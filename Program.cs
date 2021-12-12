@@ -1,5 +1,10 @@
-﻿var result = HCT.GetIntInViewingConditions(52.34833488031388, 16, 99);
-Console.Write(result);
+﻿CorePalette corePalette = new(0xFF0000FF);
+Console.WriteLine($"Primary: \t{corePalette.A1}");
+Console.WriteLine($"Secondary: \t{corePalette.A2}");
+Console.WriteLine($"Tertiary: \t{corePalette.A3}");
+Console.WriteLine($"Error: \t\t{corePalette.Error}");
+Console.WriteLine($"Neutral: \t{corePalette.N1}");
+Console.WriteLine($"NeutralVariant: {corePalette.N2}");
 
 public record Cam16(
     double hue,
@@ -22,13 +27,13 @@ public record Cam16(
     public static Cam16 FromJchInViewingConditions(double j, double c, double h)
     {
         double hueRadians = h * Math.PI / 180;
-        double mstar = 1 / .0228 * Math.Log(1 + .0228 * c * ViewingConditions.DEFAULT.fLRoot);
+        double mstar = 1 / .0228 * Math.Log(1 + .0228 * c * ViewingConditions.Default.fLRoot);
         return new(
             h,
             c,
             j,
-            4 / ViewingConditions.DEFAULT.c * Math.Sqrt(j / 100) * (ViewingConditions.DEFAULT.aw + 4) * ViewingConditions.DEFAULT.fLRoot,
-            50 * Math.Sqrt(c / Math.Sqrt(j / 100) * ViewingConditions.DEFAULT.c / (ViewingConditions.DEFAULT.aw + 4)),
+            4 / ViewingConditions.Default.c * Math.Sqrt(j / 100) * (ViewingConditions.Default.aw + 4) * ViewingConditions.Default.fLRoot,
+            50 * Math.Sqrt(c / Math.Sqrt(j / 100) * ViewingConditions.Default.c / (ViewingConditions.Default.aw + 4)),
             (1 + 100 * .007) * j / (1 + .007 * j),
             mstar * Math.Cos(hueRadians),
             mstar * Math.Sin(hueRadians));
@@ -42,12 +47,12 @@ public record Cam16(
         var x = .41233895 * redL + .35762064 * greenL + .18051042 * blueL;
         var y = .2126 * redL + .7152 * greenL + .0722 * blueL;
         var z = .01932141 * redL + .11916382 * greenL + .95034478 * blueL;
-        var rD = ViewingConditions.DEFAULT.rgbD[0] * (.401288 * x + .650173 * y - .051461 * z);
-        var gD = ViewingConditions.DEFAULT.rgbD[1] * (-.250268 * x + 1.204414 * y + .045854 * z);
-        var bD = ViewingConditions.DEFAULT.rgbD[2] * (-.002079 * x + .048952 * y + .953127 * z);
-        var rAF = Math.Pow(ViewingConditions.DEFAULT.fl * Math.Abs(rD) / 100, .42);
-        var gAF = Math.Pow(ViewingConditions.DEFAULT.fl * Math.Abs(gD) / 100, .42);
-        var bAF = Math.Pow(ViewingConditions.DEFAULT.fl * Math.Abs(bD) / 100, .42);
+        var rD = ViewingConditions.Default.rgbD[0] * (.401288 * x + .650173 * y - .051461 * z);
+        var gD = ViewingConditions.Default.rgbD[1] * (-.250268 * x + 1.204414 * y + .045854 * z);
+        var bD = ViewingConditions.Default.rgbD[2] * (-.002079 * x + .048952 * y + .953127 * z);
+        var rAF = Math.Pow(ViewingConditions.Default.fl * Math.Abs(rD) / 100, .42);
+        var gAF = Math.Pow(ViewingConditions.Default.fl * Math.Abs(gD) / 100, .42);
+        var bAF = Math.Pow(ViewingConditions.Default.fl * Math.Abs(bD) / 100, .42);
         var rA = 400 * Math.Sign(rD) * rAF / (rAF + 27.13);
         var gA = 400 * Math.Sign(gD) * gAF / (gAF + 27.13);
         var bA = 400 * Math.Sign(bD) * bAF / (bAF + 27.13);
@@ -56,21 +61,20 @@ public record Cam16(
         var atanDegrees = 180 * Math.Atan2(b, a) / Math.PI;
         var hue = 0 > atanDegrees ? atanDegrees + 360 : 360 <= atanDegrees ? atanDegrees - 360 : atanDegrees;
         var hueRadians = hue * Math.PI / 180;
-        var j = 100 * Math.Pow((40 * rA + 20 * gA + bA) / 20 * ViewingConditions.DEFAULT.nbb / ViewingConditions.DEFAULT.aw, ViewingConditions.DEFAULT.c * ViewingConditions.DEFAULT.z);
-        var alpha = Math.Pow(5E4 / 13 * .25 * (Math.Cos((20.14 > hue ? hue + 360 : hue) * Math.PI / 180 + 2) + 3.8) * ViewingConditions.DEFAULT.nc * ViewingConditions.DEFAULT.ncb * Math.Sqrt(a * a + b * b) / ((20 * rA + 20 * gA + 21 * bA) / 20 + .305), .9) * Math.Pow(1.64 - Math.Pow(.29, ViewingConditions.DEFAULT.n), .73);
+        var j = 100 * Math.Pow((40 * rA + 20 * gA + bA) / 20 * ViewingConditions.Default.nbb / ViewingConditions.Default.aw, ViewingConditions.Default.c * ViewingConditions.Default.z);
+        var alpha = Math.Pow(5E4 / 13 * .25 * (Math.Cos((20.14 > hue ? hue + 360 : hue) * Math.PI / 180 + 2) + 3.8) * ViewingConditions.Default.nc * ViewingConditions.Default.ncb * Math.Sqrt(a * a + b * b) / ((20 * rA + 20 * gA + 21 * bA) / 20 + .305), .9) * Math.Pow(1.64 - Math.Pow(.29, ViewingConditions.Default.n), .73);
         var c = alpha * Math.Sqrt(j / 100);
-        var mstar = 1 / .0228 * Math.Log(1 + .0228 * c * ViewingConditions.DEFAULT.fLRoot);
+        var mstar = 1 / .0228 * Math.Log(1 + .0228 * c * ViewingConditions.Default.fLRoot);
         return new(
             hue,
             c,
             j,
-            4 / ViewingConditions.DEFAULT.c * Math.Sqrt(j / 100) * (ViewingConditions.DEFAULT.aw + 4) * ViewingConditions.DEFAULT.fLRoot,
-            50 * Math.Sqrt(alpha * ViewingConditions.DEFAULT.c / (ViewingConditions.DEFAULT.aw + +4)),
+            4 / ViewingConditions.Default.c * Math.Sqrt(j / 100) * (ViewingConditions.Default.aw + 4) * ViewingConditions.Default.fLRoot,
+            50 * Math.Sqrt(alpha * ViewingConditions.Default.c / (ViewingConditions.Default.aw + +4)),
             (1 + 100 * .007) * j / (1 + .007 * j),
             mstar * Math.Cos(hueRadians),
             mstar * Math.Sin(hueRadians));
     }
-
 }
 
 public record ViewingConditions(
@@ -85,9 +89,9 @@ public record ViewingConditions(
     double fLRoot,
     double z)
 {
-    public static ViewingConditions DEFAULT = Default();
+    public static ViewingConditions Default = CreateDefault();
 
-    public static ViewingConditions Default(
+    public static ViewingConditions CreateDefault(
         double[]? whitePoint = null,
         double adaptingLuminance = 0,
         double backgroundLstar = 50,
@@ -139,20 +143,29 @@ public static class ColorUtils
 
 public class HCT
 {
-    private readonly double internalHue;
-    private readonly double internalChroma;
-    private readonly double internalTone;
+    public double hue;
+    public double chroma;
+    public double tone;
 
-    public HCT(double internalHue, double internalChroma, double internalTone)
+    public HCT(double hue, double chroma, double tone)
     {
-        this.internalHue = internalHue;
-        this.internalChroma = internalChroma;
-        this.internalTone = internalTone;
-        //SetInternalState(this, ToInt());
+        this.hue = hue;
+        this.chroma = chroma;
+        this.tone = tone;
+        SetInternalState(ToInt());
     }
 
-    private uint ToInt()
-        => GetIntInViewingConditions(Utils.SanitizeDegrees(internalHue), internalChroma, Math.Clamp(internalTone, 0, 100));
+    private void SetInternalState(uint argb)
+    {
+        Cam16 cam16 = Cam16.FromIntInViewingConditions(argb);
+        double tone = Utils.LstarFromInt(argb);
+        hue = cam16.hue;
+        chroma = cam16.chroma;
+        this.tone = tone;
+    }
+
+    public uint ToInt()
+        => GetIntInViewingConditions(Utils.SanitizeDegrees(hue), chroma, Math.Clamp(tone, 0, 100));
 
     public static uint GetIntInViewingConditions(double hue, double chroma, double tone)
     {
@@ -210,6 +223,12 @@ public class HCT
         }
         return null == answer ? Utils.IntFromLstar(tone) : Utils.Viewed(answer);
     }
+
+    public static HCT FromInt(uint argb)
+    {
+        Cam16 cam = Cam16.FromIntInViewingConditions(argb);
+        return new(cam.hue, cam.chroma, Utils.LstarFromInt(argb));
+    }
 }
 
 public static class Utils
@@ -262,20 +281,68 @@ public static class Utils
 
     public static uint Viewed(Cam16 self)
     {
-        double t = Math.Pow((0 == self.chroma || 0 == self.j ? 0 : self.chroma / Math.Sqrt(self.j / 100)) / Math.Pow(1.64 - Math.Pow(.29, ViewingConditions.DEFAULT.n), .73), 1 / .9);
+        double t = Math.Pow((0 == self.chroma || 0 == self.j ? 0 : self.chroma / Math.Sqrt(self.j / 100)) / Math.Pow(1.64 - Math.Pow(.29, ViewingConditions.Default.n), .73), 1 / .9);
         double hRad = self.hue * Math.PI / 180;
-        double p2 = ViewingConditions.DEFAULT.aw * Math.Pow(self.j / 100, 1 / ViewingConditions.DEFAULT.c / ViewingConditions.DEFAULT.z) / ViewingConditions.DEFAULT.nbb;
+        double p2 = ViewingConditions.Default.aw * Math.Pow(self.j / 100, 1 / ViewingConditions.Default.c / ViewingConditions.Default.z) / ViewingConditions.Default.nbb;
         double hSin = Math.Sin(hRad);
         double hCos = Math.Cos(hRad);
-        double gamma = 23 * (p2 + .305) * t / (5E4 / 13 * (Math.Cos(hRad + 2) + 3.8) * 5.75 * ViewingConditions.DEFAULT.nc * ViewingConditions.DEFAULT.ncb + 11 * t * hCos + 108 * t * hSin);
+        double gamma = 23 * (p2 + .305) * t / (5E4 / 13 * (Math.Cos(hRad + 2) + 3.8) * 5.75 * ViewingConditions.Default.nc * ViewingConditions.Default.ncb + 11 * t * hCos + 108 * t * hSin);
         double a = gamma * hCos;
         double b = gamma * hSin;
         double rA = (460 * p2 + 451 * a + 288 * b) / 1403;
         double gA = (460 * p2 - 891 * a - 261 * b) / 1403;
         double bA = (460 * p2 - 220 * a - 6300 * b) / 1403;
-        double rF = 100 / ViewingConditions.DEFAULT.fl * Math.Sign(rA) * Math.Pow(Math.Max(0, 27.13 * Math.Abs(rA) / (400 - Math.Abs(rA))), 1 / .42) / ViewingConditions.DEFAULT.rgbD[0];
-        double gF = 100 / ViewingConditions.DEFAULT.fl * Math.Sign(gA) * Math.Pow(Math.Max(0, 27.13 * Math.Abs(gA) / (400 - Math.Abs(gA))), 1 / .42) / ViewingConditions.DEFAULT.rgbD[1];
-        double bF = 100 / ViewingConditions.DEFAULT.fl * Math.Sign(bA) * Math.Pow(Math.Max(0, 27.13 * Math.Abs(bA) / (400 - Math.Abs(bA))), 1 / .42) / ViewingConditions.DEFAULT.rgbD[2];
+        double rF = 100 / ViewingConditions.Default.fl * Math.Sign(rA) * Math.Pow(Math.Max(0, 27.13 * Math.Abs(rA) / (400 - Math.Abs(rA))), 1 / .42) / ViewingConditions.Default.rgbD[0];
+        double gF = 100 / ViewingConditions.Default.fl * Math.Sign(gA) * Math.Pow(Math.Max(0, 27.13 * Math.Abs(gA) / (400 - Math.Abs(gA))), 1 / .42) / ViewingConditions.Default.rgbD[1];
+        double bF = 100 / ViewingConditions.Default.fl * Math.Sign(bA) * Math.Pow(Math.Max(0, 27.13 * Math.Abs(bA) / (400 - Math.Abs(bA))), 1 / .42) / ViewingConditions.Default.rgbD[2];
         return IntFromXyzComponents(1.86206786 * rF - 1.01125463 * gF + .14918677 * bF, .38752654 * rF + .62144744 * gF - .00897398 * bF, -.0158415 * rF - .03412294 * gF + 1.04996444 * bF);
+    }
+}
+
+public class TonalPalette
+{
+    private readonly double hue;
+    private readonly double chroma;
+    private readonly Dictionary<int, uint> cache = new();
+
+    public TonalPalette(double hue, double chroma)
+    {
+        this.hue = hue;
+        this.chroma = chroma;
+    }
+
+    public uint Tone(int tone)
+    {
+        if (!cache.TryGetValue(tone, out uint argb))
+            argb = new HCT(hue, chroma, tone).ToInt();
+        cache[tone] = argb;
+        return argb;
+    }
+
+    public override string ToString()
+    {
+        return string.Join(", ", Enumerable.Range(0, 11).Select(i => Tone(i * 10).ToString("X")[2..]));
+    }
+}
+
+public class CorePalette
+{
+    public TonalPalette A1 { get; set; }
+    public TonalPalette A2 { get; set; }
+    public TonalPalette A3 { get; set; }
+    public TonalPalette N1 { get; set; }
+    public TonalPalette N2 { get; set; }
+    public TonalPalette Error { get; set; }
+
+    public CorePalette(uint argb)
+    {
+        HCT hct = HCT.FromInt(argb);
+        double hue = hct.hue;
+        A1 = new(hue, Math.Max(48, hct.chroma));
+        A2 = new(hue, 16);
+        A3 = new(hue + 60, 24);
+        N1 = new(hue, 4);
+        N2 = new(hue, 8);
+        Error = new(25, 84);
     }
 }
