@@ -1,65 +1,5 @@
-﻿
-uint GetIntInViewingConditions(double hue, double chroma, double tone)
-{
-    if (1 > chroma || 0 >= Math.Round(tone) || 100 <= Math.Round(tone))
-        return Utils.IntFromLstar(tone);
-
-    hue = Utils.SanitizeDegrees(hue);
-    double high = chroma;
-    double mid = chroma;
-    double low = 0;
-    bool isFirstLoop = true;
-    Cam16? answer = null;
-    for (; .4 <= Math.Abs(low - high);)
-    {
-        var hueInner = hue;
-        var chromaInner = mid;
-        var toneInner = tone;
-        double lowInner = 0; double highInner = 100; double midInner, bestdL = 1E3, bestdE = 1E3; Cam16? bestCam = null;
-        for (; .01 < Math.Abs(lowInner - highInner);)
-        {
-            midInner = lowInner + (highInner - lowInner) / 2;
-            uint clipped = Utils.Viewed(Cam16.FromJchInViewingConditions(midInner, chromaInner, hueInner));
-            double clippedLstar = Utils.lstarFromInt(clipped);
-            double dL = Math.Abs(toneInner - clippedLstar);
-            if (.2 > dL)
-            {
-                Cam16 camClipped = Cam16.FromIntInViewingConditions(clipped);
-                double dE = camClipped.Distance(Cam16.FromJchInViewingConditions(camClipped.j, camClipped.chroma, hueInner));
-                if (1 >= dE && dE <= bestdE)
-                {
-                    bestdL = dL;
-                    bestdE = dE;
-                    bestCam = camClipped;
-                }
-            }
-            if (0 == bestdL && 0 == bestdE)
-                break;
-            if (clippedLstar < toneInner) lowInner = midInner; else highInner = midInner;
-        }
-        Cam16? possibleAnswer = bestCam;
-        if (isFirstLoop)
-        {
-            if (null != possibleAnswer)
-                return Utils.Viewed(possibleAnswer);
-            isFirstLoop = false;
-        }
-        else
-            if (null == possibleAnswer) high = mid;
-        else
-        {
-            answer = possibleAnswer;
-            low = mid;
-        }
-        mid = low + (high - low) / 2;
-    }
-    return null == answer ? Utils.IntFromLstar(tone) : Utils.Viewed(answer);
-}
-
-
-var result = GetIntInViewingConditions(52.34833488031388, 16, 99);
+﻿var result = HCT.GetIntInViewingConditions(52.34833488031388, 16, 99);
 Console.Write(result);
-
 
 public record Cam16(
     double hue,
@@ -133,7 +73,8 @@ public record Cam16(
 
 }
 
-public record ViewingConditions(double n,
+public record ViewingConditions(
+    double n,
     double aw,
     double nbb,
     double ncb,
@@ -213,7 +154,7 @@ public class HCT
     private uint ToInt()
         => GetIntInViewingConditions(Utils.SanitizeDegrees(internalHue), internalChroma, Math.Clamp(internalTone, 0, 100));
 
-    private uint GetIntInViewingConditions(double hue, double chroma, double tone)
+    public static uint GetIntInViewingConditions(double hue, double chroma, double tone)
     {
         if (1 > chroma || 0 >= Math.Round(tone) || 100 <= Math.Round(tone))
             return Utils.IntFromLstar(tone);
@@ -234,7 +175,7 @@ public class HCT
             {
                 midInner = lowInner + (highInner - lowInner) / 2;
                 uint clipped = Utils.Viewed(Cam16.FromJchInViewingConditions(midInner, chromaInner, hueInner));
-                double clippedLstar = Utils.lstarFromInt(clipped);
+                double clippedLstar = Utils.LstarFromInt(clipped);
                 double dL = Math.Abs(toneInner - clippedLstar);
                 if (.2 > dL)
                 {
@@ -276,7 +217,7 @@ public static class Utils
     public static double Linearized(double rgb) => .04045 >= rgb ? rgb / 12.92 : Math.Pow((rgb + .055) / 1.055, 2.4);
     public static double Delinearized(double rgb) => .0031308 >= rgb ? 12.92 * rgb : 1.055 * Math.Pow(rgb, 1 / 2.4) - .055;
 
-    public static double lstarFromInt(uint argb)
+    public static double LstarFromInt(uint argb)
     {
         double y = 21.26 * Linearized((double)((argb & 16711680) >> 16) / 255) + 71.52 * Linearized((double)((argb & 65280) >> 8) / 255) + 7.22 * Linearized((double)(argb & 255) / 255);
         y /= 100;
