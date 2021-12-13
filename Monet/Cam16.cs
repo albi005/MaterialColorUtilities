@@ -1,15 +1,28 @@
 ﻿namespace Monet;
 
-public record Cam16(
-    double Hue,
-    double Chroma,
-    double J,
-    double Q,
-    double S,
-    double JStar,
-    double AStar,
-    double BStar)
+public class Cam16
 {
+    public double Hue { get; set; }
+    public double Chroma { get; set; }
+    public double J { get; set; }
+    public double Q { get; set; }
+    public double S { get; set; }
+    public double JStar { get; set; }
+    public double AStar { get; set; }
+    public double BStar { get; set; }
+
+    public Cam16(double hue, double chroma, double j, double q, double s, double jStar, double aStar, double bStar)
+    {
+        Hue = hue;
+        Chroma = chroma;
+        J = j;
+        Q = q;
+        S = s;
+        JStar = jStar;
+        AStar = aStar;
+        BStar = bStar;
+    }
+
     public double Distance(Cam16 other)
     {
         double dJ = JStar - other.JStar;
