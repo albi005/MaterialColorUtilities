@@ -36,95 +36,84 @@ public class Theme
 
     public Theme(CorePalette palette) => Palette = palette;
 
-    public Color Primary => IsDark ? PrimaryDark : PrimaryLight;
-    public Color OnPrimary => IsDark ? OnPrimaryDark : OnPrimaryLight;
-    public Color PrimaryContainer => IsDark ? PrimaryContainerDark : PrimaryContainerLight;
-    public Color OnPrimaryContainer => IsDark ? OnPrimaryContainerDark : OnPrimaryContainerLight;
+    public Color Primary => (IsDark ? GetPrimaryDark() : GetPrimaryLight()).ToColor();
+    public Color OnPrimary => (IsDark ? GetOnPrimaryDark() : GetOnPrimaryLight()).ToColor();
+    public Color PrimaryContainer => (IsDark ? GetPrimaryContainerDark() : GetPrimaryContainerLight()).ToColor();
+    public Color OnPrimaryContainer => (IsDark ? GetOnPrimaryContainerDark() : GetOnPrimaryContainerLight()).ToColor();
 
-    public Color Secondary => IsDark ? SecondaryDark : SecondaryLight;
-    public Color OnSecondary => IsDark ? OnSecondaryDark : OnSecondaryLight;
-    public Color SecondaryContainer => IsDark ? SecondaryContainerDark : SecondaryContainerLight;
-    public Color OnSecondaryContainer => IsDark ? OnSecondaryContainerDark : OnSecondaryContainerLight;
+    public Color Secondary => (IsDark ? GetSecondaryDark() : GetSecondaryLight()).ToColor();
+    public Color OnSecondary => (IsDark ? GetOnSecondaryDark() : GetOnSecondaryLight()).ToColor();
+    public Color SecondaryContainer => (IsDark ? GetSecondaryContainerDark() : GetSecondaryContainerLight()).ToColor();
+    public Color OnSecondaryContainer => (IsDark ? GetOnSecondaryContainerDark() : GetOnSecondaryContainerLight()).ToColor();
 
-    public Color Tertiary => IsDark ? TertiaryDark : TertiaryLight;
-    public Color OnTertiary => IsDark ? OnTertiaryDark : OnTertiaryLight;
-    public Color TertiaryContainer => IsDark ? TertiaryContainerDark : TertiaryContainerLight;
-    public Color OnTertiaryContainer => IsDark ? OnTertiaryContainerDark : OnTertiaryContainerLight;
+    public Color Tertiary => (IsDark ? GetTertiaryDark() : GetTertiaryLight()).ToColor();
+    public Color OnTertiary => (IsDark ? GetOnTertiaryDark() : GetOnTertiaryLight()).ToColor();
+    public Color TertiaryContainer => (IsDark ? GetTertiaryContainerDark() : GetTertiaryContainerLight()).ToColor();
+    public Color OnTertiaryContainer => (IsDark ? GetOnTertiaryContainerDark() : GetOnTertiaryContainerLight()).ToColor();
 
-    public Color Error => IsDark ? ErrorDark : ErrorLight;
-    public Color OnError => IsDark ? OnErrorDark : OnErrorLight;
-    public Color ErrorContainer => IsDark ? ErrorContainerDark : ErrorContainerLight;
-    public Color OnErrorContainer => IsDark ? OnErrorContainerDark : OnErrorContainerLight;
+    public Color Error => (IsDark ? GetErrorDark() : GetErrorLight()).ToColor();
+    public Color OnError => (IsDark ? GetOnErrorDark() : GetOnErrorLight()).ToColor();
+    public Color ErrorContainer => (IsDark ? GetErrorContainerDark() : GetErrorContainerLight()).ToColor();
+    public Color OnErrorContainer => (IsDark ? GetOnErrorContainerDark() : GetOnErrorContainerLight()).ToColor();
 
-    public Color Background => IsDark ? BackgroundDark : BackgroundLight;
-    public Color OnBackground => IsDark ? OnBackgroundDark : OnBackgroundLight;
-    public Color Surface => IsDark ? SurfaceDark : SurfaceLight;
-    public Color OnSurface => IsDark ? OnSurfaceDark : OnSurfaceLight;
-    public Color SurfaceVariant => IsDark ? SurfaceVariantDark : SurfaceVariantLight;
-    public Color OnSurfaceVariant => IsDark ? OnSurfaceVariantDark : OnSurfaceVariantLight;
-    public Color InverseSurface => IsDark ? InverseOnSurfaceDark : InverseOnSurfaceLight;
-    public Color InverseOnSurface => IsDark ? InverseOnSurfaceDark : InverseOnSurfaceLight;
-    public Color Outline => IsDark ? OutlineDark : OutlineLight;
+    public Color Background => (IsDark ? GetBackgroundDark() : GetBackgroundLight()).ToColor();
+    public Color OnBackground => (IsDark ? GetOnBackgroundDark() : GetOnBackgroundLight()).ToColor();
+    public Color Surface => (IsDark ? GetSurfaceDark() : GetSurfaceLight()).ToColor();
+    public Color OnSurface => (IsDark ? GetOnSurfaceDark() : GetOnSurfaceLight()).ToColor();
+    public Color SurfaceVariant => (IsDark ? GetSurfaceVariantDark() : GetSurfaceVariantLight()).ToColor();
+    public Color OnSurfaceVariant => (IsDark ? GetOnSurfaceVariantDark() : GetOnSurfaceVariantLight()).ToColor();
+    public Color InverseSurface => (IsDark ? GetInverseOnSurfaceDark() : GetInverseOnSurfaceLight()).ToColor();
+    public Color InverseOnSurface => (IsDark ? GetInverseOnSurfaceDark() : GetInverseOnSurfaceLight()).ToColor();
+    public Color Outline => (IsDark ? GetOutlineDark() : GetOutlineLight()).ToColor();
 
-    // LIGHT
-    public Color PrimaryLight => Palette.Primary[40].ToColor();
-    public Color OnPrimaryLight => Palette.Primary[100].ToColor();
-    public Color PrimaryContainerLight => Palette.Primary[90].ToColor();
-    public Color OnPrimaryContainerLight => Palette.Primary[10].ToColor();
-
-    public Color SecondaryLight => Palette.Secondary[40].ToColor();
-    public Color OnSecondaryLight => Palette.Secondary[100].ToColor();
-    public Color SecondaryContainerLight => Palette.Secondary[90].ToColor();
-    public Color OnSecondaryContainerLight => Palette.Secondary[10].ToColor();
-
-    public Color TertiaryLight => Palette.Tertiary[40].ToColor();
-    public Color OnTertiaryLight => Palette.Tertiary[100].ToColor();
-    public Color TertiaryContainerLight => Palette.Tertiary[90].ToColor();
-    public Color OnTertiaryContainerLight => Palette.Tertiary[10].ToColor();
-
-    public Color ErrorLight => Palette.Error[40].ToColor();
-    public Color OnErrorLight => Palette.Error[100].ToColor();
-    public Color ErrorContainerLight => Palette.Error[90].ToColor();
-    public Color OnErrorContainerLight => Palette.Error[10].ToColor();
-
-    public Color BackgroundLight => Palette.Neutral[99].ToColor();
-    public Color OnBackgroundLight => Palette.Neutral[10].ToColor();
-    public Color SurfaceLight => Palette.Neutral[99].ToColor();
-    public Color OnSurfaceLight => Palette.Neutral[10].ToColor();
-    public Color SurfaceVariantLight => Palette.NeutralVariant[90].ToColor();
-    public Color OnSurfaceVariantLight => Palette.NeutralVariant[30].ToColor();
-    public Color InverseSurfaceLight => Palette.Neutral[20].ToColor();
-    public Color InverseOnSurfaceLight => Palette.Neutral[95].ToColor();
-    public Color OutlineLight => Palette.NeutralVariant[50].ToColor();
-
-    // DARK
-    public Color PrimaryDark => Palette.Primary[80].ToColor();
-    public Color OnPrimaryDark => Palette.Primary[20].ToColor();
-    public Color PrimaryContainerDark => Palette.Primary[30].ToColor();
-    public Color OnPrimaryContainerDark => Palette.Primary[90].ToColor();
-
-    public Color SecondaryDark => Palette.Secondary[80].ToColor();
-    public Color OnSecondaryDark => Palette.Secondary[20].ToColor();
-    public Color SecondaryContainerDark => Palette.Secondary[30].ToColor();
-    public Color OnSecondaryContainerDark => Palette.Secondary[90].ToColor();
-
-    public Color TertiaryDark => Palette.Tertiary[80].ToColor();
-    public Color OnTertiaryDark => Palette.Tertiary[20].ToColor();
-    public Color TertiaryContainerDark => Palette.Tertiary[30].ToColor();
-    public Color OnTertiaryContainerDark => Palette.Tertiary[90].ToColor();
-
-    public Color ErrorDark => Palette.Error[80].ToColor();
-    public Color OnErrorDark => Palette.Error[20].ToColor();
-    public Color ErrorContainerDark => Palette.Error[30].ToColor();
-    public Color OnErrorContainerDark => Palette.Error[90].ToColor();
-
-    public Color BackgroundDark => Palette.Neutral[10].ToColor();
-    public Color OnBackgroundDark => Palette.Neutral[90].ToColor();
-    public Color SurfaceDark => Palette.Neutral[10].ToColor();
-    public Color OnSurfaceDark => Palette.Neutral[90].ToColor();
-    public Color SurfaceVariantDark => Palette.NeutralVariant[30].ToColor();
-    public Color OnSurfaceVariantDark => Palette.NeutralVariant[80].ToColor();
-    public Color InverseSurfaceDark => Palette.Neutral[90].ToColor();
-    public Color InverseOnSurfaceDark => Palette.Neutral[20].ToColor();
-    public Color OutlineDark => Palette.NeutralVariant[60].ToColor();
+    protected virtual uint GetPrimaryLight() => Palette.Primary[40];
+    protected virtual uint GetOnPrimaryLight() => Palette.Primary[100];
+    protected virtual uint GetPrimaryContainerLight() => Palette.Primary[90];
+    protected virtual uint GetOnPrimaryContainerLight() => Palette.Primary[10];
+    protected virtual uint GetSecondaryLight() => Palette.Secondary[40];
+    protected virtual uint GetOnSecondaryLight() => Palette.Secondary[100];
+    protected virtual uint GetSecondaryContainerLight() => Palette.Secondary[90];
+    protected virtual uint GetOnSecondaryContainerLight() => Palette.Secondary[10];
+    protected virtual uint GetTertiaryLight() => Palette.Tertiary[40];
+    protected virtual uint GetOnTertiaryLight() => Palette.Tertiary[100];
+    protected virtual uint GetTertiaryContainerLight() => Palette.Tertiary[90];
+    protected virtual uint GetOnTertiaryContainerLight() => Palette.Tertiary[10];
+    protected virtual uint GetErrorLight() => Palette.Error[40];
+    protected virtual uint GetOnErrorLight() => Palette.Error[100];
+    protected virtual uint GetErrorContainerLight() => Palette.Error[90];
+    protected virtual uint GetOnErrorContainerLight() => Palette.Error[10];
+    protected virtual uint GetBackgroundLight() => Palette.Neutral[99];
+    protected virtual uint GetOnBackgroundLight() => Palette.Neutral[10];
+    protected virtual uint GetSurfaceLight() => Palette.Neutral[99];
+    protected virtual uint GetOnSurfaceLight() => Palette.Neutral[10];
+    protected virtual uint GetSurfaceVariantLight() => Palette.NeutralVariant[90];
+    protected virtual uint GetOnSurfaceVariantLight() => Palette.NeutralVariant[30];
+    protected virtual uint GetInverseSurfaceLight() => Palette.Neutral[20];
+    protected virtual uint GetInverseOnSurfaceLight() => Palette.Neutral[95];
+    protected virtual uint GetOutlineLight() => Palette.NeutralVariant[50];
+    protected virtual uint GetPrimaryDark() => Palette.Primary[80];
+    protected virtual uint GetOnPrimaryDark() => Palette.Primary[20];
+    protected virtual uint GetPrimaryContainerDark() => Palette.Primary[30];
+    protected virtual uint GetOnPrimaryContainerDark() => Palette.Primary[90];
+    protected virtual uint GetSecondaryDark() => Palette.Secondary[80];
+    protected virtual uint GetOnSecondaryDark() => Palette.Secondary[20];
+    protected virtual uint GetSecondaryContainerDark() => Palette.Secondary[30];
+    protected virtual uint GetOnSecondaryContainerDark() => Palette.Secondary[90];
+    protected virtual uint GetTertiaryDark() => Palette.Tertiary[80];
+    protected virtual uint GetOnTertiaryDark() => Palette.Tertiary[20];
+    protected virtual uint GetTertiaryContainerDark() => Palette.Tertiary[30];
+    protected virtual uint GetOnTertiaryContainerDark() => Palette.Tertiary[90];
+    protected virtual uint GetErrorDark() => Palette.Error[80];
+    protected virtual uint GetOnErrorDark() => Palette.Error[20];
+    protected virtual uint GetErrorContainerDark() => Palette.Error[30];
+    protected virtual uint GetOnErrorContainerDark() => Palette.Error[90];
+    protected virtual uint GetBackgroundDark() => Palette.Neutral[10];
+    protected virtual uint GetOnBackgroundDark() => Palette.Neutral[90];
+    protected virtual uint GetSurfaceDark() => Palette.Neutral[10];
+    protected virtual uint GetOnSurfaceDark() => Palette.Neutral[90];
+    protected virtual uint GetSurfaceVariantDark() => Palette.NeutralVariant[30];
+    protected virtual uint GetOnSurfaceVariantDark() => Palette.NeutralVariant[80];
+    protected virtual uint GetInverseSurfaceDark() => Palette.Neutral[90];
+    protected virtual uint GetInverseOnSurfaceDark() => Palette.Neutral[20];
+    protected virtual uint GetOutlineDark() => Palette.NeutralVariant[60];
 }

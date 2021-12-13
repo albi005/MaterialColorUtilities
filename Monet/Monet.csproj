@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <RepositoryUrl>https://github.com/albi005/Monet</RepositoryUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>0.0.1-alpha</Version>
+    <Version>0.0.3</Version>
   </PropertyGroup>
 
 </Project>
