@@ -21,9 +21,4 @@ public class TonalPalette
     }
 
     public uint this[int tone] => Tone(tone);
-
-    public override string ToString()
-    {
-        return string.Join(", ", Enumerable.Range(0, 11).Select(i => Tone(i * 10).ToString("X")[2..]));
-    }
 }
