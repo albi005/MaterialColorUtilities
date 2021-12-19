@@ -40,7 +40,9 @@ theme.IsDark = true;
 Color darkTertiary = theme.Tertiary;
 ```
 
-Create your own theme:
+`Theme` uses the 
+[default Material Design 3 mapping of tokens](https://m3.material.io/styles/color/the-color-system/tokens#7fd4440e-986d-443f-8b3a-4933bff16646).
+This can be changed by making your own theme:
 
 ```csharp
 public class MyTheme : Theme
