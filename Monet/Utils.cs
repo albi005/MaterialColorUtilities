@@ -135,7 +135,7 @@ public static class Utils
             colorsToProportion[color] = proportion;
             Cam16 cam = Cam16.FromIntInViewingConditions(color);
             colorsToCam[color] = cam;
-            hueProportions[(int)Math.Round(cam.Hue)] += proportion;
+            hueProportions[(int)cam.Hue] += proportion;
         }
         Dictionary<uint, double> colorsToExcitedProportion = new();
         foreach (var colorAndCam in colorsToCam)
