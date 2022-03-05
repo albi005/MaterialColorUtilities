@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.31911.260
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monet", "Monet\Monet.csproj", "{0281EA50-1EDE-4AB7-BA15-DA37126A5E52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaterialColorUtilities", "MaterialColorUtilities\MaterialColorUtilities.csproj", "{0281EA50-1EDE-4AB7-BA15-DA37126A5E52}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monet.Samples", "Monet.Samples\Monet.Samples.csproj", "{14D6A693-7174-4A4C-B1EF-3528B98041B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaterialColorUtilities.Samples", "MaterialColorUtilities.Samples\MaterialColorUtilities.Samples.csproj", "{14D6A693-7174-4A4C-B1EF-3528B98041B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonetTests", "MonetTests\MonetTests.csproj", "{35FD1BCC-D495-463C-8DE8-4E18EBC1790E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaterialColorUtilities.Tests", "MaterialColorUtilities.Tests\MaterialColorUtilities.Tests.csproj", "{35FD1BCC-D495-463C-8DE8-4E18EBC1790E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
