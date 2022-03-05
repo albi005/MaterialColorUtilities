@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Monet.Tests
+namespace MaterialColorUtilities.Tests
 {
     [TestClass()]
     public class UtilsTests

@@ -1,7 +1,7 @@
-﻿using Monet.Extensions;
+﻿using MaterialColorUtilities.Extensions;
 using System.Drawing;
 
-namespace Monet;
+namespace MaterialColorUtilities;
 
 public class Theme
 {

@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Monet.Extensions
+namespace MaterialColorUtilities.Extensions
 {
     public static class UintExtensions
     {
