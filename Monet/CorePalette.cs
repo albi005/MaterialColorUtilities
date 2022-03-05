@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Monet;
+namespace MaterialColorUtilities;
 
 public class CorePalette
 {

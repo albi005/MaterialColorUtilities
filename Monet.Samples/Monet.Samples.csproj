@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Monet\Monet.csproj" />
+    <ProjectReference Include="..\MaterialColorUtilities\MaterialColorUtilities.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,10 +1,10 @@
-﻿using Monet;
+﻿using MaterialColorUtilities;
 using SkiaSharp;
 using System.Drawing;
 using System.Reflection;
 
 // Generate seed color from an image
-string sourceImageResourceID = "Monet.Samples.Assets.5_wallpaper.webp";
+string sourceImageResourceID = "MaterialColorUtilities.Samples.Assets.5_wallpaper.webp";
 using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(sourceImageResourceID)!;
 // For good results resize the image to something like 112x112
 SKBitmap bitmap = SKBitmap.Decode(stream).Resize(new SKImageInfo(112,112), SKFilterQuality.Medium);

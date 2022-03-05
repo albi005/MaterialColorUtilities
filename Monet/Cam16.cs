@@ -1,4 +1,4 @@
-﻿namespace Monet;
+﻿namespace MaterialColorUtilities;
 
 public class Cam16
 {

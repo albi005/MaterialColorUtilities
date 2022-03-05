@@ -1,4 +1,4 @@
-﻿namespace Monet;
+﻿namespace MaterialColorUtilities;
 
 public record struct ViewingConditions(
     double N,

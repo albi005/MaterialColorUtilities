@@ -1,6 +1,6 @@
 ﻿#nullable disable
 
-namespace Monet;
+namespace MaterialColorUtilities;
 
 public static class Utils
 {

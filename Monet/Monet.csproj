@@ -5,9 +5,11 @@
 	<LangVersion>10</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RepositoryUrl>https://github.com/albi005/Monet</RepositoryUrl>
+    <RepositoryUrl>https://github.com/albi005/MaterialColorUtilities</RepositoryUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Version>0.0.4.1</Version>
+    <Description>.NET library for generating Material Color Palettes from an image or a color</Description>
+    <PackageProjectUrl>https://github.com/albi005/MaterialColorUtilities</PackageProjectUrl>
   </PropertyGroup>
 
 </Project>
