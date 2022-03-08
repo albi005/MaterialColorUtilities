@@ -1,19 +1,20 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using MaterialColorUtilities.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MaterialColorUtilities.Tests
 {
-    [TestClass()]
-    public class UtilsTests
+    [TestClass]
+    public class ImageUtilsTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void SeedFromImageTest()
         {
-            var result = Utils.SeedFromImage(testImage5);
+            var result = ImageUtils.ColorFromImage(testImage5);
             Assert.AreNotEqual(0xFF4285F4, result);
         }
 
 
-        private readonly uint[] testImage5 = new uint[]
+        private readonly int[] testImage5 = (int[])(object)(new uint[]
         {
             4293521130,
             4293521130,
@@ -12559,6 +12560,6 @@ namespace MaterialColorUtilities.Tests
             4290494363,
             4290888865,
             4291283619
-        };
+        });
     }
 }

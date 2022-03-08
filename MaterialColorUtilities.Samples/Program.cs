@@ -1,33 +1,36 @@
-﻿using MaterialColorUtilities;
+﻿using MaterialColorUtilities.Palettes;
+using MaterialColorUtilities.Schemes;
+using MaterialColorUtilities.Utils;
 using SkiaSharp;
 using System.Drawing;
 using System.Reflection;
 
 // Generate seed color from an image
-string sourceImageResourceID = "MaterialColorUtilities.Samples.Assets.5_wallpaper.webp";
-using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(sourceImageResourceID)!;
+string imageResourceID = "MaterialColorUtilities.Samples.Assets.5_wallpaper.webp";
+using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(imageResourceID)!;
 // For good results resize the image to something like 112x112
-SKBitmap bitmap = SKBitmap.Decode(stream).Resize(new SKImageInfo(112,112), SKFilterQuality.Medium);
-uint seedColor = Utils.SeedFromImage(bitmap.Pixels.Select(p => (uint)p).ToArray());
+SKBitmap bitmap = SKBitmap.Decode(stream).Resize(new SKImageInfo(112, 112), SKFilterQuality.Medium);
+int seedColor = ImageUtils.ColorFromImage(bitmap.Pixels.Select(p => (int)(uint)p).ToArray());
 Console.WriteLine($"Seed: #{seedColor.ToString("X")[2..]}");
 
 // CorePalette gives you access to every tone of the key colors
-CorePalette corePalette = new(seedColor);
+CorePalette corePalette = CorePalette.Of(seedColor);
 
-// Theme maps CorePalette to named colors
-Theme theme = new(corePalette);
-
-Console.WriteLine("\n============\nLight theme:\n============");
-foreach (var property in typeof(Theme).GetProperties())
+Console.WriteLine("\n============\nLIGHT\n============");
+LightScheme lightScheme = new(corePalette);
+foreach (var property in typeof(Scheme<int>).GetProperties())
 {
-    if (property.PropertyType == typeof(Color) && !property.Name.EndsWith("Dark") && !property.Name.EndsWith("Light"))
-        Console.WriteLine($"{property.Name}: #{((Color)property.GetValue(theme)!).ToArgb().ToString("X")[2..]}");
+    int color = (int)property.GetValue(lightScheme)!;
+    Console.WriteLine($"{property.Name}: #{color.ToString("X")[2..]}");
 }
 
-Console.WriteLine("\n============\nDark theme:\n============");
-theme.IsDark = true;
-foreach (var property in typeof(Theme).GetProperties())
+Console.WriteLine("\n============\nDARK\n============");
+DarkScheme darkScheme = new(corePalette);
+foreach (var property in typeof(Scheme<int>).GetProperties())
 {
-    if (property.PropertyType == typeof(Color) && !property.Name.EndsWith("Dark") && !property.Name.EndsWith("Light"))
-        Console.WriteLine($"{property.Name}: #{((Color)property.GetValue(theme)!).ToArgb().ToString("X")[2..]}");
+    int color = (int)property.GetValue(darkScheme)!;
+    Console.WriteLine($"{property.Name}: #{color.ToString("X")[2..]}");
 }
+
+// Convert:
+Scheme<Color> colorScheme = lightScheme.Convert(Color.FromArgb);
