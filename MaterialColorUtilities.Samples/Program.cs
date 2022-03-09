@@ -6,11 +6,11 @@ using System.Drawing;
 using System.Reflection;
 
 // Generate seed color from an image
-string imageResourceID = "MaterialColorUtilities.Samples.Assets.5_wallpaper.webp";
-using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(imageResourceID)!;
-// For good results resize the image to something like 112x112
-SKBitmap bitmap = SKBitmap.Decode(stream).Resize(new SKImageInfo(112, 112), SKFilterQuality.Medium);
+string imageResourceId = "MaterialColorUtilities.Samples.Assets.5_wallpaper.webp";
+using Stream resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(imageResourceId)!;
+SKBitmap bitmap = SKBitmap.Decode(resourceStream).Resize(new SKImageInfo(112, 112), SKFilterQuality.Medium);
 int seedColor = ImageUtils.ColorFromImage(bitmap.Pixels.Select(p => (int)(uint)p).ToArray());
+
 Console.WriteLine($"Seed: #{seedColor.ToString("X")[2..]}");
 
 // CorePalette gives you access to every tone of the key colors

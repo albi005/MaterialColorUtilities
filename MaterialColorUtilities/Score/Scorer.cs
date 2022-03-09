@@ -20,6 +20,8 @@ public static class Scorer
     private const float WEIGHT_CHROMA_ABOVE = 0.3f;
     private const float WEIGHT_CHROMA_BELOW = 0.1f;
 
+    public const int Default = unchecked((int)0xff4285F4);
+
     /**
      * Given a map with keys of colors and values of how often the color appears, rank the colors
      * based on suitability for being used for a UI theme.
@@ -135,7 +137,7 @@ public static class Scorer
         // Ensure that at least one color is returned.
         if (!colorsByScoreDescending.Any())
         {
-            colorsByScoreDescending.Add(unchecked((int)0xff4285F4)); // Google Bruh
+            colorsByScoreDescending.Add(Default);
         }
         return colorsByScoreDescending;
     }
