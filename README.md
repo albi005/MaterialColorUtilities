@@ -1,56 +1,66 @@
-# Monet
+# Material Color Utilities for .NET
 
-.NET library for generating Material Color Palettes from an image or a color
+This is a C# implementation of Google's [Material Color Utilities](https://github.com/material-foundation/material-color-utilities), that can be used to extract a color from an image and then generate a Material Design 3 color scheme.
 
-Based on https://material-foundation.github.io/material-theme-builder/app.js
+## Install
 
-## Features
+Get the package from Nuget:
+[![NuGet](https://img.shields.io/nuget/v/MaterialColorUtilities.svg)](https://www.nuget.org/packages/MaterialColorUtilities)
 
-Generate a seed primary color from an image (for example the user's wallpaper):
+## Quickstart
+
+Generate a seed color from an image (e.g. the user's wallpaper):
 
 ```csharp
-string imageId = "Monet.Samples.Assets.5_wallpaper.webp";
-using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(imageId)!;
-SKBitmap bitmap = SKBitmap.Decode(stream).Resize(new SKImageInfo(112,112), SKFilterQuality.Medium);
-uint[] pixels = bitmap.Pixels.Select(p => (uint)p).ToArray();
+// Load the image into an int[].
+// Here, the image is stored in an embedded resource, and then decoded and resized using SkiaSharp.
+// You might have to implement this part, according to your needs.
+string imageResourceId = "MaterialColorUtilities.Samples.Assets.5_wallpaper.webp";
+using Stream resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(imageResourceId)!;
+SKBitmap bitmap = SKBitmap.Decode(resourceStream).Resize(new SKImageInfo(112, 112), SKFilterQuality.Medium);
+int[] pixels = bitmap.Pixels.Select(p => (int)(uint)p).ToArray();
 
-uint seedColor = Utils.SeedFromImage(pixels);
+// This is where the magic happens
+int seedColor = ImageUtils.ColorFromImage(pixels);
 ```
 
 Use that color to create a `CorePalette` that can be used to create any tone of any key color:
 
 ```csharp
-CorePalette corePalette = new(seedColor);
-Color color = corePalette.Secondary[55].ToColor();
+CorePalette corePalette = CorePalette.Of(seedColor);
+int color = corePalette.Secondary[55];
 ```
 
 Map the `CorePalette` to any 
 [Material Design 3 named color](https://m3.material.io/styles/color/the-color-system/tokens)
-using `Theme`
+using `Scheme`
 
 ```csharp
-Theme theme = new(corePalette);
-Color primaryContainer = theme.PrimaryContainer;
+Scheme<int> scheme = new LightScheme(corePalette);
+int tertiary = scheme.Tertiary;
 ```
 
-Set `Theme.IsDark` to `true` to get the dark colors:
+A `Scheme` is generic so you can use any color type.
+Convert using an extension method:
 
 ```csharp
-theme.IsDark = true;
-Color darkTertiary = theme.Tertiary;
+Scheme<Drawing.Color> dcScheme = scheme.Convert(Drawing.Color.FromArgb);
 ```
 
-`Theme` uses the 
+
+`LightScheme` and `DarkScheme` use the 
 [default Material Design 3 mapping of tokens](https://m3.material.io/styles/color/the-color-system/tokens#7fd4440e-986d-443f-8b3a-4933bff16646).
-This can be changed by making your own theme:
+This can be changed by overriding them:
 
 ```csharp
-public class MyTheme : Theme
+public class MyScheme : LightScheme
 {
-    public MyTheme(CorePalette corePalette) : base(corePalette) { }
+    public MyScheme(CorePalette corePalette) : base(corePalette) { }
 
-    protected override uint GetBackgroundLight() => Palette.Primary[98];
-    protected override uint GetSurfaceLight() => Palette.Neutral[100];
-    protected override uint GetSurfaceDark() => Palette.Neutral[20];
+    protected override int BackgroundLight => Palette.Primary[98];
+    protected override int SurfaceLight => Palette.Neutral[100];
+    protected override int SurfaceDark => Palette.Neutral[20];
 }
 ```
+
+For more info check out the source code and the examples.

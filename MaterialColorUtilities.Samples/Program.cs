@@ -5,11 +5,16 @@ using SkiaSharp;
 using System.Drawing;
 using System.Reflection;
 
-// Generate seed color from an image
+// Generate seed color from an image:
+// Load the image into an int[].
+// The image is stored in an embedded resource, and then decoded and resized using SkiaSharp.
 string imageResourceId = "MaterialColorUtilities.Samples.Assets.5_wallpaper.webp";
 using Stream resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(imageResourceId)!;
 SKBitmap bitmap = SKBitmap.Decode(resourceStream).Resize(new SKImageInfo(112, 112), SKFilterQuality.Medium);
-int seedColor = ImageUtils.ColorFromImage(bitmap.Pixels.Select(p => (int)(uint)p).ToArray());
+int[] pixels = bitmap.Pixels.Select(p => (int)(uint)p).ToArray();
+
+// This is where the magic happens
+int seedColor = ImageUtils.ColorFromImage(pixels);
 
 Console.WriteLine($"Seed: #{seedColor.ToString("X")[2..]}");
 
