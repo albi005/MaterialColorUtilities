@@ -67,7 +67,7 @@ public class QuantizerWsmeans
         for (int i = 0; i < pointCount; i++)
         {
             int pixel = pixels[i];
-            int count = pixelToCount.GetValueOrDefault(pixel);
+            int count = pixelToCount[pixel];
             counts[i] = count;
         }
 
@@ -178,7 +178,7 @@ public class QuantizerWsmeans
             float[] componentASums = new float[clusterCount];
             float[] componentBSums = new float[clusterCount];
             float[] componentCSums = new float[clusterCount];
-            Array.Fill(pixelCountSums, 0);
+            for (int i = 0; i < pixelCountSums.Length; i++) pixelCountSums[i] = 0;
             for (int i = 0; i < pointCount; i++)
             {
                 int clusterIndex = clusterIndices[i];

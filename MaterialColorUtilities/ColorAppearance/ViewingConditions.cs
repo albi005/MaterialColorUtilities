@@ -59,7 +59,7 @@ public class ViewingConditions
         float k4 = k * k * k * k;
         float k4F = 1.0f - k4;
         float fl =
-            (k4 * adaptingLuminance) + (0.1f * k4F * k4F * (float)Math.Cbrt(5.0 * adaptingLuminance));
+            (k4 * adaptingLuminance) + (0.1f * k4F * k4F * (float)Math.Pow(5.0 * adaptingLuminance, 1.0 / 3.0));
         float n = (float)(ColorUtils.YFromLstar(backgroundLstar) / whitePoint[1]);
         float z = 1.48f + (float)Math.Sqrt(n);
         float nbb = 0.725f / (float)Math.Pow(n, 0.2);

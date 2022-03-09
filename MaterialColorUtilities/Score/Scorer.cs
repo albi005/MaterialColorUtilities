@@ -103,7 +103,7 @@ public static class Scorer
         Dictionary<int, float> filteredColorsToScore = new();
         foreach (int color in filteredColors)
         {
-            filteredColorsToScore[color] = colorsToScore.GetValueOrDefault(color);
+            filteredColorsToScore[color] = colorsToScore[color];
         }
 
         // Ensure the list of colors returned is sorted such that the first in the
@@ -119,7 +119,7 @@ public static class Scorer
 
             foreach (int alreadyChosenColor in colorsByScoreDescending)
             {
-                Cam16 alreadyChosenCam = colorsToCam.GetValueOrDefault(alreadyChosenColor);
+                Cam16 alreadyChosenCam = colorsToCam[alreadyChosenColor];
                 if (MathUtils.DifferenceDegrees(cam.Hue, alreadyChosenCam.Hue) < 15)
                 {
                     duplicateHue = true;
