@@ -8,19 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets\1_wallpaper.webp" />
-    <None Remove="Assets\2_wallpaper.webp" />
-    <None Remove="Assets\3_wallpaper.webp" />
-    <None Remove="Assets\4_wallpaper.webp" />
-    <None Remove="Assets\5_wallpaper.webp" />
+    <None Remove="Resources\wallpaper.webp" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Assets\1_wallpaper.webp" />
-    <EmbeddedResource Include="Assets\2_wallpaper.webp" />
-    <EmbeddedResource Include="Assets\3_wallpaper.webp" />
-    <EmbeddedResource Include="Assets\4_wallpaper.webp" />
-    <EmbeddedResource Include="Assets\5_wallpaper.webp">
+    <EmbeddedResource Include="Resources\wallpaper.webp">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
