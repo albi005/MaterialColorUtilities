@@ -1,17 +1,29 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-	<LangVersion>10</LangVersion>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>disable</Nullable>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>0.0.5</Version>
-    <Description>.NET library for generating Material Color Palettes from an image or a color</Description>
-    <PackageProjectUrl>https://github.com/albi005/MaterialColorUtilities</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/albi005/MaterialColorUtilities</RepositoryUrl>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Authors>albi05</Authors>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<LangVersion>10</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Version>0.0.6</Version>
+		<Description>C# implementation of the Material Design Color Utilities. Can be used to extract a color from an image and then generate a Material Design 3 color scheme from it.</Description>
+		<PackageProjectUrl>https://github.com/albi005/MaterialColorUtilities</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/albi005/MaterialColorUtilities</RepositoryUrl>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<Authors>albi05</Authors>
+
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
 </Project>
