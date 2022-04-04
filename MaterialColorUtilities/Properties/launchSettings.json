@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SourceGenerators": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\MaterialColorUtilities.Console\\MaterialColorUtilities.Console.csproj"
+    }
+  }
+}

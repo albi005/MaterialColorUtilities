@@ -4,7 +4,10 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
+
+	<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+	<CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)Generated</CompilerGeneratedFilesOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,7 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MaterialColorUtilities\MaterialColorUtilities.csproj" />
+    <ProjectReference Include="..\MaterialColorUtilities\MaterialColorUtilities.csproj"
+					  OutputItemType="Analyzer"
+					  ReferenceOutputAssembly="true"/>
   </ItemGroup>
 
 </Project>

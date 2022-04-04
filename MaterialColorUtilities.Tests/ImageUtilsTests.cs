@@ -16,7 +16,7 @@ namespace MaterialColorUtilities.Tests
         public void ColorfulImage()
         {
             int[] image = Resources.LoadImage("sandy-desert.webp");
-            int resultColor = ImageUtils.ColorFromImage(image);
+            int resultColor = ImageUtils.ColorsFromImage(image)[0];
             Assert.AreNotEqual(Scorer.Default, resultColor);
         }
 
@@ -28,7 +28,7 @@ namespace MaterialColorUtilities.Tests
         public void BoringImage()
         {
             int[] image = Resources.LoadImage("black-rectangle-on-white-background.jpg");
-            int resultColor = ImageUtils.ColorFromImage(image);
+            int resultColor = ImageUtils.ColorsFromImage(image)[0];
             Assert.AreEqual(Scorer.Default, resultColor);
         }
     }

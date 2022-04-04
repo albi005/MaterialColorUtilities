@@ -29,4 +29,41 @@ public class Scheme<TColor>
     public TColor InverseSurface { get; set; }
     public TColor InverseOnSurface { get; set; }
     public TColor InversePrimary { get; set; }
+
+    public Scheme<TResult> ConvertTo<TResult>(Func<TColor, TResult> convert)
+    {
+        return ConvertTo(convert, new());
+    }
+
+    public Scheme<TResult> ConvertTo<TResult>(Func<TColor, TResult> convert, Scheme<TResult> result)
+    {
+        result.Primary = convert(Primary);
+        result.OnPrimary = convert(OnPrimary);
+        result.PrimaryContainer = convert(PrimaryContainer);
+        result.OnPrimaryContainer = convert(OnPrimaryContainer);
+        result.Secondary = convert(Secondary);
+        result.OnSecondary = convert(OnSecondary);
+        result.SecondaryContainer = convert(SecondaryContainer);
+        result.OnSecondaryContainer = convert(OnSecondaryContainer);
+        result.Tertiary = convert(Tertiary);
+        result.OnTertiary = convert(OnTertiary);
+        result.TertiaryContainer = convert(TertiaryContainer);
+        result.OnTertiaryContainer = convert(OnTertiaryContainer);
+        result.Error = convert(Error);
+        result.OnError = convert(OnError);
+        result.ErrorContainer = convert(ErrorContainer);
+        result.OnErrorContainer = convert(OnErrorContainer);
+        result.Background = convert(Background);
+        result.OnBackground = convert(OnBackground);
+        result.Surface = convert(Surface);
+        result.OnSurface = convert(OnSurface);
+        result.SurfaceVariant = convert(SurfaceVariant);
+        result.OnSurfaceVariant = convert(OnSurfaceVariant);
+        result.Outline = convert(Outline);
+        result.Shadow = convert(Shadow);
+        result.InverseSurface = convert(InverseSurface);
+        result.InverseOnSurface = convert(InverseOnSurface);
+        result.InversePrimary = convert(InversePrimary);
+        return result;
+    }
 }
