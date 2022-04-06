@@ -7,69 +7,63 @@ using System.Text;
 namespace MaterialColorUtilities.Schemes;
 
 [Generator]
-internal class SchemeConverterGenerator : ISourceGenerator
-{
+internal class SchemeConverterGenerator : IIncrementalGenerator
+{ 
     const string SchemeDisplayString = "MaterialColorUtilities.Schemes.Scheme<TColor>";
 
-    static readonly DiagnosticDescriptor NestedDescriptor = new(
-        "MC0001",
-        "Nested Scheme subclasses won't have converter methods generated",
-        "Scheme subclass '{0}' won't have converter methods generated as it is nested inside another class",
-        "",
-        DiagnosticSeverity.Warning,
-        true);
-
-    static readonly DiagnosticDescriptor NonPartialDescriptor = new(
-        "MC0002",
-        "Non-partial Scheme subclasses won't have converter methods generated",
-        "Scheme subclass '{0}' won't have converter methods generated as it is not marked partial",
-        "",
-        DiagnosticSeverity.Warning,
-        true);
-
-    public void Initialize(GeneratorInitializationContext context)
+    public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
+        var resultSourceFile = context.SyntaxProvider.CreateSyntaxProvider(
+            (syntaxNode, _) => syntaxNode is ClassDeclarationSyntax cds
+            && cds.BaseList != null
+            && cds.TypeParameterList != null
+            && cds.Parent is not ClassDeclarationSyntax
+            && cds.Modifiers.Any(SyntaxKind.PartialKeyword),
+            CreateSourceFile);
+
+        context.RegisterSourceOutput(resultSourceFile, static (SourceProductionContext context, (string Hint, SourceText Text) source) =>
+        {
+            if (source.Hint == null) return;
+            context.AddSource(source.Hint, source.Text);
+        });
     }
 
-    public void Execute(GeneratorExecutionContext context)
+    public (string Hint, SourceText Source) CreateSourceFile(GeneratorSyntaxContext context, CancellationToken cancellationToken)
     {
-        SyntaxReceiver syntaxReceiver = (SyntaxReceiver)context.SyntaxReceiver;
-        foreach (ClassDeclarationSyntax classDeclarationSyntax in syntaxReceiver.Candidates)
+        ClassDeclarationSyntax classDeclarationSyntax = (ClassDeclarationSyntax)context.Node;
+        SemanticModel semanticModel = context.SemanticModel;
+        INamedTypeSymbol classSymbol = semanticModel.GetDeclaredSymbol(classDeclarationSyntax);
+
+        if (!IsScheme(classSymbol)) return (null, null);
+
+        StringBuilder builder = new();
+        builder.AppendLine("using System;");
+        builder.AppendLine();
+
+        bool isGlobalNamespace = classSymbol.ContainingNamespace.IsGlobalNamespace;
+        if (!isGlobalNamespace)
         {
-            SemanticModel semanticModel = context.Compilation.GetSemanticModel(classDeclarationSyntax.SyntaxTree);
-            INamedTypeSymbol classSymbol = semanticModel.GetDeclaredSymbol(classDeclarationSyntax);
-            
-            if (!IsScheme(classSymbol)) return;
-
-            if (IsNested(classSymbol))
-            {
-                context.ReportDiagnostic(Diagnostic.Create(
-                    NestedDescriptor,
-                    classDeclarationSyntax.GetLocation(),
-                    $"{classDeclarationSyntax.Identifier}{classDeclarationSyntax.TypeParameterList}"));
-                break;
-            }
-            
-            if (!IsPartial(classDeclarationSyntax))
-            {
-                context.ReportDiagnostic(Diagnostic.Create(
-                    NonPartialDescriptor,
-                    classDeclarationSyntax.GetLocation(),
-                    $"{classDeclarationSyntax.Identifier}{classDeclarationSyntax.TypeParameterList}"));
-                break;
-            }
-                
-            StringBuilder builder = new();
-            builder.AppendLine("using System;");
-            builder.AppendLine();
-            AddNamespace(builder, classSymbol, classDeclarationSyntax);
-
-            SourceText sourceText = SyntaxFactory.ParseCompilationUnit(builder.ToString())
-                .NormalizeWhitespace()
-                .GetText(Encoding.UTF8);
-            context.AddSource($"{classDeclarationSyntax.Identifier}.g.cs", sourceText);            
+            builder.AppendLine($"namespace {classSymbol.ContainingNamespace.ToDisplayString()}");
+            builder.AppendLine("{");
         }
+
+        AddClass(builder, classSymbol, classDeclarationSyntax);
+
+        if (!isGlobalNamespace)
+            builder.AppendLine("}");
+
+        SourceText sourceText = SyntaxFactory.ParseCompilationUnit(builder.ToString())
+            .NormalizeWhitespace()
+            .GetText(Encoding.UTF8);
+
+        string hint = "";
+        if (!isGlobalNamespace) hint += $"{classSymbol.ContainingNamespace}.";
+        hint += classDeclarationSyntax.Identifier.ToString();
+        int typeParameterCount = classDeclarationSyntax.TypeParameterList.Parameters.Count;
+        if (typeParameterCount > 1) hint += $"`{typeParameterCount}";
+        hint += ".ConvertTo.g.cs";
+
+        return (hint, sourceText);
     }
 
     bool IsScheme(INamedTypeSymbol symbol)
@@ -81,31 +75,6 @@ internal class SchemeConverterGenerator : ISourceGenerator
         return IsScheme(symbol.BaseType);
     }
 
-    bool IsNested(INamedTypeSymbol symbol)
-    {
-        return symbol.ContainingType != null;
-    }
-
-    bool IsPartial(ClassDeclarationSyntax classDeclarationSyntax)
-    {
-        return classDeclarationSyntax.Modifiers.Any(SyntaxKind.PartialKeyword);
-    }
-
-    void AddNamespace(StringBuilder builder, INamedTypeSymbol classSymbol, ClassDeclarationSyntax classDeclarationSyntax)
-    {
-        bool isGlobalNamespace = classSymbol.ContainingNamespace.IsGlobalNamespace;
-        if (!isGlobalNamespace)
-        {
-            builder.AppendLine($"namespace {classSymbol.ContainingNamespace.ToDisplayString()}");
-            builder.AppendLine("{");
-        }
-        
-        AddClass(builder, classSymbol, classDeclarationSyntax);
-
-        if (!isGlobalNamespace)
-            builder.AppendLine("}");
-    }
-
     // "SCHEME" is replaced with the implementer's name
     // "TCOLOR" is defined by the implementer
     // public SCHEME<TResult> ConvertTo<TResult>(Func<TCOLOR, TResult> convert)
@@ -113,14 +82,17 @@ internal class SchemeConverterGenerator : ISourceGenerator
     void AddClass(StringBuilder builder, INamedTypeSymbol symbol, ClassDeclarationSyntax declaration)
     {
         string tColor = GetTColor(symbol);
+        string resultIdentifierAndTypeParameters = $"{declaration.Identifier}{declaration.TypeParameterList.ToString().Replace(tColor, "TResult")}";
         builder.AppendLine($"{declaration.Modifiers} class {declaration.Identifier}{declaration.TypeParameterList}");
         builder.AppendLine("{");
-        builder.AppendLine($"public new {declaration.Identifier}<TResult> ConvertTo<TResult>(Func<{tColor}, TResult> convert)");
+        builder.AppendLine("/// <summary>Converts the Scheme into a new one with a different color type</summary>");
+        builder.AppendLine($"public new {resultIdentifierAndTypeParameters} ConvertTo<TResult>(Func<{tColor}, TResult> convert)");
         builder.AppendLine("{");
-        builder.AppendLine($"return ConvertTo<TResult>(convert, new {declaration.Identifier}<TResult>());");
+        builder.AppendLine($"return ConvertTo<TResult>(convert, new {resultIdentifierAndTypeParameters}());");
         builder.AppendLine("}");
         builder.AppendLine();
-        builder.AppendLine($"public {declaration.Identifier}<TResult> ConvertTo<TResult>(Func<{tColor}, TResult> convert, {declaration.Identifier}<TResult> result)");
+        builder.AppendLine("/// <summary>Maps the Scheme's colors onto an existing Scheme object with a different color type</summary>");
+        builder.AppendLine($"public {resultIdentifierAndTypeParameters} ConvertTo<TResult>(Func<{tColor}, TResult> convert, {resultIdentifierAndTypeParameters} result)");
         builder.AppendLine("{");
         builder.AppendLine("base.ConvertTo(convert, result);");
         foreach (var member in symbol.GetMembers())
@@ -145,19 +117,5 @@ internal class SchemeConverterGenerator : ISourceGenerator
         if (symbol.OriginalDefinition.ToDisplayString() == SchemeDisplayString)
             return symbol.TypeArguments[0].ToDisplayString();
         return GetTColor(symbol.BaseType);
-    }
-}
-
-class SyntaxReceiver : ISyntaxReceiver
-{
-    public List<ClassDeclarationSyntax> Candidates { get; } = new();
-
-    public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
-    {
-        if (syntaxNode is ClassDeclarationSyntax cds
-            && cds.BaseList != null)
-        {
-            Candidates.Add(cds);
-        }
     }
 }
