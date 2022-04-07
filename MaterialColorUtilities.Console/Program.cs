@@ -21,7 +21,7 @@ int seedColor = ImageUtils.ColorsFromImage(pixels).First();
 Console.WriteLine($"Seed: {StringUtils.HexFromArgb(seedColor)}");
 
 // CorePalette gives you access to every tone of the key colors
-CorePalette corePalette = CorePalette.Of(seedColor);
+CorePalette corePalette = new(seedColor);
 
 // Map the core palette to color schemes
 // A Scheme contains the named colors, like Primary or OnTertiaryContainer
@@ -43,10 +43,9 @@ ConsoleHelper.PrintProperties("Dark scheme", darkSchemeString);
 
 // 4. Use your new colors (this is should be at the end, but you can't add top-level statements after type declarations)
 MyCorePalette myCorePalette = new(seedColor);
-MyScheme<string, int> myDarkScheme = new MyDarkSchemeMapper()
+MyScheme<string> myDarkScheme = new MyDarkSchemeMapper()
     .Map(myCorePalette)
     .ConvertTo(StringUtils.HexFromArgb);
-string orangeContainer = myDarkScheme.OrangeContainer;
 ConsoleHelper.PrintProperties("My dark scheme", myDarkScheme);
 
 // 1. Define a new key color if you need by subclassing CorePalette
@@ -56,6 +55,7 @@ public class MyCorePalette : CorePalette
     
     public MyCorePalette(int seed) : base(seed)
     {
+        // You can harmonize a color to make it closer to the seed color
         int harmonizedOrange = Blender.Harmonize(unchecked(0xFFA500), seed);
         Orange = TonalPalette.FromInt(harmonizedOrange);
     }
@@ -64,7 +64,7 @@ public class MyCorePalette : CorePalette
 // 2. Subclass Scheme
 // The source generator will add new converter methods on build.
 // Make sure to mark it partial.
-public partial class MyScheme<TColor1, T> : Scheme<TColor1>
+public partial class MyScheme<TColor1> : Scheme<TColor1>
 {
     public TColor1 Orange { get; set; }
     public TColor1 OnOrange { get; set; }
@@ -73,21 +73,24 @@ public partial class MyScheme<TColor1, T> : Scheme<TColor1>
 }
 
 // 3. Create mappers
-public class MyLightSchemeMapper : LightSchemeMapper<MyCorePalette, MyScheme<int, int>>
+public class MyLightSchemeMapper : LightSchemeMapper<MyCorePalette, MyScheme<int>>
 {
-    protected override void MapCore(MyCorePalette palette, MyScheme<int, int> scheme)
+    protected override void MapCore(MyCorePalette palette, MyScheme<int> scheme)
     {
         base.MapCore(palette, scheme);
         scheme.Orange = palette.Orange[40];
         scheme.OnOrange = palette.Orange[100];
         scheme.OrangeContainer = palette.Orange[90];
         scheme.OnOrangeContainer = palette.Orange[10];
+
+        // You can also override already mapped colors
+        scheme.Surface = palette.Neutral[100];
     }
 }
 
-public class MyDarkSchemeMapper : DarkSchemeMapper<MyCorePalette, MyScheme<int, int>>
+public class MyDarkSchemeMapper : DarkSchemeMapper<MyCorePalette, MyScheme<int>>
 {
-    protected override void MapCore(MyCorePalette palette, MyScheme<int, int> scheme)
+    protected override void MapCore(MyCorePalette palette, MyScheme<int> scheme)
     {
         base.MapCore(palette, scheme);
         scheme.Orange = palette.Orange[80];
