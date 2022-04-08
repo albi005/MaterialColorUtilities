@@ -13,6 +13,12 @@ namespace MaterialColorUtilities.Schemes
         const string SchemeDisplayString = "MaterialColorUtilities.Schemes.Scheme<TColor>";
 
         record struct ClassContext(ClassDeclarationSyntax Syntax, INamedTypeSymbol Symbol);
+        class ClassContextNameOnlyComparer : IEqualityComparer<ClassContext>
+        {
+            public bool Equals(ClassContext x, ClassContext y) => x.Symbol.ToDisplayString() == y.Symbol.ToDisplayString();
+            public int GetHashCode(ClassContext obj) => obj.Symbol.ToDisplayString().GetHashCode();
+            public static ClassContextNameOnlyComparer Default { get; } = new ClassContextNameOnlyComparer();
+        }
         record struct SourceCreationContext(
             string Identifier,
             string Modifiers,
@@ -56,8 +62,12 @@ namespace MaterialColorUtilities.Schemes
 
             IncrementalValuesProvider<ClassContext> schemes = classes.Where(c => IsScheme(c.Symbol));
 
+            IncrementalValuesProvider<ClassContext> schemesWithoutDuplicates = schemes
+                .Collect()
+                .SelectMany(static (schemes, _) => schemes.Distinct(ClassContextNameOnlyComparer.Default));
+
             // Collect necessary information about the Scheme
-            IncrementalValuesProvider<SourceCreationContext> sourceCreationContexts = schemes
+            IncrementalValuesProvider<SourceCreationContext> sourceCreationContexts = schemesWithoutDuplicates
                 .Select(static (context, _) =>
                 {
                     string tColor = GetTColor(context.Symbol);
@@ -132,6 +142,9 @@ namespace MaterialColorUtilities.Schemes
 
             context.RegisterSourceOutput(results, static (SourceProductionContext generator, Result result) =>
             {
+#if DEBUG
+                result.SourceText = $"// Generated at: {DateTime.Now}\n" + result.SourceText;
+#endif
                 generator.AddSource(result.Hint, result.SourceText);
             });
         }

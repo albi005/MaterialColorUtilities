@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace MaterialColorUtilities.Tests;
 
 [TestClass]
-public class SyntaxTests
+public class GeneratorSyntaxTests
 {
     [TestMethod]
     // Has type parameters, but no TColor
@@ -16,14 +16,31 @@ public class SyntaxTests
     }
 }
 
+
+// TColor has a different name
+public partial class MyScheme<T> : Scheme<T>
+{
+}
+
+// Spread across multiple declarations
+// > Only generate one
+public partial class MyScheme2<T> : MyScheme<T>
+{
+    public T Color1 { get; set; }
+}
+public partial class MyScheme2<T> : MyScheme<T>
+{
+    public T Color2 { get; set; }
+}
+
+// Default TColor
+// > Don't generate
+public partial class MyScheme2 : MyScheme2<int>
+{
+}
+
+// Has type parameters, but none of them change TColor
+// > Don't generate
 public partial class SchemeWithTypeParametersButWithoutTColor<T> : Scheme<int>
-{
-}
-
-public partial class SchemeWithDifferentTColor<T> : Scheme<T>
-{
-}
-
-public partial class SchemeWithDifferentTColor2<T> : SchemeWithDifferentTColor<T>
 {
 }
