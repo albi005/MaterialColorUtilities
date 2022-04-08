@@ -1,6 +1,7 @@
+
 # Material Color Utilities for .NET
 
-This is a C# implementation of Google's [Material Color Utilities](https://github.com/material-foundation/material-color-utilities), that can be used to extract a color from an image and then generate a Material Design 3 color scheme.
+This is a C# implementation of Google's [Material Color Utilities](https://github.com/material-foundation/material-color-utilities), that can be used to extract a color from an image and then generate a Material Design 3 color scheme. Also includes helpers for working with schemes.
 
 ## Install
 
@@ -13,54 +14,109 @@ Generate a seed color from an image (e.g. the user's wallpaper):
 
 ```csharp
 // Load the image into an int[].
-// Here, the image is stored in an embedded resource, and then decoded and resized using SkiaSharp.
-// You might have to implement this part, according to your needs.
-string imageResourceId = "MaterialColorUtilities.Samples.Assets.5_wallpaper.webp";
-using Stream resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(imageResourceId)!;
+// The image is stored in an embedded resource, and then decoded and resized using SkiaSharp.
+string imageResourceId = "MaterialColorUtilities.Console.Resources.wallpaper.webp";
+using Stream resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(imageResourceId);
 SKBitmap bitmap = SKBitmap.Decode(resourceStream).Resize(new SKImageInfo(112, 112), SKFilterQuality.Medium);
 int[] pixels = bitmap.Pixels.Select(p => (int)(uint)p).ToArray();
 
 // This is where the magic happens
-int seedColor = ImageUtils.ColorFromImage(pixels);
+int seedColor = ImageUtils.ColorsFromImage(pixels).First();
 ```
 
-Use that color to create a `CorePalette` that can be used to create any tone of any key color:
+Use that color to create a `CorePalette` that can be used to create any tone (0-100) of any key color:
 
 ```csharp
-CorePalette corePalette = CorePalette.Of(seedColor);
-int color = corePalette.Secondary[55];
+CorePalette corePalette = new(seedColor);
+int color = corePalette.Secondary[69];
 ```
 
-Map the `CorePalette` to any 
-[Material Design 3 named color](https://m3.material.io/styles/color/the-color-system/tokens)
-using `Scheme`
+A *scheme* contains the [Material Design 3 named colors](https://m3.material.io/styles/color/the-color-system/tokens), like OnPrimary, Background, or TertiaryContainer. Turn the `CorePalette` into a `Scheme<int>` using a mapper:
 
 ```csharp
-Scheme<int> scheme = new LightScheme(corePalette);
-int tertiary = scheme.Tertiary;
+Scheme<int> lightScheme = new LightSchemeMapper().Map(corePalette);
+Scheme<int> darkScheme = new DarkSchemeMapper().Map(corePalette);
 ```
 
-A `Scheme` is generic so you can use any color type.
-Convert using an extension method:
+Then convert your scheme to one with a different color type:
 
 ```csharp
-Scheme<Drawing.Color> dcScheme = scheme.Convert(Drawing.Color.FromArgb);
+Scheme<Color> lightSchemeColor = lightScheme.ConvertTo(Color.FromArgb);
+Scheme<string> lightSchemeString = lightScheme.ConvertTo(x => "#" + x.ToString("X")[2..]);
 ```
 
+## Extension
+### Adding your own colors
 
-`LightScheme` and `DarkScheme` use the 
-[default Material Design 3 mapping of tokens](https://m3.material.io/styles/color/the-color-system/tokens#7fd4440e-986d-443f-8b3a-4933bff16646).
-This can be changed by overriding them:
+1. Define a new *key color* if you need by subclassing `CorePalette`:
 
 ```csharp
-public class MyScheme : LightScheme
+public class MyCorePalette : CorePalette
 {
-    public MyScheme(CorePalette corePalette) : base(corePalette) { }
-
-    protected override int BackgroundLight => Palette.Primary[98];
-    protected override int SurfaceLight => Palette.Neutral[100];
-    protected override int SurfaceDark => Palette.Neutral[20];
+    public TonalPalette Orange { get; set; }
+    
+    public MyCorePalette(int seed) : base(seed)
+    {
+        // You can harmonize a color to make it closer to the seed color
+        int harmonizedOrange = Blender.Harmonize(unchecked(0xFFA500), seed);
+        Orange = TonalPalette.FromInt(harmonizedOrange);
+    }
 }
 ```
 
-For more info check out the source code and the examples.
+2. Subclass `Scheme<TColor>`
+
+> The source generator will add new converter methods automatically.
+> Make sure to mark the class `partial` and don't nest it inside another class.
+
+```csharp
+public partial class MyScheme<TColor> : Scheme<TColor>
+{
+    public TColor Orange { get; set; }
+    public TColor OnOrange { get; set; }
+    public TColor OrangeContainer { get; set; }
+    public TColor OnOrangeContainer { get; set; }
+}
+```
+
+3. Create mappers
+
+```csharp
+public class MyLightSchemeMapper : LightSchemeMapper<MyCorePalette, MyScheme<int>>
+{
+    protected override void MapCore(MyCorePalette palette, MyScheme<int> scheme)
+    {
+        base.MapCore(palette, scheme);
+        scheme.Orange = palette.Orange[40];
+        scheme.OnOrange = palette.Orange[100];
+        scheme.OrangeContainer = palette.Orange[90];
+        scheme.OnOrangeContainer = palette.Orange[10];
+
+        // You can also override already mapped colors
+        scheme.Surface = palette.Neutral[100];
+    }
+}
+
+public class MyDarkSchemeMapper : DarkSchemeMapper<MyCorePalette, MyScheme<int>>
+{
+    protected override void MapCore(MyCorePalette palette, MyScheme<int> scheme)
+    {
+        base.MapCore(palette, scheme);
+        scheme.Orange = palette.Orange[80];
+        scheme.OnOrange = palette.Orange[20];
+        scheme.OrangeContainer = palette.Orange[30];
+        scheme.OnOrangeContainer = palette.Orange[90];
+    }
+}
+```
+
+4. Profit!
+
+```csharp
+MyCorePalette myCorePalette = new(seedColor);
+MyScheme<string> myDarkScheme = new MyDarkSchemeMapper()
+    .Map(myCorePalette)
+    .ConvertTo(StringUtils.HexFromArgb);
+```
+
+For more info check out the source code and the example projects.
