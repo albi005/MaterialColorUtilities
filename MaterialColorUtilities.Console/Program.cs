@@ -29,7 +29,7 @@ Scheme<int> lightScheme = new LightSchemeMapper().Map(corePalette);
 Scheme<int> darkScheme = new DarkSchemeMapper().Map(corePalette);
 
 // Easily convert between Schemes with different color types
-Scheme<Color> schemeColor = lightScheme.ConvertTo(Color.FromArgb);
+Scheme<Color> lightSchemeColor = lightScheme.ConvertTo(Color.FromArgb);
 
 Scheme<string> lightSchemeString = lightScheme.ConvertTo(x => "#" + x.ToString("X")[2..]);
 ConsoleHelper.PrintProperties("Light scheme", lightSchemeString);
@@ -64,12 +64,12 @@ public class MyCorePalette : CorePalette
 // 2. Subclass Scheme
 // The source generator will add new converter methods on build.
 // Make sure to mark it partial.
-public partial class MyScheme<TColor1> : Scheme<TColor1>
+public partial class MyScheme<TColor> : Scheme<TColor>
 {
-    public TColor1 Orange { get; set; }
-    public TColor1 OnOrange { get; set; }
-    public TColor1 OrangeContainer { get; set; }
-    public TColor1 OnOrangeContainer { get; set; }
+    public TColor Orange { get; set; }
+    public TColor OnOrange { get; set; }
+    public TColor OrangeContainer { get; set; }
+    public TColor OnOrangeContainer { get; set; }
 }
 
 // 3. Create mappers
