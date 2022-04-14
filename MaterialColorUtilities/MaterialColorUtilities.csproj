@@ -7,7 +7,7 @@
 		<Nullable>disable</Nullable>
 
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<Version>0.0.6</Version>
+		<Version>0.0.7</Version>
 		<Description>C# implementation of the Material Design Color Utilities. Can be used to extract a color from an image and then generate a Material Design 3 color scheme from it.</Description>
 		<PackageProjectUrl>https://github.com/albi005/MaterialColorUtilities</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/albi005/MaterialColorUtilities</RepositoryUrl>
@@ -17,13 +17,23 @@
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+		<IsRoslynComponent>true</IsRoslynComponent>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
-			<PrivateAssets>all</PrivateAssets>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.1.0" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3" PrivateAssets="all" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 	</ItemGroup>
 
 </Project>

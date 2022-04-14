@@ -20,11 +20,11 @@ public class CorePalette
      *
      * @param argb ARGB representation of a color
      */
-    public static CorePalette Of(int argb) => new(argb);
+    public static CorePalette Of(int seed) => new(seed);
 
-    private CorePalette(int argb)
+    public CorePalette(int seed)
     {
-        Hct hct = Hct.FromInt(argb);
+        Hct hct = Hct.FromInt(seed);
         float hue = hct.Hue;
         Primary = TonalPalette.FromHueAndChroma(hue, Math.Max(48f, hct.Chroma));
         Secondary = TonalPalette.FromHueAndChroma(hue, 16f);
