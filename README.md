@@ -66,8 +66,13 @@ public class MyCorePalette : CorePalette
 
 2. Subclass `Scheme<TColor>`
 
-> The source generator will add new converter methods automatically.
+> 🤖 A source generator will add new converter methods automatically.
+> 
 > Make sure to mark the class `partial` and don't nest it inside another class.
+> 
+> If you get warning `CS8032: An instance of analyzer MaterialColorUtilities.Schemes.SchemeConverterGenerator cannot be created from...`
+> your IDE/compiler doesn't have Rosyln 4.0, so the source generator won't work.
+> Make sure you are using Visual Studio 2022+ (as it has MSBuild 17) or .NET SDK 6+.
 
 ```csharp
 public partial class MyScheme<TColor> : Scheme<TColor>
