@@ -5,34 +5,34 @@ namespace MaterialColorUtilities.ColorAppearance;
 
 public class Hct
 {
-    private float hue;
-    private float chroma;
-    private float tone;
+    private double hue;
+    private double chroma;
+    private double tone;
 
-    public static Hct From(float hue, float chroma, float tone) => new(hue, chroma, tone);
+    public static Hct From(double hue, double chroma, double tone) => new(hue, chroma, tone);
 
     public static Hct FromInt(int argb)
     {
         Cam16 cam = Cam16.FromInt(argb);
-        return new(cam.Hue, cam.Chroma, (float)ColorUtils.LStarFromArgb(argb));
+        return new(cam.Hue, cam.Chroma, ColorUtils.LStarFromArgb(argb));
     }
 
-    public Hct(float hue, float chroma, float tone)
+    public Hct(double hue, double chroma, double tone)
     {
         SetInternalState(GamutMap(hue, chroma, tone));
     }
 
-    public float Hue
+    public double Hue
     {
         get => hue; 
-        set => SetInternalState(GamutMap((float)MathUtils.SanitizeDegreesDouble(value), chroma, tone));
+        set => SetInternalState(GamutMap(MathUtils.SanitizeDegreesDouble(value), chroma, tone));
     }
-    public float Chroma
+    public double Chroma
     {
         get => chroma;
         set => SetInternalState(GamutMap(hue, value, tone));
     }
-    public float Tone
+    public double Tone
     {
         get => tone;
         set => SetInternalState(GamutMap(hue, chroma, value));
@@ -43,7 +43,7 @@ public class Hct
     private void SetInternalState(int argb)
     {
         Cam16 cam = Cam16.FromInt(argb);
-        float tone = (float)ColorUtils.LStarFromArgb(argb);
+        double tone = ColorUtils.LStarFromArgb(argb);
         hue = cam.Hue;
         chroma = cam.Chroma;
         this.tone = tone;
@@ -53,26 +53,26 @@ public class Hct
      * When the delta between the floor & ceiling of a binary search for maximum chroma at a hue and
      * tone is less than this, the binary search terminates.
      */
-    private const float CHROMA_SEARCH_ENDPOINT = 0.4f;
+    private const double CHROMA_SEARCH_ENDPOINT = 0.4;
 
     /** The maximum color distance, in CAM16-UCS, between a requested color and the color returned. */
-    private const float DE_MAX = 1.0f;
+    private const double DE_MAX = 1.0;
 
     /** The maximum difference between the requested L* and the L* returned. */
-    private const float DL_MAX = 0.2f;
+    private const double DL_MAX = 0.2;
 
     /**
      * The minimum color distance, in CAM16-UCS, between a requested color and an 'exact' match. This
      * allows the binary search during gamut mapping to terminate much earlier when the error is
      * infinitesimal.
      */
-    private const float DE_MAX_ERROR = 0.000000001f;
+    private const double DE_MAX_ERROR = 0.000000001;
 
     /**
      * When the delta between the floor & ceiling of a binary search for J, lightness in CAM16, is
      * less than this, the binary search terminates.
      */
-    private const float LIGHTNESS_SEARCH_ENDPOINT = 0.01f;
+    private const double LIGHTNESS_SEARCH_ENDPOINT = 0.01;
 
     /**
      * @param hue a number, in degrees, representing ex. red, orange, yellow, etc. Ranges from 0 <=
@@ -83,7 +83,7 @@ public class Hct
      * @param tone Lightness. Ranges from 0 to 100.
      * @return ARGB representation of a color in default viewing conditions
      */
-    private static int GamutMap(float hue, float chroma, float tone)
+    private static int GamutMap(double hue, double chroma, double tone)
     {
         return GamutMapInViewingConditions(hue, chroma, tone, ViewingConditions.Default);
     }
@@ -95,7 +95,7 @@ public class Hct
      * @param viewingConditions Information about the environment where the color was observed.
      */
     private static int GamutMapInViewingConditions(
-        float hue, float chroma, float tone, ViewingConditions viewingConditions)
+        double hue, double chroma, double tone, ViewingConditions viewingConditions)
     {
 
         if (chroma < 1.0 || Math.Round(tone) <= 0.0 || Math.Round(tone) >= 100.0)
@@ -103,11 +103,11 @@ public class Hct
             return ColorUtils.ArgbFromLstar(tone);
         }
 
-        hue = (float)MathUtils.SanitizeDegreesDouble(hue);
+        hue = MathUtils.SanitizeDegreesDouble(hue);
 
-        float high = chroma;
-        float mid = chroma;
-        float low = 0.0f;
+        double high = chroma;
+        double mid = chroma;
+        double low = 0.0;
         bool isFirstLoop = true;
 
         Cam16 answer = null;
@@ -124,7 +124,7 @@ public class Hct
                 else
                 {
                     isFirstLoop = false;
-                    mid = low + (high - low) / 2.0f;
+                    mid = low + (high - low) / 2.0;
                     continue;
                 }
             }
@@ -139,7 +139,7 @@ public class Hct
                 low = mid;
             }
 
-            mid = low + (high - low) / 2.0f;
+            mid = low + (high - low) / 2.0;
         }
 
         if (answer == null)
@@ -156,13 +156,13 @@ public class Hct
      * @param tone L*a*b* lightness
      * @return CAM16 instance within error tolerance of the provided dimensions, or null.
      */
-    private static Cam16 FindCamByJ(float hue, float chroma, float tone)
+    private static Cam16 FindCamByJ(double hue, double chroma, double tone)
     {
-        float low = 0.0f;
-        float high = 100.0f;
-        float mid;
-        float bestdL = 1000.0f;
-        float bestdE = 1000.0f;
+        double low = 0.0;
+        double high = 100.0;
+        double mid;
+        double bestdL = 1000.0;
+        double bestdE = 1000.0;
 
         Cam16 bestCam = null;
         while (Math.Abs(low - high) > LIGHTNESS_SEARCH_ENDPOINT)
@@ -170,13 +170,13 @@ public class Hct
             mid = low + (high - low) / 2;
             Cam16 camBeforeClip = Cam16.FromJch(mid, chroma, hue);
             int clipped = camBeforeClip.GetInt();
-            float clippedLstar = (float)ColorUtils.LStarFromArgb(clipped);
-            float dL = Math.Abs(tone - clippedLstar);
+            double clippedLstar = ColorUtils.LStarFromArgb(clipped);
+            double dL = Math.Abs(tone - clippedLstar);
 
             if (dL < DL_MAX)
             {
                 Cam16 camClipped = Cam16.FromInt(clipped);
-                float dE =
+                double dE =
                     camClipped.Distance(Cam16.FromJch(camClipped.J, camClipped.Chroma, hue));
                 if (dE <= DE_MAX && dE <= bestdE)
                 {

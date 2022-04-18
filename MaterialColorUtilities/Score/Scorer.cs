@@ -12,13 +12,13 @@ public static class Scorer
      * <p>Enables use of a high cluster count for image quantization, thus ensuring colors aren't
      * muddied, while curating the high cluster count to a much smaller number of appropriate choices.
      */
-    private const float CUTOFF_CHROMA = 15f;
-    private const float CUTOFF_EXCITED_PROPORTION = 0.01f;
-    private const float CUTOFF_TONE = 10f;
-    private const float TARGET_CHROMA = 48f;
-    private const float WEIGHT_PROPORTION = 0.7f;
-    private const float WEIGHT_CHROMA_ABOVE = 0.3f;
-    private const float WEIGHT_CHROMA_BELOW = 0.1f;
+    private const double CUTOFF_CHROMA = 15;
+    private const double CUTOFF_EXCITED_PROPORTION = 0.01;
+    private const double CUTOFF_TONE = 10;
+    private const double TARGET_CHROMA = 48;
+    private const double WEIGHT_PROPORTION = 0.7;
+    private const double WEIGHT_CHROMA_ABOVE = 0.3;
+    private const double WEIGHT_CHROMA_BELOW = 0.1;
 
     public const int Default = unchecked((int)0xff4285F4);
 
@@ -36,7 +36,7 @@ public static class Scorer
     public static List<int> Score(Dictionary<int, int> colorsToPopulation)
     {
         // Determine the total count of all colors.
-        float populationSum = 0f;
+        double populationSum = 0;
         foreach (var entry in colorsToPopulation)
         {
             populationSum += entry.Value;
@@ -46,12 +46,12 @@ public static class Scorer
         // count. Also, fill a cache of CAM16 colors representing each color, and
         // record the proportion of colors for each CAM16 hue.
         Dictionary<int, Cam16> colorsToCam = new();
-        float[] hueProportions = new float[361];
+        double[] hueProportions = new double[361];
         foreach (var entry in colorsToPopulation)
         {
             int color = entry.Key;
-            float population = entry.Value;
-            float proportion = population / populationSum;
+            double population = entry.Value;
+            double proportion = population / populationSum;
 
             Cam16 cam = Cam16.FromInt(color);
             colorsToCam[color] = cam;
@@ -62,14 +62,14 @@ public static class Scorer
 
         // Determine the proportion of the colors around each color, by summing the
         // proportions around each color's hue.
-        Dictionary<int, float> colorsToExcitedProportion = new();
+        Dictionary<int, double> colorsToExcitedProportion = new();
         foreach (var entry in colorsToCam)
         {
             int color = entry.Key;
             Cam16 cam = entry.Value;
             int hue = (int)Math.Round(cam.Hue);
 
-            float excitedProportion = 0f;
+            double excitedProportion = 0;
             for (int j = (hue - 15); j < (hue + 15); j++)
             {
                 int neighborHue = MathUtils.SanitizeDegreesInt(j);
@@ -80,27 +80,27 @@ public static class Scorer
         }
 
         // Score the colors by their proportion, as well as how chromatic they are.
-        Dictionary<int, float> colorsToScore = new();
+        Dictionary<int, double> colorsToScore = new();
         foreach (var entry in colorsToCam)
         {
             int color = entry.Key;
             Cam16 cam = entry.Value;
 
-            float proportion = colorsToExcitedProportion[color];
-            float proportionScore = proportion * 100.0f * WEIGHT_PROPORTION;
+            double proportion = colorsToExcitedProportion[color];
+            double proportionScore = proportion * 100.0 * WEIGHT_PROPORTION;
 
-            float chromaWeight =
+            double chromaWeight =
                 cam.Chroma < TARGET_CHROMA ? WEIGHT_CHROMA_BELOW : WEIGHT_CHROMA_ABOVE;
-            float chromaScore = (cam.Chroma - TARGET_CHROMA) * chromaWeight;
+            double chromaScore = (cam.Chroma - TARGET_CHROMA) * chromaWeight;
 
-            float score = proportionScore + chromaScore;
+            double score = proportionScore + chromaScore;
             colorsToScore[color] = score;
         }
 
         // Remove colors that are unsuitable, ex. very dark or unchromatic colors.
         // Also, remove colors that are very similar in hue.
         List<int> filteredColors = Filter(colorsToExcitedProportion, colorsToCam);
-        Dictionary<int, float> filteredColorsToScore = new();
+        Dictionary<int, double> filteredColorsToScore = new();
         foreach (int color in filteredColors)
         {
             filteredColorsToScore[color] = colorsToScore[color];
@@ -108,7 +108,7 @@ public static class Scorer
 
         // Ensure the list of colors returned is sorted such that the first in the
         // list is the most suitable, and the last is the least suitable.
-        List<KeyValuePair<int, float>> entryList = new(filteredColorsToScore);
+        List<KeyValuePair<int, double>> entryList = new(filteredColorsToScore);
         entryList.Sort((a, b) => b.Value.CompareTo(a.Value));
         List<int> colorsByScoreDescending = new();
         foreach (var entry in entryList)
@@ -143,14 +143,14 @@ public static class Scorer
     }
 
     private static List<int> Filter(
-        Dictionary<int, float> colorsToExcitedProportion, Dictionary<int, Cam16> colorsToCam)
+        Dictionary<int, double> colorsToExcitedProportion, Dictionary<int, Cam16> colorsToCam)
     {
         List<int> filtered = new();
         foreach (var entry in colorsToCam)
         {
             int color = entry.Key;
             Cam16 cam = entry.Value;
-            float proportion = colorsToExcitedProportion[color];
+            double proportion = colorsToExcitedProportion[color];
 
             if (cam.Chroma >= CUTOFF_CHROMA
                 && ColorUtils.LStarFromArgb(color) >= CUTOFF_TONE

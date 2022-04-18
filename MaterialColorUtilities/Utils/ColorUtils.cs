@@ -4,16 +4,16 @@ public static class ColorUtils
 {
     static readonly double[][] SrgbToXyz =
     {
-        new double[] { 0.41233895, 0.35762064, 0.18051042 },
-        new double[] { 0.2126, 0.7152, 0.0722 },
-        new double[] { 0.01932141, 0.11916382, 0.95034478 }
+        new[] { 0.41233895, 0.35762064, 0.18051042 },
+        new[] { 0.2126, 0.7152, 0.0722 },
+        new[] { 0.01932141, 0.11916382, 0.95034478 }
     };
 
     static readonly double[][] XyzToSrgb =
     {
-        new double[] { 3.2413774792388685, -1.5376652402851851, -0.49885366846268053 },
-        new double[] { -0.9691452513005321, 1.8758853451067872, 0.04156585616912061 },
-        new double[] { 0.05562093689691305, -0.20395524564742123, 1.0571799111220335 }
+        new[] { 3.2413774792388685, -1.5376652402851851, -0.49885366846268053 },
+        new[] { -0.9691452513005321, 1.8758853451067872, 0.04156585616912061 },
+        new[] { 0.05562093689691305, -0.20395524564742123, 1.0571799111220335 }
     };
 
     public static double[] WhitePointD65 { get; } = { 95.047, 100, 108.883 };
@@ -114,8 +114,8 @@ public static class ColorUtils
 
     public static int IntFromLStar(double lStar)
     {
-        double fy = (double)(lStar + 16) / 116;
-        double kappa = (double)24389 / 27;
+        double fy = (lStar + 16) / 116;
+        double kappa = 24389 / 27;
         bool cubeExceedEpsilon = fy * fy * fy > 216D / 24389;
         var xyz = new double[]
         {

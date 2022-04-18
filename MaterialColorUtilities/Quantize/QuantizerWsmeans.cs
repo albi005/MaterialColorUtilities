@@ -41,7 +41,7 @@ public class QuantizerWsmeans
         int[] inputPixels, int[] startingClusters, int maxColors)
     {
         Dictionary<int, int> pixelToCount = new();
-        float[][] points = new float[inputPixels.Length][];
+        double[][] points = new double[inputPixels.Length][];
         int[] pixels = new int[inputPixels.Length];
         IPointProvider pointProvider = new PointProviderLab();
 
@@ -77,7 +77,7 @@ public class QuantizerWsmeans
             clusterCount = Math.Min(clusterCount, startingClusters.Length);
         }
 
-        float[][] clusters = new float[clusterCount][];
+        double[][] clusters = new double[clusterCount][];
         int clustersCreated = 0;
         for (int i = 0; i < startingClusters.Length; i++)
         {
@@ -122,7 +122,7 @@ public class QuantizerWsmeans
             {
                 for (int j = i + 1; j < clusterCount; j++)
                 {
-                    float distance = pointProvider.Distance(clusters[i], clusters[j]);
+                    double distance = pointProvider.Distance(clusters[i], clusters[j]);
                     distanceToIndexMatrix[j][i].Distance1 = distance;
                     distanceToIndexMatrix[j][i].Index = i;
                     distanceToIndexMatrix[i][j].Distance1 = distance;
@@ -138,12 +138,12 @@ public class QuantizerWsmeans
             int pointsMoved = 0;
             for (int i = 0; i < pointCount; i++)
             {
-                float[] point = points[i];
+                double[] point = points[i];
                 int previousClusterIndex = clusterIndices[i];
-                float[] previousCluster = clusters[previousClusterIndex];
-                float previousDistance = pointProvider.Distance(point, previousCluster);
+                double[] previousCluster = clusters[previousClusterIndex];
+                double previousDistance = pointProvider.Distance(point, previousCluster);
 
-                float minimumDistance = previousDistance;
+                double minimumDistance = previousDistance;
                 int newClusterIndex = -1;
                 for (int j = 0; j < clusterCount; j++)
                 {
@@ -151,7 +151,7 @@ public class QuantizerWsmeans
                     {
                         continue;
                     }
-                    float distance = pointProvider.Distance(point, clusters[j]);
+                    double distance = pointProvider.Distance(point, clusters[j]);
                     if (distance < minimumDistance)
                     {
                         minimumDistance = distance;
@@ -160,8 +160,8 @@ public class QuantizerWsmeans
                 }
                 if (newClusterIndex != -1)
                 {
-                    float distanceChange =
-                        (float)Math.Abs(Math.Sqrt(minimumDistance) - Math.Sqrt(previousDistance));
+                    double distanceChange =
+                        Math.Abs(Math.Sqrt(minimumDistance) - Math.Sqrt(previousDistance));
                     if (distanceChange > MIN_MOVEMENT_DISTANCE)
                     {
                         pointsMoved++;
@@ -175,14 +175,14 @@ public class QuantizerWsmeans
                 break;
             }
 
-            float[] componentASums = new float[clusterCount];
-            float[] componentBSums = new float[clusterCount];
-            float[] componentCSums = new float[clusterCount];
+            double[] componentASums = new double[clusterCount];
+            double[] componentBSums = new double[clusterCount];
+            double[] componentCSums = new double[clusterCount];
             for (int i = 0; i < pixelCountSums.Length; i++) pixelCountSums[i] = 0;
             for (int i = 0; i < pointCount; i++)
             {
                 int clusterIndex = clusterIndices[i];
-                float[] point = points[i];
+                double[] point = points[i];
                 int count = counts[i];
                 pixelCountSums[clusterIndex] += count;
                 componentASums[clusterIndex] += (point[0] * count);
@@ -195,12 +195,12 @@ public class QuantizerWsmeans
                 int count = pixelCountSums[i];
                 if (count == 0)
                 {
-                    clusters[i] = new float[] { 0f, 0f, 0f };
+                    clusters[i] = new double[] { 0, 0, 0 };
                     continue;
                 }
-                float a = componentASums[i] / count;
-                float b = componentBSums[i] / count;
-                float c = componentCSums[i] / count;
+                double a = componentASums[i] / count;
+                double b = componentBSums[i] / count;
+                double c = componentCSums[i] / count;
                 clusters[i][0] = a;
                 clusters[i][1] = b;
                 clusters[i][2] = c;

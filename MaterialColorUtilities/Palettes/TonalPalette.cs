@@ -5,8 +5,8 @@ namespace MaterialColorUtilities.Palettes;
 public class TonalPalette
 {
     private readonly Dictionary<int, int> cache = new();
-    private readonly float hue;
-    private readonly float chroma;
+    private readonly double hue;
+    private readonly double chroma;
 
     /**
      * Create tones using the HCT hue and chroma from a color.
@@ -27,9 +27,9 @@ public class TonalPalette
      * @param chroma HCT chroma
      * @return Tones matching hue and chroma.
      */
-    public static TonalPalette FromHueAndChroma(float hue, float chroma) => new(hue, chroma);
+    public static TonalPalette FromHueAndChroma(double hue, double chroma) => new(hue, chroma);
 
-    private TonalPalette(float hue, float chroma)
+    private TonalPalette(double hue, double chroma)
     {
         this.hue = hue;
         this.chroma = chroma;
