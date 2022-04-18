@@ -25,12 +25,12 @@ public class CorePalette
     public CorePalette(int seed)
     {
         Hct hct = Hct.FromInt(seed);
-        float hue = hct.Hue;
-        Primary = TonalPalette.FromHueAndChroma(hue, Math.Max(48f, hct.Chroma));
-        Secondary = TonalPalette.FromHueAndChroma(hue, 16f);
-        Tertiary = TonalPalette.FromHueAndChroma(hue + 60f, 24f);
-        Neutral = TonalPalette.FromHueAndChroma(hue, 4f);
-        NeutralVariant = TonalPalette.FromHueAndChroma(hue, 8f);
-        Error = TonalPalette.FromHueAndChroma(25, 84f);
+        double hue = hct.Hue;
+        Primary = TonalPalette.FromHueAndChroma(hue, Math.Max(48, hct.Chroma));
+        Secondary = TonalPalette.FromHueAndChroma(hue, 16);
+        Tertiary = TonalPalette.FromHueAndChroma(hue + 60, 24);
+        Neutral = TonalPalette.FromHueAndChroma(hue, 4);
+        NeutralVariant = TonalPalette.FromHueAndChroma(hue, 8);
+        Error = TonalPalette.FromHueAndChroma(25, 84);
     }
 }
