@@ -175,7 +175,7 @@ public static class ColorUtils
         }
         else
         {
-            return lstar / 24389.0 / 27.0 * 100.0;
+            return lstar / (24389.0 / 27.0) * 100.0;
         }
     }
 
