@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MaterialColorUtilities.Utils;
+﻿namespace MaterialColorUtilities.Utils;
 
 public static class ColorUtils
 {
@@ -62,10 +60,13 @@ public static class ColorUtils
 
     public static int ArgbFromXyz(double x, double y, double z)
     {
-        double[] linearRgb = MathUtils.MatrixMultiply(new double[] { x, y, z }, XyzToSrgb());
-        int r = Delinearized(linearRgb[0]);
-        int g = Delinearized(linearRgb[1]);
-        int b = Delinearized(linearRgb[2]);
+        double[][] matrix = XyzToSrgb();
+        double linearR = matrix[0][0] * x + matrix[0][1] * y + matrix[0][2] * z;
+        double linearG = matrix[1][0] * x + matrix[1][1] * y + matrix[1][2] * z;
+        double linearB = matrix[2][0] * x + matrix[2][1] * y + matrix[2][2] * z;
+        int r = Delinearized(linearR);
+        int g = Delinearized(linearG);
+        int b = Delinearized(linearB);
         return ArgbFromRgb(r, g, b);
     }
 
@@ -149,11 +150,17 @@ public static class ColorUtils
 
     public static double[] LabFromArgb(int argb)
     {
+        double linearR = Linearized(RedFromArgb(argb));
+        double linearG = Linearized(GreenFromArgb(argb));
+        double linearB = Linearized(BlueFromArgb(argb));
+        double[][] matrix = SrgbToXyz();
+        double x = matrix[0][0] * linearR + matrix[0][1] * linearG + matrix[0][2] * linearB;
+        double y = matrix[1][0] * linearR + matrix[1][1] * linearG + matrix[1][2] * linearB;
+        double z = matrix[2][0] * linearR + matrix[2][1] * linearG + matrix[2][2] * linearB;
         double[] whitePoint = WhitePointD65;
-        double[] xyz = XyzFromArgb(argb);
-        double xNormalized = xyz[0] / whitePoint[0];
-        double yNormalized = xyz[1] / whitePoint[1];
-        double zNormalized = xyz[2] / whitePoint[2];
+        double xNormalized = x / whitePoint[0];
+        double yNormalized = y / whitePoint[1];
+        double zNormalized = z / whitePoint[2];
         double fx = LabF(xNormalized);
         double fy = LabF(yNormalized);
         double fz = LabF(zNormalized);
