@@ -20,16 +20,9 @@ public class MathUtils
     public static int ClampInt(int min, int max, int input)
     {
         if (input < min)
-        {
             return min;
-        }
-        else
-        {
-            if (input > max)
-            {
-                return max;
-            }
-        }
+        if (input > max)
+            return max;
         return input;
     }
 
@@ -41,16 +34,9 @@ public class MathUtils
     public static double ClampDouble(double min, double max, double input)
     {
         if (input < min)
-        {
             return min;
-        }
-        else
-        {
-            if (input > max)
-            {
-                return max;
-            }
-        }
+        if (input > max)
+            return max;
         return input;
     }
 
