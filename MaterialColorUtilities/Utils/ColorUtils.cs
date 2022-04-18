@@ -2,6 +2,22 @@
 
 public static class ColorUtils
 {
+    static readonly double[][] SrgbToXyz =
+    {
+        new double[] { 0.41233895, 0.35762064, 0.18051042 },
+        new double[] { 0.2126, 0.7152, 0.0722 },
+        new double[] { 0.01932141, 0.11916382, 0.95034478 }
+    };
+
+    static readonly double[][] XyzToSrgb =
+    {
+        new double[] { 3.2406, -1.5372, -0.4986 },
+        new double[] { -0.9689, 1.8758, 0.0415 },
+        new double[] { 0.0557, -0.204, 1.057 }
+    };
+
+    public static double[] WhitePointD65 { get; } = { 95.047, 100, 108.883 };
+
     /** Converts a color from RGB components to ARGB format. */
     public static int ArgbFromRgb(int red, int green, int blue)
     {
@@ -38,29 +54,9 @@ public static class ColorUtils
         return AlphaFromArgb(argb) >= 255;
     }
 
-    /** Returns the sRGB to XYZ transformation matrix. */
-    public static double[][] SrgbToXyz()
-    {
-        return new double[][] {
-              new double[] {0.41233895, 0.35762064, 0.18051042},
-              new double[] {0.2126, 0.7152, 0.0722},
-              new double[] {0.01932141, 0.11916382, 0.95034478},
-        };
-    }
-
-    /** Returns the XYZ to sRGB transformation matrix. */
-    public static double[][] XyzToSrgb()
-    {
-        return new double[][] {
-              new double[] {3.2406, -1.5372, -0.4986},
-              new double[] {-0.9689, 1.8758, 0.0415},
-              new double[] {0.0557, -0.204, 1.057},
-        };
-    }
-
     public static int ArgbFromXyz(double x, double y, double z)
     {
-        double[][] matrix = XyzToSrgb();
+        double[][] matrix = XyzToSrgb;
         double linearR = matrix[0][0] * x + matrix[0][1] * y + matrix[0][2] * z;
         double linearG = matrix[1][0] * x + matrix[1][1] * y + matrix[1][2] * z;
         double linearB = matrix[2][0] * x + matrix[2][1] * y + matrix[2][2] * z;
@@ -76,7 +72,7 @@ public static class ColorUtils
         double r = Linearized(RedFromArgb(argb));
         double g = Linearized(GreenFromArgb(argb));
         double b = Linearized(BlueFromArgb(argb));
-        return MathUtils.MatrixMultiply(new double[] { r, g, b }, SrgbToXyz());
+        return MathUtils.MatrixMultiply(new double[] { r, g, b }, SrgbToXyz);
     }
 
     public static int ArgbFromLstar(double lstar)
@@ -153,7 +149,7 @@ public static class ColorUtils
         double linearR = Linearized(RedFromArgb(argb));
         double linearG = Linearized(GreenFromArgb(argb));
         double linearB = Linearized(BlueFromArgb(argb));
-        double[][] matrix = SrgbToXyz();
+        double[][] matrix = SrgbToXyz;
         double x = matrix[0][0] * linearR + matrix[0][1] * linearG + matrix[0][2] * linearB;
         double y = matrix[1][0] * linearR + matrix[1][1] * linearG + matrix[1][2] * linearB;
         double z = matrix[2][0] * linearR + matrix[2][1] * linearG + matrix[2][2] * linearB;
@@ -210,8 +206,6 @@ public static class ColorUtils
         }
         return MathUtils.ClampInt(0, 255, (int)Math.Round(delinearized * 255.0));
     }
-
-    public static double[] WhitePointD65 { get; } = new double[] { 95.047, 100, 108.883 };
 
     public static double LabF(double t)
     {
