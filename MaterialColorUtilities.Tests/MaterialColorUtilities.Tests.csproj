@@ -1,39 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6</TargetFramework>
-    <Nullable>disable</Nullable>
+	<PropertyGroup>
+		<TargetFramework>net6</TargetFramework>
+		<Nullable>disable</Nullable>
 
-    <IsPackable>false</IsPackable>
+		<IsPackable>false</IsPackable>
 
-    <PlatformTarget>AnyCPU</PlatformTarget>
+		<PlatformTarget>AnyCPU</PlatformTarget>
 
-    <OutputType>Library</OutputType>
+		<OutputType>Library</OutputType>
 
-    <StartupObject></StartupObject>
-  </PropertyGroup>
+		<StartupObject></StartupObject>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Resources\black-rectangle-on-white-background.jpg" />
-    <None Remove="Resources\sandy-desert.webp" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="Resources\black-rectangle-on-white-background.jpg" />
+		<None Remove="Resources\sandy-desert.webp" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\black-rectangle-on-white-background.jpg" />
-    <EmbeddedResource Include="Resources\sandy-desert.webp" />
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\black-rectangle-on-white-background.jpg" />
+		<EmbeddedResource Include="Resources\sandy-desert.webp" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.2.7" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.2.7" />
-    <PackageReference Include="coverlet.collector" Version="3.1.0" />
-    <PackageReference Include="SkiaSharp" Version="2.80.3" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+		<PackageReference Include="MSTest.TestAdapter" Version="2.2.7" />
+		<PackageReference Include="MSTest.TestFramework" Version="2.2.7" />
+		<PackageReference Include="coverlet.collector" Version="3.1.0" />
+		<PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.80.3" />
+		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.80.3" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\MaterialColorUtilities\MaterialColorUtilities.csproj"
-					  OutputItemType="Analyzer" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\MaterialColorUtilities\MaterialColorUtilities.csproj"
+						  OutputItemType="Analyzer" />
+	</ItemGroup>
 
 </Project>
