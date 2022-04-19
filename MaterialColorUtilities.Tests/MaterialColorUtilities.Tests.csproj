@@ -33,8 +33,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\MaterialColorUtilities\MaterialColorUtilities.csproj"
-						  OutputItemType="Analyzer" />
+		<ProjectReference Include="..\MaterialColorUtilities\MaterialColorUtilities.csproj" OutputItemType="Analyzer" />
 	</ItemGroup>
 
 </Project>
