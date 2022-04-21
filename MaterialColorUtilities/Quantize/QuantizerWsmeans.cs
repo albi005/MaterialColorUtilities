@@ -12,12 +12,12 @@
  */
 public class QuantizerWsmeans
 {
-    private class Distance : IComparable<Distance>
+    private class DistanceAndIndex : IComparable<DistanceAndIndex>
     {
         public int Index { get; set; } = -1;
-        public double Distance1 { get; set; } = -1; //TODO: Rename to Value
+        public double Distance { get; set; } = -1;
 
-        public int CompareTo(Distance other) => Distance1.CompareTo(other.Distance1);
+        public int CompareTo(DistanceAndIndex other) => Distance.CompareTo(other.Distance);
     }
 
     private const int MAX_ITERATIONS = 10;
@@ -41,11 +41,11 @@ public class QuantizerWsmeans
         int[] inputPixels, int[] startingClusters, int maxColors)
     {
         Dictionary<int, int> pixelToCount = new();
-        double[][] points = new double[inputPixels.Length][];
-        int[] pixels = new int[inputPixels.Length];
+        List<double[]> points = new(); // Point index to Lab representation.
+        List<int> pixels = new(); // Point index to RGB representation.
         IPointProvider pointProvider = new PointProviderLab();
 
-        int pointCount = 0;
+        int pointCount = 0; // The number of unique colors found in inputPixels.
         for (int i = 0; i < inputPixels.Length; i++)
         {
             int inputPixel = inputPixels[i];
@@ -55,15 +55,19 @@ public class QuantizerWsmeans
             }
             else
             {
-                points[pointCount] = pointProvider.FromInt(inputPixel);
-                pixels[pointCount] = inputPixel;
+                // A new unique color has been found.
+                // Calculate its LAB representation and cache it.
+                points.Add(pointProvider.FromInt(inputPixel));
+                // Store the ARGB value at the same index.
+                // The index will be the number of unique colors found before this color.
+                pixels.Add(inputPixel);
                 pointCount++;
 
                 pixelToCount[inputPixel] = 1;
             }
         }
 
-        int[] counts = new int[pointCount];
+        int[] counts = new int[pointCount]; // Point index to how many times it occures in inputPixels.
         for (int i = 0; i < pointCount; i++)
         {
             int pixel = pixels[i];
@@ -71,70 +75,86 @@ public class QuantizerWsmeans
             counts[i] = count;
         }
 
-        int clusterCount = Math.Min(maxColors, pointCount);
-        if (startingClusters.Length != 0)
+        int clusterCount = Math.Min(maxColors, pointCount); // The number of clusters to create.
+        if (startingClusters.Length != 0) // If starting clusters have been specified, use those.
         {
             clusterCount = Math.Min(clusterCount, startingClusters.Length);
         }
 
-        double[][] clusters = new double[clusterCount][];
+        double[][] clusters = new double[clusterCount][]; // A cluster is a point in Lab space. Every color will be grouped/assigned to one.
         int clustersCreated = 0;
+        // Create clusters from startingClusters.
         for (int i = 0; i < startingClusters.Length; i++)
         {
             clusters[i] = pointProvider.FromInt(startingClusters[i]);
             clustersCreated++;
         }
 
+        // If startingClusters is empty...
+        // ...in Dart choose randomly from the input colors.
+        // ...in TypeScript create random Lab points.
+        // ...in Java do nothing, which will cause an exception later.
+        // This can happen when the inputs are not a result of Wu quantization.
         int additionalClustersNeeded = clusterCount - clustersCreated;
         if (additionalClustersNeeded > 0)
         {
-            for (int i = 0; i < additionalClustersNeeded; i++) { }
-        }
-
-        Random random = new();
-
-        int[] clusterIndices = new int[pointCount];
-        for (int i = 0; i < pointCount; i++)
-        {
-            clusterIndices[i] = (int)Math.Floor(random.NextDouble() * clusterCount);
-        }
-
-        int[][] indexMatrix = new int[clusterCount][];
-        for (int i = 0; i < clusterCount; i++)
-        {
-            indexMatrix[i] = new int[clusterCount];
-        }
-
-        Distance[][] distanceToIndexMatrix = new Distance[clusterCount][];
-        for (int i = 0; i < clusterCount; i++)
-        {
-            distanceToIndexMatrix[i] = new Distance[clusterCount];
-            for (int j = 0; j < clusterCount; j++)
+            Random random = new();
+            List<int> usedIndices = new(additionalClustersNeeded);
+            for (int i = 0; i < additionalClustersNeeded; i++)
             {
-                distanceToIndexMatrix[i][j] = new Distance();
+                int index = random.Next(points.Count);
+                while (usedIndices.Contains(index))
+                {
+                    index = random.Next(points.Count);
+                }
+
+                usedIndices.Add(index);
+                clusters[clustersCreated + i] = points[index];
             }
         }
 
-        int[] pixelCountSums = new int[clusterCount];
+        // Assign every point to a random cluster
+        int[] clusterIndices = new int[pointCount]; // Point index to containing cluster's index
+        for (int i = 0; i < pointCount; i++)
+        {
+            // This is enough as clusters are already randomly ordered.
+            clusterIndices[i] = i % clusterCount;
+        }
+
+        // Initialize distanceToIndexMatrix, which will store the distance between clusters
+        DistanceAndIndex[][] distanceToIndexMatrix = new DistanceAndIndex[clusterCount][];
+        for (int i = 0; i < clusterCount; i++)
+        {
+            distanceToIndexMatrix[i] = new DistanceAndIndex[clusterCount];
+            for (int j = 0; j < clusterCount; j++)
+            {
+                distanceToIndexMatrix[i][j] = new DistanceAndIndex();
+            }
+        }
+
+        // Start iterating
+        int[] pixelCountSums = new int[clusterCount]; // The number of pixels per cluster
         for (int iteration = 0; iteration < MAX_ITERATIONS; iteration++)
         {
+            // For every cluster...
             for (int i = 0; i < clusterCount; i++)
             {
+                // ...cache the distance to every other cluster.
                 for (int j = i + 1; j < clusterCount; j++)
                 {
                     double distance = pointProvider.Distance(clusters[i], clusters[j]);
-                    distanceToIndexMatrix[j][i].Distance1 = distance;
+                    distanceToIndexMatrix[j][i].Distance = distance;
                     distanceToIndexMatrix[j][i].Index = i;
-                    distanceToIndexMatrix[i][j].Distance1 = distance;
+                    distanceToIndexMatrix[i][j].Distance = distance;
                     distanceToIndexMatrix[i][j].Index = j;
                 }
+
+                // Sort the distances to the other clusters.
+                // This way, distanceToIndexMatrix[i][0] will be the closest cluster's index (a color ID) and distance.
                 Array.Sort(distanceToIndexMatrix[i]);
-                for (int j = 0; j < clusterCount; j++)
-                {
-                    indexMatrix[i][j] = distanceToIndexMatrix[i][j].Index;
-                }
             }
 
+            // Assign every point to the closest cluster
             int pointsMoved = 0;
             for (int i = 0; i < pointCount; i++)
             {
@@ -145,9 +165,17 @@ public class QuantizerWsmeans
 
                 double minimumDistance = previousDistance;
                 int newClusterIndex = -1;
+                // Find the cluster closest to the point
                 for (int j = 0; j < clusterCount; j++)
                 {
-                    if (distanceToIndexMatrix[previousClusterIndex][j].Distance1 >= 4 * previousDistance)
+                    // Let A be the point for which we need the closest cluster,
+                    // let B be previous cluster the point was assigned to and
+                    // let C be the current cluster in the enumeration.
+                    // If BC >= 2AB, then AC can't be < AB (triangle inequality rule).
+
+                    // 4 is used here instead of 2,
+                    // as pointProvider returns the square of the actual distance to save time.
+                    if (distanceToIndexMatrix[previousClusterIndex][j].Distance >= 4 * previousDistance)
                     {
                         continue;
                     }
@@ -165,6 +193,7 @@ public class QuantizerWsmeans
                     if (distanceChange > MIN_MOVEMENT_DISTANCE)
                     {
                         pointsMoved++;
+                        // Set the point's cluster to the closest one we found
                         clusterIndices[i] = newClusterIndex;
                     }
                 }
@@ -175,21 +204,24 @@ public class QuantizerWsmeans
                 break;
             }
 
+            // For every cluster, individually sum the LAB components...
             double[] componentASums = new double[clusterCount];
             double[] componentBSums = new double[clusterCount];
             double[] componentCSums = new double[clusterCount];
-            for (int i = 0; i < pixelCountSums.Length; i++) pixelCountSums[i] = 0;
+            for (int i = 0; i < pixelCountSums.Length; i++)
+                pixelCountSums[i] = 0;
             for (int i = 0; i < pointCount; i++)
             {
                 int clusterIndex = clusterIndices[i];
                 double[] point = points[i];
                 int count = counts[i];
                 pixelCountSums[clusterIndex] += count;
-                componentASums[clusterIndex] += (point[0] * count);
-                componentBSums[clusterIndex] += (point[1] * count);
-                componentCSums[clusterIndex] += (point[2] * count);
+                componentASums[clusterIndex] += point[0] * count;
+                componentBSums[clusterIndex] += point[1] * count;
+                componentCSums[clusterIndex] += point[2] * count;
             }
 
+            // ...then set the cluster's position to the average position.
             for (int i = 0; i < clusterCount; i++)
             {
                 int count = pixelCountSums[i];
