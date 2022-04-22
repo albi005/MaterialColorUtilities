@@ -70,7 +70,7 @@ public static class Scorer
             int hue = (int)Math.Round(cam.Hue);
 
             double excitedProportion = 0;
-            for (int j = (hue - 15); j < (hue + 15); j++)
+            for (int j = hue - 15; j < (hue + 15); j++)
             {
                 int neighborHue = MathUtils.SanitizeDegreesInt(j);
                 excitedProportion += hueProportions[neighborHue];
