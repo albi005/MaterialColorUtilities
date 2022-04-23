@@ -36,7 +36,7 @@ public static class Scorer
     private const double WEIGHT_CHROMA_ABOVE = 0.3;
     private const double WEIGHT_CHROMA_BELOW = 0.1;
 
-    public const int GoogleBlue = unchecked((int)0xff4285F4);
+    public const int Default = unchecked((int)0xff4285F4); // Google Blue
 
     /// <summary>
     /// Given a map with keys of colors and values of how often the color appears, rank the colors
@@ -156,7 +156,7 @@ public static class Scorer
         // Ensure that at least one color is returned.
         if (!colorsByScoreDescending.Any())
         {
-            colorsByScoreDescending.Add(GoogleBlue);
+            colorsByScoreDescending.Add(Default);
         }
         return colorsByScoreDescending;
     }

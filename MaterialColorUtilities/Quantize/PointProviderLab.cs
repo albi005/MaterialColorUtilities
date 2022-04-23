@@ -14,7 +14,6 @@
 // limitations under the License.
 
 using MaterialColorUtilities.Utils;
-using System.Collections.Generic;
 
 namespace MaterialColorUtilities.Quantize;
 
