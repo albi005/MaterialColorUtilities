@@ -1,5 +1,8 @@
 ﻿namespace MaterialColorUtilities.Schemes;
 
+/// <summary>
+/// Contains the names of the named colors as constants.
+/// </summary>
 public static class Keys
 {
     public const string Primary = "Primary";

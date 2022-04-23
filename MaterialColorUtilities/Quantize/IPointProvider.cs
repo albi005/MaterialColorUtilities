@@ -15,6 +15,9 @@
 
 namespace MaterialColorUtilities.Quantize;
 
+/// <summary>
+/// An interface to allow use of different color spaces by quantizers.
+/// </summary>
 public interface IPointProvider
 {
     public double[] FromInt(int argb);

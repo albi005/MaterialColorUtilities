@@ -15,16 +15,17 @@
 
 namespace MaterialColorUtilities.Quantize;
 
-/**
- * An image quantizer that improves on the speed of a standard K-Means algorithm by implementing
- * several optimizations, including deduping identical pixels and a triangle inequality rule that
- * reduces the number of comparisons needed to identify which cluster a point should be moved to.
- *
- * <p>Wsmeans stands for Weighted Square Means.
- *
- * <p>This algorithm was designed by M. Emre Celebi, and was found in their 2011 paper, Improving
- * the Performance of K-Means for Color Quantization. https://arxiv.org/abs/1101.0395
- */
+/// <summary>
+/// An image quantizer that improves on the speed of a standard K-Means algorithm by implementing
+/// several optimizations, including deduping identical pixels and a triangle inequality rule that
+/// reduces the number of comparisons needed to identify which cluster a point should be moved to.
+/// </summary>
+/// <remarks>
+/// Wsmeans stands for Weighted Square Means.<para/>
+/// This algorithm was designed by M. Emre Celebi, and was found in their 2011 paper,
+/// Improving the Performance of K-Means for Color Quantization.
+/// <see href="https://arxiv.org/abs/1101.0395"/>
+/// </remarks>
 public class QuantizerWsmeans
 {
     private class DistanceAndIndex : IComparable<DistanceAndIndex>
@@ -38,20 +39,24 @@ public class QuantizerWsmeans
     private const int MAX_ITERATIONS = 10;
     private const double MIN_MOVEMENT_DISTANCE = 3.0;
 
-    /**
-     * Reduce the number of colors needed to represented the input, minimizing the difference between
-     * the original image and the recolored image.
-     *
-     * @param inputPixels Colors in ARGB format.
-     * @param startingClusters Defines the initial state of the quantizer. Passing an empty array is
-     *     fine, the implementation will create its own initial state that leads to reproducible
-     *     results for the same inputs. Passing an array that is the result of Wu quantization leads
-     *     to higher quality results.
-     * @param maxColors The number of colors to divide the image into. A lower number of colors may be
-     *     returned.
-     * @return Map with keys of colors in ARGB format, values of how many of the input pixels belong
-     *     to the color.
-     */
+    /// <summary>
+    /// Reduce the number of colors needed to represented the input, minimizing the
+    /// difference between the original image and the recolored image.
+    /// </summary>
+    /// <param name="inputPixels">Colors in ARGB format.</param>
+    /// <param name="startingClusters">
+    /// Defines the initial state of the quantizer. Passing an empty
+    /// array is fine, the implementation will create its own initial state that leads to
+    /// reproducible results for the same inputs. Passing an array that is the result of Wu
+    /// quantization leads to higher quality results.
+    /// </param>
+    /// <param name="maxColors">
+    /// The number of colors to divide the image into. A lower number of colors may be returned.
+    /// </param>
+    /// <returns>
+    /// A dictionary with keys of colors in ARGB format, values of how many of the input pixels belong
+    /// to the color.
+    /// </returns>
     public static Dictionary<int, int> Quantize(
         int[] inputPixels, int[] startingClusters, int maxColors)
     {
@@ -113,6 +118,22 @@ public class QuantizerWsmeans
         int additionalClustersNeeded = clusterCount - clustersCreated;
         if (additionalClustersNeeded > 0)
         {
+            // Use existing points rather than generating random centroids.
+            //
+            // KMeans is extremely sensitive to initial clusters. This quantizer
+            // is meant to be used with a Wu quantizer that provides initial
+            // centroids, but Wu is very slow on unscaled images and when extracting
+            // more than 256 colors.
+            //
+            // Here, we can safely assume that more than 256 colors were requested
+            // for extraction. Generating random centroids tends to lead to many
+            // "empty" centroids, as the random centroids are nowhere near any pixels
+            // in the image, and the centroids from Wu are very refined and close
+            // to pixels in the image.
+            //
+            // Rather than generate random centroids, we'll pick centroids that
+            // are actual pixels in the image, and avoid duplicating centroids.
+
             Random random = new();
             List<int> usedIndices = new(additionalClustersNeeded);
             for (int i = 0; i < additionalClustersNeeded; i++)

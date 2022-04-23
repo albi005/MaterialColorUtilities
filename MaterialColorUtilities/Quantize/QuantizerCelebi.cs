@@ -15,17 +15,31 @@
 
 namespace MaterialColorUtilities.Quantize;
 
-/**
- * An image quantizer that improves on the quality of a standard K-Means algorithm by setting the
- * K-Means initial state to the output of a Wu quantizer, instead of random centroids. Improves on
- * speed by several optimizations, as implemented in Wsmeans, or Weighted Square Means, K-Means with
- * those optimizations.
- *
- * <p>This algorithm was designed by M. Emre Celebi, and was found in their 2011 paper, Improving
- * the Performance of K-Means for Color Quantization. https://arxiv.org/abs/1101.0395
- */
+/// <summary>
+/// An image quantizer that improves on the quality of a standard K-Means algorithm by setting the
+/// K-Means initial state to the output of a Wu quantizer, instead of random centroids. Improves on
+/// speed by several optimizations, as implemented in Wsmeans, or Weighted Square Means, K-Means with
+/// those optimizations.
+/// </summary>
+/// <remarks>
+/// This algorithm was designed by M. Emre Celebi, and was found in their 2011 paper, Improving
+/// the Performance of K-Means for Color Quantization. <see href="https://arxiv.org/abs/1101.0395"/>
+/// </remarks>
 public static class QuantizerCelebi
 {
+    /// <summary>
+    /// Reduce the number of colors needed to represent the input, minimizing the
+    /// difference between the original image and the recolored image.
+    /// </summary>
+    /// <param name="pixels">Colors in ARGB format.</param>
+    /// <param name="maxColors">
+    /// The number of colors to divide the image into. A lower number of colors may be
+    /// returned.
+    /// </param>
+    /// <returns>
+    /// A dictionary with keys of colors in ARGB format, and values of number of pixels in the
+    /// original image that correspond to the color in the quantized image.
+    /// </returns>
     public static Dictionary<int, int> Quantize(int[] pixels, int maxColors)
     {
         QuantizerResult wuResult = new QuantizerWu().Quantize(pixels, maxColors);

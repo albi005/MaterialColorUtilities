@@ -17,10 +17,25 @@ using MaterialColorUtilities.Utils;
 
 namespace MaterialColorUtilities.ColorAppearance;
 
+/// <summary>
+/// In traditional color spaces, a color can be identified solely by the observer's measurement of
+/// the color. Color appearance models such as CAM16 also use information about the environment
+/// where the color was observed, known as the viewing conditions.
+/// </summary>
+/// <remarks>
+/// For example, white under the traditional assumption of a midday sun white point is accurately
+/// measured as a slightly chromatic blue by CAM16. (roughly, hue 203, chroma 3, lightness 100)
+/// <para/>
+/// This class caches intermediate values of the CAM16 conversion process that depend only on
+/// viewing conditions, enabling speed ups.
+/// </remarks>
 public class ViewingConditions
 {
+    /// <summary>
+    /// sRGB-like viewing conditions.
+    /// </summary>
     public static ViewingConditions Default = Make(
-        new double[]
+        new[]
         {
              ColorUtils.WhitePointD65[0],
              ColorUtils.WhitePointD65[1],
@@ -97,6 +112,14 @@ public class ViewingConditions
         return new ViewingConditions(n, aw, nbb, ncb, c, nc, rgbD, fl, Math.Pow(fl, 0.25), z);
     }
 
+    /// <summary>
+    /// Parameters are intermediate values of the CAM16 conversion process.
+    /// Their names are shorthand for technical color science terminology,
+    /// this class would not benefit from documenting them individually.
+    /// A brief overview is available in the CAM16 specification,
+    /// and a complete overview requires a color science textbook,
+    /// osuch as Fairchild's Color Appearance Models.
+    /// </summary>
     public ViewingConditions(
         double n,
         double aw,

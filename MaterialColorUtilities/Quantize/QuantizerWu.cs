@@ -17,12 +17,13 @@ using MaterialColorUtilities.Utils;
 
 namespace MaterialColorUtilities.Quantize;
 
-/**
- * An image quantizer that divides the image's pixels into clusters by recursively cutting an RGB
- * cube, based on the weight of pixels in each area of the cube.
- *
- * <p>The algorithm was described by Xiaolin Wu in Graphic Gems II, published in 1991.
- */
+/// <summary>
+/// An image quantizer that divides the image's pixels into clusters by recursively cutting an RGB
+/// cube, based on the weight of pixels in each area of the cube.
+/// </summary>
+/// <remarks>
+/// The algorithm was described by Xiaolin Wu in Graphic Gems II, published in 1991.
+/// </remarks>
 public class QuantizerWu : IQuantizer
 {
     int[] weights;
