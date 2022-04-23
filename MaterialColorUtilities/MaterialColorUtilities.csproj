@@ -17,16 +17,19 @@
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
 
 		<!-- Pack the source generator to the right package folder -->
-		<None Include="..\MaterialColorUtilities.SourceGenerators\bin\$(Configuration)\netstandard2.0\MaterialColorUtilities.SourceGenerators.dll"
-			  PackagePath="analyzers\dotnet\roslyn4.0\cs"
-			  Pack="true"
-			  Visible="false" />
+		<None Include="..\MaterialColorUtilities.SourceGenerators\bin\$(Configuration)\netstandard2.0\MaterialColorUtilities.SourceGenerators.dll" PackagePath="analyzers\dotnet\roslyn4.0\cs" Pack="true" Visible="false" />
+		
+		<None Include="..\README.md">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
+		</None>
 	</ItemGroup>
 
 	<!-- Source generator project reference for packing -->
