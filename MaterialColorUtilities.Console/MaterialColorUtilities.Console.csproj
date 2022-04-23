@@ -27,9 +27,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\MaterialColorUtilities\MaterialColorUtilities.csproj"
+		<ProjectReference Include="..\MaterialColorUtilities.SourceGenerators\MaterialColorUtilities.SourceGenerators.csproj"
 						  OutputItemType="Analyzer"
-						  ReferenceOutputAssembly="true"/>
+						  ReferenceOutputAssembly="false"/>
+		<ProjectReference Include="..\MaterialColorUtilities\MaterialColorUtilities.csproj" />
 	</ItemGroup>
 
 </Project>

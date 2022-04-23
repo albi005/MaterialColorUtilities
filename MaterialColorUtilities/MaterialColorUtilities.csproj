@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
 		<LangVersion>10</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Version>0.1.0</Version>
 		<Description>C# implementation of the Material Design Color Utilities. Can be used to extract a color from an image and then generate a Material Design 3 color scheme from it.</Description>
 		<PackageProjectUrl>https://github.com/albi005/MaterialColorUtilities</PackageProjectUrl>
@@ -17,22 +17,26 @@
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-
-		<IsRoslynComponent>true</IsRoslynComponent>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all">
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
+
+		<!-- Pack the source generator to the right package folder -->
+		<None Include="..\MaterialColorUtilities.SourceGenerators\bin\$(Configuration)\netstandard2.0\MaterialColorUtilities.SourceGenerators.dll"
+			  PackagePath="analyzers\dotnet\roslyn4.0\cs"
+			  Pack="true"
+			  Visible="false" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.1.0" PrivateAssets="all" />
+	<!-- Source generator project reference for packing -->
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+		<ProjectReference Include="..\MaterialColorUtilities.SourceGenerators\MaterialColorUtilities.SourceGenerators.csproj" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-	</ItemGroup>
+	<!-- Enable trimming support on .NET 6 -->
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+		<IsTrimmable>true</IsTrimmable>
+	</PropertyGroup>
 
 </Project>

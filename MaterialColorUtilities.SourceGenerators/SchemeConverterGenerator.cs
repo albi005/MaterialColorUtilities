@@ -4,22 +4,24 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Text;
+using System.Text.RegularExpressions;
 
-namespace MaterialColorUtilities.Schemes
+namespace MaterialColorUtilities.SourceGenerators
 {
-    [Generator]
-    internal class SchemeConverterGenerator : IIncrementalGenerator
+    [Generator(LanguageNames.CSharp)]
+    public sealed class SchemeConverterGenerator : IIncrementalGenerator
     {
         const string SchemeDisplayString = "MaterialColorUtilities.Schemes.Scheme<TColor>";
 
-        record struct ClassContext(ClassDeclarationSyntax Syntax, INamedTypeSymbol Symbol);
-        class ClassContextNameOnlyComparer : IEqualityComparer<ClassContext>
+        public record struct ClassContext(ClassDeclarationSyntax Syntax, INamedTypeSymbol Symbol);
+        
+        public class ClassContextNameOnlyComparer : IEqualityComparer<ClassContext>
         {
             public bool Equals(ClassContext x, ClassContext y) => x.Symbol.ToDisplayString() == y.Symbol.ToDisplayString();
             public int GetHashCode(ClassContext obj) => obj.Symbol.ToDisplayString().GetHashCode();
             public static ClassContextNameOnlyComparer Default { get; } = new ClassContextNameOnlyComparer();
         }
-        record struct SourceCreationContext(
+        public record struct SourceCreationContext(
             string Identifier,
             string Modifiers,
             string Namespace,
@@ -34,7 +36,7 @@ namespace MaterialColorUtilities.Schemes
                 && NewColors.SequenceEqual(other.NewColors)
                 && TColor == other.TColor
                 && TypeParameters == other.TypeParameters;
-            public override int GetHashCode() => 
+            public override int GetHashCode() =>
                 Identifier.GetHashCode()
                 ^ Modifiers.GetHashCode()
                 ^ Namespace.GetHashCode()
@@ -42,7 +44,7 @@ namespace MaterialColorUtilities.Schemes
                 ^ TColor.GetHashCode()
                 ^ TypeParameters.GetHashCode();
         }
-        record struct Result(string Hint, string SourceText);
+        public record struct Result(string Hint, string SourceText);
 
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
@@ -92,7 +94,8 @@ namespace MaterialColorUtilities.Schemes
             IncrementalValuesProvider<Result> results = sourceCreationContexts.Select(static (context, _) =>
             {
                 bool hasNamespace = context.Namespace != null;
-                string resultType = $"{context.Identifier}{context.TypeParameters.Replace(context.TColor, "TResult")}";
+                string typeParameters = Regex.Replace(context.TypeParameters, @$"\b{context.TColor}\b", "TResult");
+                string resultType = $"{context.Identifier}{typeParameters}";
 
                 StringBuilder builder = new();
                 builder.AppendLine("using System;");
@@ -133,14 +136,13 @@ namespace MaterialColorUtilities.Schemes
                 string hint = "";
                 if (hasNamespace) hint += $"{context.Namespace}.";
                 hint += context.Identifier;
-                if (context.TypeParameters.Contains(','))
-                    hint += $"`{context.TypeParameters.Count(c => c == ',')}";
-                hint += ".ConvertTo.g.cs";
+                hint += $"{{{context.TypeParameters.Substring(1, context.TypeParameters.Length - 2)}}}";
+                hint += ".ConvertTo.sg.cs";
 
                 return new Result(hint, sourceText);
             });
 
-            context.RegisterSourceOutput(results, static (SourceProductionContext generator, Result result) =>
+            context.RegisterSourceOutput(results, static (generator, result) =>
             {
 #if DEBUG
                 result.SourceText = $"// Generated at: {DateTime.Now}\n" + result.SourceText;

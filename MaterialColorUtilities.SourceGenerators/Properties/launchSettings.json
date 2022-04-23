@@ -1,10 +1,10 @@
 {
   "profiles": {
-    "Console generators": {
+    "Console project generators": {
       "commandName": "DebugRoslynComponent",
       "targetProject": "..\\MaterialColorUtilities.Console\\MaterialColorUtilities.Console.csproj"
     },
-    "Tests generators": {
+    "Tests project generators": {
       "commandName": "DebugRoslynComponent",
       "targetProject": "..\\MaterialColorUtilities.Tests\\MaterialColorUtilities.Tests.csproj"
     }

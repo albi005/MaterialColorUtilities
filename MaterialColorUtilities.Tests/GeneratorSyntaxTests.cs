@@ -1,18 +1,21 @@
 ﻿using MaterialColorUtilities.Schemes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MaterialColorUtilities.Tests;
 
-[TestClass]
-public class GeneratorSyntaxTests
+// If this builds -> the return type is good -> the source generator is working
+public class GeneratorSyntaxExamples
 {
-    [TestMethod]
     // Has type parameters, but no TColor
     public void TypeParametersWithoutTColor()
     {
         SchemeWithTypeParametersButWithoutTColor<object> scheme = new();
-        var converted = scheme.ConvertTo(i => (double)i);
-        Assert.IsInstanceOfType(converted, typeof(Scheme<double>));
+        Scheme<double> converted = scheme.ConvertTo(i => (double)i);
+    }
+
+    public void AdditionalTypeParameters()
+    {
+        MyScheme3<object, int> scheme = new();
+        MyScheme3<object, double> converted = scheme.ConvertTo(i => (double)i);
     }
 }
 
@@ -43,4 +46,10 @@ public partial class MyScheme2 : MyScheme2<int>
 // > Don't generate
 public partial class SchemeWithTypeParametersButWithoutTColor<T> : Scheme<int>
 {
+}
+
+// Has an additional type parameter
+public partial class MyScheme3<TWhatever, T> : MyScheme<T>
+{
+    public T MyColor { get; set; }
 }
