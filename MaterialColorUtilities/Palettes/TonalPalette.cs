@@ -17,31 +17,29 @@ using MaterialColorUtilities.ColorAppearance;
 
 namespace MaterialColorUtilities.Palettes;
 
+/// <summary>
+/// A convenience class for retrieving colors that are constant in hue and
+/// chroma, but vary in tone.
+/// </summary>
 public class TonalPalette
 {
     private readonly Dictionary<int, int> cache = new();
     private readonly double hue;
     private readonly double chroma;
 
-    /**
-     * Create tones using the HCT hue and chroma from a color.
-     *
-     * @param argb ARGB representation of a color
-     * @return Tones matching that color's hue and chroma.
-     */
+    /// <summary>Creates tones using the HCT hue and chroma from a color.</summary>
+    /// <param name="argb">ARGB representation of a color.</param>
+    /// <returns>Tones matching that color's hue and chroma.</returns>
     public static TonalPalette FromInt(int argb)
     {
         Hct hct = Hct.FromInt(argb);
         return FromHueAndChroma(hct.Hue, hct.Chroma);
     }
 
-    /**
-     * Create tones from a defined HCT hue and chroma.
-     *
-     * @param hue HCT hue
-     * @param chroma HCT chroma
-     * @return Tones matching hue and chroma.
-     */
+    /// <summary>Creates tones from a defined HCT hue and chroma.</summary>
+    /// <param name="hue">HCT hue</param>
+    /// <param name="chroma">HCT chroma</param>
+    /// <returns>Tones matching hue and chroma.</returns>
     public static TonalPalette FromHueAndChroma(double hue, double chroma) => new(hue, chroma);
 
     private TonalPalette(double hue, double chroma)
@@ -50,16 +48,16 @@ public class TonalPalette
         this.chroma = chroma;
     }
 
-    /**
-     * Create an ARGB color with HCT hue and chroma of this Tones instance, and the provided HCT tone.
-     *
-     * @param tone HCT tone, measured from 0 to 100.
-     * @return ARGB representation of a color with that tone.
-     */
+    /// <summary>Creates an ARGB color with HCT hue and chroma of this TonalPalette instance, and the provided HCT tone.</summary>
+    /// <param name="tone">HCT tone, measured from 0 to 100.</param>
+    /// <returns>ARGB representation of a color with that tone.</returns>
     public int Tone(int tone)
         => cache.TryGetValue(tone, out int value)
             ? value
             : cache[tone] = Hct.From(hue, chroma, tone).ToInt();
 
+    /// <summary>Creates an ARGB color with HCT hue and chroma of this TonalPalette instance, and the provided HCT tone.</summary>
+    /// <param name="tone">HCT tone, measured from 0 to 100.</param>
+    /// <returns>ARGB representation of a color with that tone.</returns>
     public int this[int tone] => Tone(tone);
 }

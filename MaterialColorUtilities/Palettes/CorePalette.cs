@@ -17,10 +17,10 @@ using MaterialColorUtilities.ColorAppearance;
 
 namespace MaterialColorUtilities.Palettes;
 
-/**
- * An intermediate concept between the key color for a UI theme, and a full color scheme. 5 sets of
- * tones are generated, all except one use the same hue as the key color, and all vary in chroma.
- */
+/// <summary>
+/// An intermediate concept between the key color for a UI theme, and a full color scheme. 5 sets of
+/// tones are generated, all except one use the same hue as the key color, and all vary in chroma.
+/// </summary>
 public class CorePalette
 {
     public TonalPalette Primary { get; set; }
@@ -30,13 +30,12 @@ public class CorePalette
     public TonalPalette NeutralVariant { get; set; }
     public TonalPalette Error { get; set; }
 
-    /**
-     * Create key tones from a color.
-     *
-     * @param argb ARGB representation of a color
-     */
+    /// <summary>Create key tones from a source ARGB color.</summary>
+    /// <param name="argb">ARGB representation of a color.</param>
     public static CorePalette Of(int seed) => new(seed);
 
+    /// <summary>Create key tones from a source ARGB color.</summary>
+    /// <param name="argb">ARGB representation of a color.</param>
     public CorePalette(int seed)
     {
         Hct hct = Hct.FromInt(seed);

@@ -1,5 +1,24 @@
-﻿namespace MaterialColorUtilities.Schemes;
+﻿// Copyright 2021 Google LLC
+// Copyright 2021-2022 project contributors
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
+namespace MaterialColorUtilities.Schemes;
+
+/// <summary>
+/// Represents a Material color scheme, a mapping of color roles to colors.
+/// </summary>
+/// <typeparam name="TColor">The type of the named colors.</typeparam>
 public class Scheme<TColor>
 {
     public TColor Primary { get; set; }
@@ -31,7 +50,7 @@ public class Scheme<TColor>
     public TColor InversePrimary { get; set; }
 
     /// <summary>
-    /// Converts the Scheme into a new one with a different color type
+    /// Converts the Scheme into a new one with a different color type.
     /// </summary>
     /// <typeparam name="TResult">The color type of the result Scheme</typeparam>
     /// <param name="convert">The function used to convert <typeparamref name="TColor"/> to <typeparamref name="TResult"/></param>
@@ -48,7 +67,7 @@ public class Scheme<TColor>
     }
 
     /// <summary>
-    /// Maps the Scheme's colors onto an existing Scheme object with a different color type
+    /// Maps the Scheme's colors onto an existing Scheme object with a different color type.
     /// </summary>
     /// <typeparam name="TResult">The color type of the result Scheme</typeparam>
     /// <param name="convert">The function used to convert <typeparamref name="TColor"/> to <typeparamref name="TResult"/></param>
