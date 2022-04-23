@@ -12,18 +12,18 @@ namespace MaterialColorUtilities.Tests
         const int Yellow = unchecked((int)0xffffff00);
         
         [TestMethod]
-        [DataRow(Red, Blue, 0xffFB0054)]
-        [DataRow(Red, Green, 0xffDA5400)]
-        [DataRow(Red, Yellow, 0xffDA5400)]
-        [DataRow(Blue, Green, 0xff0047A7)]
-        [DataRow(Blue, Red, 0xff5600DE)]
-        [DataRow(Blue, Yellow, 0xff0047A7)]
-        [DataRow(Green, Blue, 0xff00FC91)]
-        [DataRow(Green, Red, 0xffADF000)]
-        [DataRow(Green, Yellow, 0xffADF000)]
-        [DataRow(Yellow, Blue, 0xffEBFFB2)]
-        [DataRow(Yellow, Green, 0xffEBFFB2)]
-        [DataRow(Yellow, Red, 0xffFFF6DC)]
+        [DataRow(Red, Blue, 0xffFB0057)]
+        [DataRow(Red, Green, 0xffD85600)]
+        [DataRow(Red, Yellow, 0xffD85600)]
+        [DataRow(Blue, Green, 0xff0047A3)]
+        [DataRow(Blue, Red, 0xff5700DC)]
+        [DataRow(Blue, Yellow, 0xff0047A3)]
+        [DataRow(Green, Blue, 0xff00FC94)]
+        [DataRow(Green, Red, 0xffB1F000)]
+        [DataRow(Green, Yellow, 0xffB1F000)]
+        [DataRow(Yellow, Blue, 0xffEBFFBA)]
+        [DataRow(Yellow, Green, 0xffEBFFBA)]
+        [DataRow(Yellow, Red, 0xffFFF6E3)]
         public void Harmonize(int designColor, int sourceColor, uint result)
         {
             int answer = Blender.Harmonize(designColor, sourceColor);

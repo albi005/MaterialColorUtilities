@@ -11,7 +11,7 @@ public class ViewingConditions
              ColorUtils.WhitePointD65[1],
              ColorUtils.WhitePointD65[2]
         },
-        (200.0 / Math.PI * ColorUtils.YFromLstar(50.0) / 100.0),
+        200.0 / Math.PI * ColorUtils.YFromLstar(50.0) / 100.0,
         50.0,
         2.0,
         false);
@@ -35,7 +35,7 @@ public class ViewingConditions
         bool discountingIlluminant)
     {
         // Transform white point XYZ to 'cone'/'rgb' responses
-        double[][] matrix = Cam16.XYZ_TO_CAM16RGB;
+        double[][] matrix = Cam16.XyzToCam16Rgb;
         double[] xyz = whitePoint;
         double rW = (xyz[0] * matrix[0][0]) + (xyz[1] * matrix[0][1]) + (xyz[2] * matrix[0][2]);
         double gW = (xyz[0] * matrix[1][0]) + (xyz[1] * matrix[1][1]) + (xyz[2] * matrix[1][2]);
@@ -71,7 +71,7 @@ public class ViewingConditions
              Math.Pow(fl * rgbD[2] * bW / 100.0, 0.42)
         };
 
-        double[] rgbA = new double[]
+        double[] rgbA = new[]
         {
             (400.0 * rgbAFactors[0]) / (rgbAFactors[0] + 27.13),
             (400.0 * rgbAFactors[1]) / (rgbAFactors[1] + 27.13),

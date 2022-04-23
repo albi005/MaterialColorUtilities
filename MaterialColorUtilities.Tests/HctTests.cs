@@ -113,7 +113,7 @@ namespace MaterialColorUtilities.Tests
         public void RgbToCamToRgb(int colorToTest)
         {
             Cam16 cam = Cam16.FromInt(colorToTest);
-            int color = new Hct(cam.Hue, cam.Chroma, ColorUtils.LStarFromArgb(colorToTest))
+            int color = Hct.From(cam.Hue, cam.Chroma, ColorUtils.LStarFromArgb(colorToTest))
                 .ToInt();
             Assert.AreEqual(colorToTest, color);
         }
@@ -161,6 +161,17 @@ namespace MaterialColorUtilities.Tests
             Assert.That.IsCloseTo(vc.Fl, 0.388, 0.001);
             Assert.That.IsCloseTo(vc.FlRoot, 0.789, 0.001);
             Assert.That.IsCloseTo(vc.Z, 1.909, 0.001);
+        }
+
+        [TestMethod]
+        public void Hct_PreservesOriginalColor()
+        {
+            for (int argb = unchecked((int)0xFF000000); argb <= unchecked((int)0xFFFFFFFF); argb += 6969)
+            {
+                Hct hct = Hct.FromInt(argb);
+                int reconstructedArgb = Hct.From(hct.Hue, hct.Chroma, hct.Tone).ToInt();
+                Assert.AreEqual(argb, reconstructedArgb);
+            }
         }
     }
 }

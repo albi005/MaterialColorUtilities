@@ -5,9 +5,6 @@ namespace MaterialColorUtilities.Blend;
 
 public static class Blender
 {
-    private const double HARMONIZE_MAX_DEGREES = 15.0;
-    private const double HARMONIZE_PERCENTAGE = 0.5;
-
     /**
      * Blend the design color's HCT hue towards the key color's HCT hue, in a way that leaves the
      * original color recognizable and recognizably shifted towards the key color.
@@ -22,7 +19,7 @@ public static class Blender
         Hct fromHct = Hct.FromInt(designColor);
         Hct toHct = Hct.FromInt(sourceColor);
         double differenceDegrees = MathUtils.DifferenceDegrees(fromHct.Hue, toHct.Hue);
-        double rotationDegrees = Math.Min(differenceDegrees * HARMONIZE_PERCENTAGE, HARMONIZE_MAX_DEGREES);
+        double rotationDegrees = Math.Min(differenceDegrees * 0.5, 15.0);
         double outputHue =
             MathUtils.SanitizeDegreesDouble(
                 fromHct.Hue
@@ -39,9 +36,9 @@ public static class Blender
      * @param amount how much blending to perform; 0.0 >= and <= 1.0
      * @return from, with a hue blended towards to. Chroma and tone are constant.
      */
-    public static int BlendHctHue(int from, int to, double amount)
+    public static int HctHue(int from, int to, double amount)
     {
-        int ucs = BlendCam16Ucs(from, to, amount);
+        int ucs = Cam16Ucs(from, to, amount);
         Cam16 ucsCam = Cam16.FromInt(ucs);
         Cam16 fromCam = Cam16.FromInt(from);
         return Hct.From(ucsCam.Hue, fromCam.Chroma, ColorUtils.LStarFromArgb(from)).ToInt();
@@ -55,25 +52,20 @@ public static class Blender
      * @param amount how much blending to perform; 0.0 >= and <= 1.0
      * @return from, blended towards to. Hue, chroma, and tone will change.
      */
-    public static int BlendCam16Ucs(int from, int to, double amount)
+    public static int Cam16Ucs(int from, int to, double amount)
     {
         Cam16 fromCam = Cam16.FromInt(from);
         Cam16 toCam = Cam16.FromInt(to);
-
-        double aJ = fromCam.JStar;
-        double aA = fromCam.AStar;
-        double aB = fromCam.BStar;
-
-        double bJ = toCam.JStar;
-        double bA = toCam.AStar;
-        double bB = toCam.BStar;
-
-        double j = aJ + (bJ - aJ) * amount;
-        double a = aA + (bA - aA) * amount;
-        double b = aB + (bB - aB) * amount;
-
-        Cam16 blended = Cam16.FromUcs(j, a, b);
-        return blended.GetInt();
+        double fromJ = fromCam.Jstar;
+        double fromA = fromCam.Astar;
+        double fromB = fromCam.Bstar;
+        double toJ = toCam.Jstar;
+        double toA = toCam.Astar;
+        double toB = toCam.Bstar;
+        double jstar = fromJ + (toJ - fromJ) * amount;
+        double astar = fromA + (toA - fromA) * amount;
+        double bstar = fromB + (toB - fromB) * amount;
+        return Cam16.FromUcs(jstar, astar, bstar).ToInt();
     }
 
     /**
@@ -89,22 +81,20 @@ public static class Blender
         double a = to - from;
         double b = to - from + 360.0;
         double c = to - from - 360.0;
-
         double aAbs = Math.Abs(a);
         double bAbs = Math.Abs(b);
         double cAbs = Math.Abs(c);
-
         if (aAbs <= bAbs && aAbs <= cAbs)
         {
-            return a >= 0.0 ? 1 : -1;
+            return a >= 0.0 ? 1.0 : -1.0;
         }
         else if (bAbs <= aAbs && bAbs <= cAbs)
         {
-            return b >= 0.0 ? 1 : -1;
+            return b >= 0.0 ? 1.0 : -1.0;
         }
         else
         {
-            return c >= 0.0 ? 1 : -1;
+            return c >= 0.0 ? 1.0 : -1.0;
         }
     }
 }

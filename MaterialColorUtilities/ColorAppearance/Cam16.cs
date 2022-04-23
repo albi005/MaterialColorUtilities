@@ -5,7 +5,7 @@ namespace MaterialColorUtilities.ColorAppearance;
 public class Cam16
 {
     // Transforms XYZ color space coordinates to 'cone'/'RGB' responses in CAM16.
-    public static double[][] XYZ_TO_CAM16RGB =
+    public static double[][] XyzToCam16Rgb =
     {
         new[] { 0.401288, 0.650173, -0.051461 },
         new[] { -0.250268, 1.204414, 0.045854 },
@@ -13,7 +13,7 @@ public class Cam16
     };
 
     // Transforms 'cone'/'RGB' responses in CAM16 to XYZ color space coordinates.
-    public static double[][] CAM16RGB_TO_XYZ =
+    public static double[][] Cam16RgbToXyz =
     {
         new[] { 1.8620678, -1.0112547, 0.14918678 },
         new[] { 0.38752654, 0.62144744, -0.00897398 },
@@ -26,15 +26,15 @@ public class Cam16
     public double Q { get; set; }
     public double M { get; set; }
     public double S { get; set; }
-    public double JStar { get; set; }
-    public double AStar { get; set; }
-    public double BStar { get; set; }
+    public double Jstar { get; set; }
+    public double Astar { get; set; }
+    public double Bstar { get; set; }
 
     public double Distance(Cam16 other)
     {
-        double dJ = JStar - other.JStar;
-        double dA = AStar - other.AStar;
-        double dB = BStar - other.BStar;
+        double dJ = Jstar - other.Jstar;
+        double dA = Astar - other.Astar;
+        double dB = Bstar - other.Bstar;
         double dEPrime = Math.Sqrt(dJ * dJ + dA * dA + dB * dB);
         double dE = 1.41 * Math.Pow(dEPrime, .63);
         return dE;
@@ -48,9 +48,9 @@ public class Cam16
         Q = q;
         M = m;
         S = s;
-        JStar = jStar;
-        AStar = aStar;
-        BStar = bStar;
+        Jstar = jStar;
+        Astar = aStar;
+        Bstar = bStar;
     }
 
     public static Cam16 FromInt(int argb) => FromIntInViewingConditions(argb, ViewingConditions.Default);
@@ -69,7 +69,7 @@ public class Cam16
         double z = 0.01932141 * redL + 0.11916382 * greenL + 0.95034478 * blueL;
 
         // Transform XYZ to 'cone'/'rgb' responses
-        double[][] matrix = XYZ_TO_CAM16RGB;
+        double[][] matrix = XyzToCam16Rgb;
         double rT = (x * matrix[0][0]) + (y * matrix[0][1]) + (z * matrix[0][2]);
         double gT = (x * matrix[1][0]) + (y * matrix[1][1]) + (z * matrix[1][2]);
         double bT = (x * matrix[2][0]) + (y * matrix[2][1]) + (z * matrix[2][2]);
@@ -184,7 +184,7 @@ public class Cam16
         return FromJchInViewingConditions(j, c, h, viewingConditions);
     }
 
-    public int GetInt()
+    public int ToInt()
     {
         return Viewed(ViewingConditions.Default);
     }
@@ -239,7 +239,7 @@ public class Cam16
         double gF = gC / viewingConditions.RgbD[1];
         double bF = bC / viewingConditions.RgbD[2];
 
-        double[][] matrix = CAM16RGB_TO_XYZ;
+        double[][] matrix = Cam16RgbToXyz;
         double x = (rF * matrix[0][0]) + (gF * matrix[0][1]) + (bF * matrix[0][2]);
         double y = (rF * matrix[1][0]) + (gF * matrix[1][1]) + (bF * matrix[1][2]);
         double z = (rF * matrix[2][0]) + (gF * matrix[2][1]) + (bF * matrix[2][2]);
