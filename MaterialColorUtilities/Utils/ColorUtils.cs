@@ -15,6 +15,13 @@
 
 namespace MaterialColorUtilities.Utils;
 
+/// <summary>
+/// Color science utilities.
+/// </summary>
+/// <remarks>
+/// Utility methods for color science constants and color space conversions that aren't HCT or
+/// CAM16.
+/// </remarks>
 public static class ColorUtils
 {
     static readonly double[][] SrgbToXyz =
@@ -31,15 +38,18 @@ public static class ColorUtils
         new[] { 0.05562093689691305, -0.20395524564742123, 1.0571799111220335 }
     };
 
+    /// <summary>
+    /// The standard white point; white on a sunny day.
+    /// </summary>
     public static double[] WhitePointD65 { get; } = { 95.047, 100, 108.883 };
 
-    /** Converts a color from RGB components to ARGB format. */
+    /// <summary>Converts a color from RGB components to ARGB format.</summary>
     public static int ArgbFromRgb(int red, int green, int blue)
     {
         return (255 << 24) | ((red & 255) << 16) | ((green & 255) << 8) | (blue & 255);
     }
 
-    /** Converts a color from linear RGB components to ARGB format. */
+    /// <summary>Converts a color from linear RGB components to ARGB format.</summary>
     public static int ArgbFromLinrgb(double[] linrgb)
     {
         int r = Delinearized(linrgb[0]);
@@ -48,36 +58,37 @@ public static class ColorUtils
         return ArgbFromRgb(r, g, b);
     }
 
-    /** Returns the alpha component of a color in ARGB format. */
+    /// <summary>Returns the alpha component of a color in ARGB format.</summary>
     public static int AlphaFromArgb(int argb)
     {
         return (argb >> 24) & 255;
     }
 
-    /** Returns the red component of a color in ARGB format. */
+    /// <summary>Returns the red component of a color in ARGB format.</summary>
     public static int RedFromArgb(int argb)
     {
         return (argb >> 16) & 255;
     }
 
-    /** Returns the green component of a color in ARGB format. */
+    /// <summary>Returns the green component of a color in ARGB format.</summary>
     public static int GreenFromArgb(int argb)
     {
         return (argb >> 8) & 255;
     }
 
-    /** Returns the blue component of a color in ARGB format. */
+    /// <summary>Returns the blue component of a color in ARGB format.</summary>
     public static int BlueFromArgb(int argb)
     {
         return argb & 255;
     }
 
-    /** Returns whether a color in ARGB format is opaque. */
+    /// <summary>Returns whether a color in ARGB format is opaque.</summary>
     public static bool IsOpaque(int argb)
     {
         return AlphaFromArgb(argb) >= 255;
     }
 
+    /// <summary>Converts a color from XYZ to ARGB.</summary> 
     public static int ArgbFromXyz(double x, double y, double z)
     {
         double[][] matrix = XyzToSrgb;
@@ -90,7 +101,7 @@ public static class ColorUtils
         return ArgbFromRgb(r, g, b);
     }
 
-    /** Converts a color from XYZ to ARGB. */
+    /// <summary>Converts a color from ARGB to XYZ.</summary>
     public static double[] XyzFromArgb(int argb)
     {
         double r = Linearized(RedFromArgb(argb));
@@ -99,60 +110,7 @@ public static class ColorUtils
         return MathUtils.MatrixMultiply(new double[] { r, g, b }, SrgbToXyz);
     }
 
-    public static int ArgbFromLstar(double lstar)
-    {
-        double fy = (lstar + 16.0) / 116.0;
-        double fz = fy;
-        double fx = fy;
-        double kappa = 24389.0 / 27.0;
-        double epsilon = 216.0 / 24389.0;
-        bool lExceedsEpsilonKappa = lstar > 8.0;
-        double y = lExceedsEpsilonKappa ? fy * fy * fy : lstar / kappa;
-        bool cubeExceedEpsilon = fy * fy * fy > epsilon;
-        double x = cubeExceedEpsilon ? fx * fx * fx : lstar / kappa;
-        double z = cubeExceedEpsilon ? fz * fz * fz : lstar / kappa;
-        double[] whitePoint = WhitePointD65;
-        return ArgbFromXyz(x * whitePoint[0], y * whitePoint[1], z * whitePoint[2]);
-    }
-
-    public static double LStarFromArgb(int argb)
-    {
-        double y = XyzFromArgb(argb)[1] / 100.0;
-        double e = 216.0 / 24389.0;
-        if (y <= e)
-        {
-            return 24389.0 / 27.0 * y;
-        }
-        else
-        {
-            double yIntermediate = Math.Pow(y, 1.0 / 3.0);
-            return 116.0 * yIntermediate - 16.0;
-        }
-    }
-
-    public static uint IntFromRgb(byte[] rgb) =>
-        0xFF000000 |
-        ((uint)rgb[0] & 255) << 16 |
-        ((uint)rgb[1] & 255) << 8 |
-        (uint)rgb[2] & 255;
-
-    public static int IntFromLStar(double lStar)
-    {
-        double fy = (lStar + 16) / 116;
-        double kappa = 24389 / 27;
-        bool cubeExceedEpsilon = fy * fy * fy > 216D / 24389;
-        var xyz = new double[]
-        {
-            (cubeExceedEpsilon ? fy * fy * fy : (116 * fy - 16) / kappa) * WhitePointD65[0],
-            (8 < lStar ? fy * fy * fy : lStar / kappa) * WhitePointD65[1],
-            (cubeExceedEpsilon ? fy * fy * fy : (116 * fy - 16) / kappa) * WhitePointD65[2]
-        };
-        return ArgbFromXyz(xyz[0], xyz[1], xyz[2]);
-    }
-
-    public static double SanitizeDegrees(double degrees)
-        => 0 > degrees ? degrees % 360 + 360 : 360 <= degrees ? degrees % 360 : degrees;
-
+    /// <summary>Converts a color represented in Lab color space into an ARGB integer.</summary>
     public static int ArgbFromLab(double l, double a, double b)
     {
         double[] whitePoint = WhitePointD65;
@@ -168,6 +126,7 @@ public static class ColorUtils
         return ArgbFromXyz(x, y, z);
     }
 
+    /// <summary>Converts a color from ARGB representation to L*a*b* representation.</summary>
     public static double[] LabFromArgb(int argb)
     {
         double linearR = Linearized(RedFromArgb(argb));
@@ -190,6 +149,53 @@ public static class ColorUtils
         return new double[] { l, a, b };
     }
 
+    /// <summary>Converts an L* value to an ARGB representation.</summary>
+    /// <param name="l">L* in L*a*b*</param>
+    /// <returns>ARGB representation of grayscale color with lightness matching L*</returns>
+    public static int ArgbFromLstar(double lstar)
+    {
+        double fy = (lstar + 16.0) / 116.0;
+        double fz = fy;
+        double fx = fy;
+        double kappa = 24389.0 / 27.0;
+        double epsilon = 216.0 / 24389.0;
+        bool lExceedsEpsilonKappa = lstar > 8.0;
+        double y = lExceedsEpsilonKappa ? fy * fy * fy : lstar / kappa;
+        bool cubeExceedEpsilon = fy * fy * fy > epsilon;
+        double x = cubeExceedEpsilon ? fx * fx * fx : lstar / kappa;
+        double z = cubeExceedEpsilon ? fz * fz * fz : lstar / kappa;
+        double[] whitePoint = WhitePointD65;
+        return ArgbFromXyz(x * whitePoint[0], y * whitePoint[1], z * whitePoint[2]);
+    }
+
+    /// <summary>Computes the L* value of a color in ARGB representation.</summary>
+    /// <param name="argb">ARGB representation of a color</param>
+    /// <returns>L*, from L*a*b*, coordinate of the color</returns>
+    public static double LStarFromArgb(int argb)
+    {
+        double y = XyzFromArgb(argb)[1] / 100.0;
+        double e = 216.0 / 24389.0;
+        if (y <= e)
+        {
+            return 24389.0 / 27.0 * y;
+        }
+        else
+        {
+            double yIntermediate = Math.Pow(y, 1.0 / 3.0);
+            return 116.0 * yIntermediate - 16.0;
+        }
+    }
+
+    /// <summary>
+    /// Converts an L* value to a Y value.
+    /// </summary>
+    /// <remarks>
+    /// L* in L*a*b* and Y in XYZ measure the same quantity, luminance.
+    /// L* measures perceptual luminance, a linear scale. Y in XYZ measures relative luminance, a
+    /// logarithmic scale.
+    /// </remarks>
+    /// <param name="lstar">L* in L*a*b*</param>
+    /// <returns>Y in XYZ</returns>
     public static double YFromLstar(double lstar)
     {
         double ke = 8.0;
@@ -203,6 +209,11 @@ public static class ColorUtils
         }
     }
 
+    /// <summary>
+    /// Linearizes an RGB component.
+    /// </summary>
+    /// <param name="rgbComponent">0 ≤ rgb_component ≤ 255, represents R/G/B channel</param>
+    /// <returns>0.0 ≤ output ≤ 100.0, color channel converted to linear RGB space</returns>
     public static double Linearized(int rgbComponent)
     {
         double normalized = rgbComponent / 255.0;
@@ -216,6 +227,11 @@ public static class ColorUtils
         }
     }
 
+    /// <summary>
+    /// Delinearizes an RGB component.
+    /// </summary>
+    /// <param name="rgbComponent">0.0 ≤ rgb_component ≤ 100.0, represents linear R/G/B channel</param>
+    /// <returns>0 ≤ output ≤ 255, color channel converted to regular RGB space</returns>
     public static int Delinearized(double rgbComponent)
     {
         double normalized = rgbComponent / 100.0;

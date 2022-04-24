@@ -2,6 +2,9 @@
 
 namespace MaterialColorUtilities.Schemes
 {
+    /// <summary>
+    /// Base class for mappers.
+    /// </summary>
     public abstract class BaseSchemeMapper<TCorePalette, TScheme> : ISchemeMapper<TCorePalette, TScheme>
         where TCorePalette : CorePalette
         where TScheme : Scheme<int>, new()
@@ -14,6 +17,10 @@ namespace MaterialColorUtilities.Schemes
             return scheme;
         }
 
+        /// <summary>
+        /// Does the actual mapping of the core palette to the scheme.
+        /// Override to add more mapping statements.
+        /// </summary>
         protected abstract void MapCore(TCorePalette corePalette, TScheme scheme);
     }
 }

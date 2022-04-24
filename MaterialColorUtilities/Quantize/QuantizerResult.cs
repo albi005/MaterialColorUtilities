@@ -15,6 +15,9 @@
 
 namespace MaterialColorUtilities.Quantize;
 
+/// <summary>
+/// The result of a quantizer run.
+/// </summary>
 public class QuantizerResult
 {
     public Dictionary<int, int> ColorToCount { get; }

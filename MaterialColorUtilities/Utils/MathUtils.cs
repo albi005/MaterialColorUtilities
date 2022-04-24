@@ -15,23 +15,25 @@
 
 namespace MaterialColorUtilities.Utils;
 
+/// <summary>
+/// Utility methods for mathematical operations.
+/// </summary>
 public class MathUtils
 {
-    /**
-     * The linear interpolation function.
-     *
-     * @return start if amount = 0 and stop if amount = 1
-     */
+    /// <summary>The linear interpolation function.</summary>
+    /// <returns>
+    /// <paramref name="start"/> if <paramref name="amount"/> = 0 and <paramref name="stop"/> if <paramref name="amount"/> = 1
+    /// </returns>
     public static double Lerp(double start, double stop, double amount)
     {
         return (1.0 - amount) * start + amount * stop;
     }
 
-    /**
-     * Clamps an integer between two integers.
-     *
-     * @return input when min <= input <= max, and either min or max otherwise.
-     */
+    /// <summary>Clamps an integer between two integers.</summary>
+    /// <returns>
+    /// <paramref name="input"/> when <paramref name="min"/> ≤ <paramref name="input"/> ≤ <paramref name="max"/>,
+    /// and either <paramref name="min"/> or <paramref name="max"/> otherwise.
+    /// </returns>
     public static int ClampInt(int min, int max, int input)
     {
         if (input < min)
@@ -41,11 +43,11 @@ public class MathUtils
         return input;
     }
 
-    /**
-     * Clamps an integer between two floating-point numbers.
-     *
-     * @return input when min <= input <= max, and either min or max otherwise.
-     */
+    /// <summary>Clamps an integer between two floating-point numbers.</summary>
+    /// <returns>
+    /// <paramref name="input"/> when <paramref name="min"/> ≤ <paramref name="input"/> ≤ <paramref name="max"/>,
+    /// and either <paramref name="min"/> or <paramref name="max"/> otherwise.
+    /// </returns>
     public static double ClampDouble(double min, double max, double input)
     {
         if (input < min)
@@ -55,11 +57,8 @@ public class MathUtils
         return input;
     }
 
-    /**
-     * Sanitizes a degree measure as an integer.
-     *
-     * @return a degree measure between 0 (inclusive) and 360 (exclusive).
-     */
+    /// <summary>Sanitizes a degree measure as an integer.</summary>
+    /// <returns>A degree measure between 0 (inclusive) and 360 (exclusive).</returns>
     public static int SanitizeDegreesInt(int degrees)
     {
         degrees %= 360;
@@ -70,11 +69,8 @@ public class MathUtils
         return degrees;
     }
 
-    /**
-     * Sanitizes a degree measure as a floating-point number.
-     *
-     * @return a degree measure between 0.0 (inclusive) and 360.0 (exclusive).
-     */
+    /// <summary>Sanitizes a degree measure as a floating-point number.</summary>
+    /// <returns>A degree measure between 0.0 (inclusive) and 360.0 (exclusive).</returns>
     public static double SanitizeDegreesDouble(double degrees)
     {
         degrees %= 360.0;
@@ -85,12 +81,13 @@ public class MathUtils
         return degrees;
     }
 
-    /** Distance of two points on a circle, represented using degrees. */
+    /// <summary>Distance of two points on a circle, represented using degrees.</summary>
     public static double DifferenceDegrees(double a, double b)
     {
         return 180.0 - Math.Abs(Math.Abs(a - b) - 180.0);
     }
 
+    /// <summary>Multiplies a 1x3 row vector with a 3x3 matrix.</summary>
     public static double[] MatrixMultiply(double[] row, double[][] matrix)
     {
         double a = row[0] * matrix[0][0] + row[1] * matrix[0][1] + row[2] * matrix[0][2];

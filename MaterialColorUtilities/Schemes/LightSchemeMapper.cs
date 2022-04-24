@@ -2,10 +2,15 @@
 
 namespace MaterialColorUtilities.Schemes
 {
+    /// <inheritdoc/>
     public class LightSchemeMapper : LightSchemeMapper<CorePalette, Scheme<int>>
     {
     }
 
+    /// <summary>
+    /// A mapper that maps a core palette to a light scheme using the 
+    /// <see href="https://m3.material.io/styles/color/the-color-system/tokens">default Material Design 3 mappings.</see>
+    /// </summary>
     public class LightSchemeMapper<TCorePalette, TScheme> : BaseSchemeMapper<TCorePalette, TScheme>
         where TCorePalette : CorePalette
         where TScheme : Scheme<int>, new()

@@ -20,13 +20,14 @@ namespace MaterialColorUtilities.Score;
 
 public static class Scorer
 {
-    /**
-     * Given a large set of colors, remove colors that are unsuitable for a UI theme, and rank the rest
-     * based on suitability.
-     *
-     * <p>Enables use of a high cluster count for image quantization, thus ensuring colors aren't
-     * muddied, while curating the high cluster count to a much smaller number of appropriate choices.
-     */
+    /// <summary>
+    /// Given a large set of colors, remove colors that are unsuitable for a UI theme, and rank the rest
+    /// based on suitability.
+    /// </summary>
+    /// <remarks>
+    /// Enables use of a high cluster count for image quantization, thus ensuring colors aren't
+    /// muddied, while curating the high cluster count to a much smaller number of appropriate choices.
+    /// </remarks>
     private const double CUTOFF_CHROMA = 15;
     private const double CUTOFF_EXCITED_PROPORTION = 0.01;
     private const double CUTOFF_TONE = 10;
@@ -35,19 +36,22 @@ public static class Scorer
     private const double WEIGHT_CHROMA_ABOVE = 0.3;
     private const double WEIGHT_CHROMA_BELOW = 0.1;
 
-    public const int Default = unchecked((int)0xff4285F4);
+    public const int Default = unchecked((int)0xff4285F4); // Google Blue
 
-    /**
-     * Given a map with keys of colors and values of how often the color appears, rank the colors
-     * based on suitability for being used for a UI theme.
-     *
-     * @param colorsToPopulation map with keys of colors and values of how often the color appears,
-     *     usually from a source image.
-     * @return Colors sorted by suitability for a UI theme. The most suitable color is the first item,
-     *     the least suitable is the last. There will always be at least one color returned. If all
-     *     the input colors were not suitable for a theme, a default fallback color will be provided,
-     *     Google Blue.
-     */
+    /// <summary>
+    /// Given a map with keys of colors and values of how often the color appears, rank the colors
+    /// based on suitability for being used for a UI theme.
+    /// </summary>
+    /// <param name="colorsToPopulation">
+    /// A dictionary with keys of colors and values of how often the color
+    /// appears, usually from a source image.
+    /// </param>
+    /// <returns>
+    /// A list of colors sorted by suitability for a UI theme. The most suitable color is the first
+    /// item, the least suitable is the last. There will always be at least one color returned. If
+    /// all the input colors were not suitable for a theme, a default fallback color will be provided,
+    /// Google Blue.
+    /// </returns>
     public static List<int> Score(Dictionary<int, int> colorsToPopulation)
     {
         // Determine the total count of all colors.

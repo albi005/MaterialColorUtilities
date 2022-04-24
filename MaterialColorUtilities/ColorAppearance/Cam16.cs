@@ -17,6 +17,22 @@ using MaterialColorUtilities.Utils;
 
 namespace MaterialColorUtilities.ColorAppearance;
 
+/// <summary>
+/// CAM16, a color appearance model. Colors are not just defined by their hex code,
+/// but rather, a hex code and viewing conditions.
+/// </summary>
+/// <remarks>
+/// CAM16 instances also have coordinates in the CAM16-UCS space, called J*, a*, b*, or jstar,
+/// astar, bstar in code. CAM16-UCS is included in the CAM16 specification, and should be used when
+/// measuring distances between colors.
+/// 
+/// In traditional color spaces, a color can be identified solely by the observer's measurement of
+/// the color. Color appearance models such as CAM16 also use information about the environment where
+/// the color was observed, known as the viewing conditions.
+/// 
+/// For example, white under the traditional assumption of a midday sun white point is accurately
+/// measured as a slightly chromatic blue by CAM16. (roughly, hue 203, chroma 3, lightness 100)
+/// </remarks>
 public class Cam16
 {
     // Transforms XYZ color space coordinates to 'cone'/'RGB' responses in CAM16.
@@ -35,14 +51,44 @@ public class Cam16
         new[] { -0.01584150, -0.03412294, 1.0499644 }
     };
 
+    /// <summary>Hue in CAM16</summary>
     public double Hue { get; set; }
+    
+    /// <summary>Chroma in CAM16</summary>
     public double Chroma { get; set; }
+    
+    /// <summary>Lightness in CAM16</summary>
     public double J { get; set; }
+
+    /// <summary>Brightness in CAM16.</summary>
+    /// <remarks>
+    /// Prefer lightness, brightness is an absolute quantity. For example, a sheet of white paper is
+    /// much brighter viewed in sunlight than in indoor light, but it is the lightest object under any
+    /// lighting.
+    /// </remarks>
     public double Q { get; set; }
+
+    /// <summary>Colorfulness in CAM16.</summary>
+    /// <remarks>
+    /// Prefer chroma, colorfulness is an absolute quantity. For example, a yellow toy car is much
+    /// more colorful outside than inside, but it has the same chroma in both environments.
+    /// </remarks>
     public double M { get; set; }
+
+    /// <summary>Saturation in CAM16.</summary>
+    /// <remarks>
+    /// Colorfulness in proportion to brightness. Prefer chroma, saturation measures colorfulness
+    /// relative to the color's own brightness, where chroma is colorfulness relative to white.
+    /// </remarks>
     public double S { get; set; }
+
+    /// <summary>Lightness coordinate in CAM16-UCS</summary>
     public double Jstar { get; set; }
+    
+    /// <summary>a* coordinate in CAM16-UCS</summary>
     public double Astar { get; set; }
+
+    /// <summary>b* coordinate in CAM16-UCS</summary>
     public double Bstar { get; set; }
 
     public double Distance(Cam16 other)
@@ -55,7 +101,26 @@ public class Cam16
         return dE;
     }
 
-    public Cam16(double hue, double chroma, double j, double q, double m, double s, double jStar, double aStar, double bStar)
+    /// <summary>
+    /// All of the CAM16 dimensions can be calculated from 3 of the dimensions, in the following
+    /// combinations: - {j or q} and {c, m, or s} and hue - jstar, astar, bstar.
+    /// Prefer using a static
+    /// method that constructs from 3 of those dimensions. This constructor is intended for those
+    /// methods to use to return all possible dimensions.
+    /// </summary>
+    /// <param name="hue">for example, red, orange, yellow, green, etc.</param>
+    /// <param name="chroma">
+    /// informally, colorfulness / color intensity. like saturation in HSL, except
+    /// perceptually accurate.
+    /// </param>
+    /// <param name="j">lightness</param>
+    /// <param name="q">brightness; ratio of lightness to white point's lightness</param>
+    /// <param name="m">colorfulness</param>
+    /// <param name="s">saturation; ratio of chroma to white point's chroma</param>
+    /// <param name="jStar">CAM16-UCS J* coordinate</param>
+    /// <param name="aStar">CAM16-UCS a* coordinate</param>
+    /// <param name="bStar">CAM16-UCS b* coordinate</param>
+    private Cam16(double hue, double chroma, double j, double q, double m, double s, double jStar, double aStar, double bStar)
     {
         Hue = hue;
         Chroma = chroma;
@@ -68,8 +133,18 @@ public class Cam16
         Bstar = bStar;
     }
 
+    /// <summary>
+    /// Create a CAM16 color from a color, assuming the color was viewed in default viewing conditions.
+    /// </summary>
+    /// <param name="argb">ARGB representation of a color.</param>
     public static Cam16 FromInt(int argb) => FromIntInViewingConditions(argb, ViewingConditions.Default);
 
+    /// <summary>
+    /// Create a CAM16 color from a color in defined viewing conditions.
+    /// </summary>
+    /// <param name="argb">ARGB representation of a color.</param>
+    /// <param name="viewingConditions">Information about the environment where the color was observed.</param>
+    /// <returns></returns>
     public static Cam16 FromIntInViewingConditions(int argb, ViewingConditions viewingConditions)
     {
         // Transform ARGB int to XYZ
@@ -156,8 +231,15 @@ public class Cam16
         return new Cam16(hue, c, j, q, m, s, jstar, astar, bstar);
     }
 
+    /// <param name="j">lightness</param>
+    /// <param name="c">chroma</param>
+    /// <param name="h">hue</param>
     public static Cam16 FromJch(double j, double c, double h) => FromJchInViewingConditions(j, c, h, ViewingConditions.Default);
 
+    /// <param name="j">lightness</param>
+    /// <param name="c">chroma</param>
+    /// <param name="h">hue</param>
+    /// <param name="viewingConditions">Information about the environment where the color was observed.</param>
     private static Cam16 FromJchInViewingConditions(
         double j, double c, double h, ViewingConditions viewingConditions)
     {
@@ -180,9 +262,22 @@ public class Cam16
         return new Cam16(h, c, j, q, m, s, jstar, astar, bstar);
     }
 
+    /// <summary>
+    /// Create a CAM16 color from CAM16-UCS coordinates.
+    /// </summary>
+    /// <param name="jstar">CAM16-UCS lightness.</param>
+    /// <param name="astar">CAM16-UCS a dimension. Like a* in L*a*b*, it is a Cartesian coordinate on the Y axis.</param>
+    /// <param name="bstar">CAM16-UCS b dimension. Like a* in L*a*b*, it is a Cartesian coordinate on the X axis.</param>
     public static Cam16 FromUcs(double jstar, double astar, double bstar) =>
         FromUcsInViewingConditions(jstar, astar, bstar, ViewingConditions.Default);
 
+    /// <summary>
+    /// Create a CAM16 color from CAM16-UCS coordinates in defined viewing conditions.
+    /// </summary>
+    /// <param name="jstar">CAM16-UCS lightness.</param>
+    /// <param name="astar">CAM16-UCS a dimension. Like a* in L*a*b*, it is a Cartesian coordinate on the Y axis.</param>
+    /// <param name="bstar">CAM16-UCS b dimension. Like a* in L*a*b*, it is a Cartesian coordinate on the X axis.</param>
+    /// <param name="viewingConditions">Information about the environment where the color was observed.</param>
     public static Cam16 FromUcsInViewingConditions(
         double jstar, double astar, double bstar, ViewingConditions viewingConditions)
     {
@@ -199,11 +294,21 @@ public class Cam16
         return FromJchInViewingConditions(j, c, h, viewingConditions);
     }
 
+    /// <summary>
+    /// ARGB representation of the color. Assumes the color was viewed in default viewing conditions,
+    /// which are near-identical to the default viewing conditions for sRGB.
+    /// </summary>
+    /// <returns></returns>
     public int ToInt()
     {
         return Viewed(ViewingConditions.Default);
     }
 
+    /// <summary>
+    /// ARGB representation of the color, in defined viewing conditions.
+    /// </summary>
+    /// <param name="viewingConditions">Information about the environment where the color will be viewed.</param>
+    /// <returns>ARGB representation of color</returns>
     public int Viewed(ViewingConditions viewingConditions)
     {
         double alpha =
