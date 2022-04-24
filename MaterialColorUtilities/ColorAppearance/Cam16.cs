@@ -36,7 +36,7 @@ namespace MaterialColorUtilities.ColorAppearance;
 public class Cam16
 {
     // Transforms XYZ color space coordinates to 'cone'/'RGB' responses in CAM16.
-    public static double[][] XyzToCam16Rgb =
+    internal static readonly double[][] XyzToCam16Rgb =
     {
         new[] { 0.401288, 0.650173, -0.051461 },
         new[] { -0.250268, 1.204414, 0.045854 },
@@ -44,7 +44,7 @@ public class Cam16
     };
 
     // Transforms 'cone'/'RGB' responses in CAM16 to XYZ color space coordinates.
-    public static double[][] Cam16RgbToXyz =
+    internal static readonly double[][] Cam16RgbToXyz =
     {
         new[] { 1.8620678, -1.0112547, 0.14918678 },
         new[] { 0.38752654, 0.62144744, -0.00897398 },
@@ -91,6 +91,11 @@ public class Cam16
     /// <summary>b* coordinate in CAM16-UCS</summary>
     public double Bstar { get; set; }
 
+    /// <summary>
+    /// CAM16 instances also have coordinates in the CAM16-UCS space, called J*,
+    /// a*, b*, or jstar, astar, bstar in code. CAM16-UCS is included in the CAM16
+    /// specification, and should be used when measuring distances between colors.
+    /// </summary>
     public double Distance(Cam16 other)
     {
         double dJ = Jstar - other.Jstar;
@@ -144,7 +149,6 @@ public class Cam16
     /// </summary>
     /// <param name="argb">ARGB representation of a color.</param>
     /// <param name="viewingConditions">Information about the environment where the color was observed.</param>
-    /// <returns></returns>
     public static Cam16 FromIntInViewingConditions(int argb, ViewingConditions viewingConditions)
     {
         // Transform ARGB int to XYZ
@@ -240,7 +244,7 @@ public class Cam16
     /// <param name="c">chroma</param>
     /// <param name="h">hue</param>
     /// <param name="viewingConditions">Information about the environment where the color was observed.</param>
-    private static Cam16 FromJchInViewingConditions(
+    public static Cam16 FromJchInViewingConditions(
         double j, double c, double h, ViewingConditions viewingConditions)
     {
         double q =
@@ -299,10 +303,7 @@ public class Cam16
     /// which are near-identical to the default viewing conditions for sRGB.
     /// </summary>
     /// <returns></returns>
-    public int ToInt()
-    {
-        return Viewed(ViewingConditions.Default);
-    }
+    public int ToInt() => Viewed(ViewingConditions.Default);
 
     /// <summary>
     /// ARGB representation of the color, in defined viewing conditions.

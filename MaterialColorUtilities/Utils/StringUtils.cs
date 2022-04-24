@@ -3,7 +3,7 @@
     /// <summary>
     /// Utility methods for string representations of colors.
     /// </summary>
-    public class StringUtils
+    public static class StringUtils
     {
         /// <summary>
         /// Hex string representing color, ex. #ff0000 for red.

@@ -34,7 +34,7 @@ public class ViewingConditions
     /// <summary>
     /// sRGB-like viewing conditions.
     /// </summary>
-    public static ViewingConditions Default = Make(
+    public static ViewingConditions Default { get; } = Make(
         new[]
         {
              ColorUtils.WhitePointD65[0],
@@ -46,16 +46,16 @@ public class ViewingConditions
         2.0,
         false);
 
-    public double N { get; set; }
-    public double Aw { get; set; }
-    public double Nbb { get; set; }
-    public double Ncb { get; set; }
-    public double C { get; set; }
-    public double Nc { get; set; }
-    public double[] RgbD { get; set; }
-    public double Fl { get; set; }
-    public double FlRoot { get; set; }
-    public double Z { get; set; }
+    public double N { get; }
+    public double Aw { get; }
+    public double Nbb { get; }
+    public double Ncb { get; }
+    public double C { get; }
+    public double Nc { get; }
+    public double[] RgbD { get; }
+    public double Fl { get; }
+    public double FlRoot { get; }
+    public double Z { get; }
 
     public static ViewingConditions Make(
         double[] whitePoint,

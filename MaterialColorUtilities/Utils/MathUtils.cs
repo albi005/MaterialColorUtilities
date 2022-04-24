@@ -18,7 +18,7 @@ namespace MaterialColorUtilities.Utils;
 /// <summary>
 /// Utility methods for mathematical operations.
 /// </summary>
-public class MathUtils
+public static class MathUtils
 {
     /// <summary>The linear interpolation function.</summary>
     /// <returns>
