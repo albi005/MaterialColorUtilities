@@ -32,7 +32,7 @@ namespace MaterialColorUtilities.Schemes
             scheme.Error = corePalette.Error[80];
             scheme.OnError = corePalette.Error[20];
             scheme.ErrorContainer = corePalette.Error[30];
-            scheme.OnErrorContainer = corePalette.Error[90];
+            scheme.OnErrorContainer = corePalette.Error[80];
             scheme.Background = corePalette.Neutral[10];
             scheme.OnBackground = corePalette.Neutral[90];
             scheme.Surface = corePalette.Neutral[10];

@@ -18,8 +18,9 @@ using MaterialColorUtilities.ColorAppearance;
 namespace MaterialColorUtilities.Palettes;
 
 /// <summary>
-/// An intermediate concept between the key color for a UI theme, and a full color scheme. 5 sets of
-/// tones are generated, all except one use the same hue as the key color, and all vary in chroma.
+/// An intermediate concept between the key color for a UI theme, and a full color scheme.
+/// 5 sets of tones are generated, all except one use the same hue as the key color, and
+/// all vary in chroma.
 /// </summary>
 public class CorePalette
 {
@@ -30,21 +31,38 @@ public class CorePalette
     public TonalPalette NeutralVariant { get; set; }
     public TonalPalette Error { get; set; }
 
-    /// <summary>Create key tones from a source ARGB color.</summary>
+    /// <summary>Create key tones from a color.</summary>
     /// <param name="argb">ARGB representation of a color.</param>
-    public static CorePalette Of(int seed) => new(seed);
+    public static CorePalette Of(int argb) => new(argb);
 
-    /// <summary>Create key tones from a source ARGB color.</summary>
+    /// <summary>Create content key tones from a color.</summary>
     /// <param name="argb">ARGB representation of a color.</param>
-    public CorePalette(int seed)
+    public static CorePalette ContentOf(int argb) => new(argb, true);
+
+    /// <summary>Create key tones from a color.</summary>
+    /// <param name="argb">ARGB representation of a color.</param>
+    /// <param name="isContent"></param>
+    public CorePalette(int argb, bool isContent = false)
     {
-        Hct hct = Hct.FromInt(seed);
+        Hct hct = Hct.FromInt(argb);
         double hue = hct.Hue;
-        Primary = TonalPalette.FromHueAndChroma(hue, Math.Max(48, hct.Chroma));
-        Secondary = TonalPalette.FromHueAndChroma(hue, 16);
-        Tertiary = TonalPalette.FromHueAndChroma(hue + 60, 24);
-        Neutral = TonalPalette.FromHueAndChroma(hue, 4);
-        NeutralVariant = TonalPalette.FromHueAndChroma(hue, 8);
+        double chroma = hct.Chroma;
+        if (isContent)
+        {
+            Primary = TonalPalette.FromHueAndChroma(hue, chroma);
+            Secondary = TonalPalette.FromHueAndChroma(hue, chroma / 3);
+            Tertiary = TonalPalette.FromHueAndChroma(hue + 60, chroma / 2);
+            Neutral = TonalPalette.FromHueAndChroma(hue, Math.Min(chroma / 12, 4));
+            NeutralVariant = TonalPalette.FromHueAndChroma(hue, Math.Min(chroma / 6, 8));
+        }
+        else
+        {
+            Primary = TonalPalette.FromHueAndChroma(hue, Math.Max(48, chroma));
+            Secondary = TonalPalette.FromHueAndChroma(hue, 16);
+            Tertiary = TonalPalette.FromHueAndChroma(hue + 60, 24);
+            Neutral = TonalPalette.FromHueAndChroma(hue, 4);
+            NeutralVariant = TonalPalette.FromHueAndChroma(hue, 8);
+        }
         Error = TonalPalette.FromHueAndChroma(25, 84);
     }
 }
