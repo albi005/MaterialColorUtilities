@@ -81,6 +81,21 @@ public static class MathUtils
         return degrees;
     }
 
+    /// <summary>
+    /// Sign of direction change needed to travel from one angle to another.
+    /// </summary>
+    /// <param name="from">The angle travel starts from, in degrees.</param>
+    /// <param name="to">The angle travel ends at, in degrees.</param>
+    /// <returns>
+    /// -1 if decreasing <paramref name="from"/> leads to the shortest travel distance, 1 if increasing <paramref name="from"/> leads
+    /// to the shortest travel distance.
+    /// </returns>
+    public static double RotationDirection(double from, double to)
+    {
+        double increasingDifference = SanitizeDegreesDouble(to - from);
+        return increasingDifference <= 180.0 ? 1.0 : -1.0;
+    }
+
     /// <summary>Distance of two points on a circle, represented using degrees.</summary>
     public static double DifferenceDegrees(double a, double b)
     {
