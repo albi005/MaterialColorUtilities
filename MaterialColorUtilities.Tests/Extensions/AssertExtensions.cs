@@ -14,6 +14,12 @@ namespace MaterialColorUtilities.Tests.Extensions
                 throw new AssertFailedException($"Difference is {difference}.");
         }
 
+        public static void IsInInclusiveRange(this Assert assert, double value, double low, double high)
+        {
+            if (value < low || value > high)
+                throw new AssertFailedException($"Value is not in range [{low}, {high}].");
+        }
+
         public static void AreSequenceEqual<T>(this Assert assert, IEnumerable<T> expected, IEnumerable<T> actual)
         {
             if (!expected.SequenceEqual(actual))

@@ -188,5 +188,24 @@ namespace MaterialColorUtilities.Tests
                 Assert.AreEqual(argb, reconstructedArgb);
             }
         }
+
+        [TestMethod]
+        public void Hct_ReturnsSufficientlyCloseColor()
+        {
+            for (var hue = 15; hue < 360; hue += 30)
+            {
+                for (var chroma = 0; chroma <= 100; chroma += 10)
+                {
+                    for (var tone = 20; tone <= 80; tone += 10)
+                    {
+                        var hctColor = Hct.From(hue, chroma, tone);
+                        if (chroma > 0)
+                            Assert.That.IsCloseTo(hctColor.Hue, hue, 4.0);
+                        Assert.That.IsInInclusiveRange(hctColor.Chroma, 0.0, chroma + 2.5);
+                        Assert.That.IsCloseTo(hctColor.Tone, tone, 0.5);
+                    }
+                }
+            }
+        }
     }
 }
