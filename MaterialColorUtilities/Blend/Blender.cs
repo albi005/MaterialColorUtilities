@@ -42,7 +42,7 @@ public static class Blender
         double outputHue =
             MathUtils.SanitizeDegreesDouble(
                 fromHct.Hue
-                    + rotationDegrees * RotationDirection(fromHct.Hue, toHct.Hue));
+                    + rotationDegrees * MathUtils.RotationDirection(fromHct.Hue, toHct.Hue));
         return Hct.From(outputHue, fromHct.Chroma, fromHct.Tone).ToInt();
     }
 
@@ -83,36 +83,5 @@ public static class Blender
         double astar = fromA + (toA - fromA) * amount;
         double bstar = fromB + (toB - fromB) * amount;
         return Cam16.FromUcs(jstar, astar, bstar).ToInt();
-    }
-
-    /// <summary>
-    /// Sign of direction change needed to travel from one angle to another.
-    /// </summary>
-    /// <param name="from">The angle travel starts from, in degrees.</param>
-    /// <param name="to">The angle travel ends at, in degrees.</param>
-    /// <returns>
-    /// -1 if decreasing <paramref name="from"/> leads to the shortest travel distance, 1 if increasing <paramref name="from"/> leads
-    /// to the shortest travel distance.
-    /// </returns>
-    private static double RotationDirection(double from, double to)
-    {
-        double a = to - from;
-        double b = to - from + 360.0;
-        double c = to - from - 360.0;
-        double aAbs = Math.Abs(a);
-        double bAbs = Math.Abs(b);
-        double cAbs = Math.Abs(c);
-        if (aAbs <= bAbs && aAbs <= cAbs)
-        {
-            return a >= 0.0 ? 1.0 : -1.0;
-        }
-        else if (bAbs <= aAbs && bAbs <= cAbs)
-        {
-            return b >= 0.0 ? 1.0 : -1.0;
-        }
-        else
-        {
-            return c >= 0.0 ? 1.0 : -1.0;
-        }
     }
 }
