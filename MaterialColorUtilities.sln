@@ -5,11 +5,11 @@ VisualStudioVersion = 17.1.31911.260
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaterialColorUtilities", "MaterialColorUtilities\MaterialColorUtilities.csproj", "{0281EA50-1EDE-4AB7-BA15-DA37126A5E52}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaterialColorUtilities.Console", "MaterialColorUtilities.Console\MaterialColorUtilities.Console.csproj", "{14D6A693-7174-4A4C-B1EF-3528B98041B2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaterialColorUtilities.Tests", "MaterialColorUtilities.Tests\MaterialColorUtilities.Tests.csproj", "{35FD1BCC-D495-463C-8DE8-4E18EBC1790E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaterialColorUtilities.SourceGenerators", "MaterialColorUtilities.SourceGenerators\MaterialColorUtilities.SourceGenerators.csproj", "{13AF7E9C-9F4A-4D9C-BA64-0A7BAA23C0A1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaterialColorUtilities.Samples.Console", "Samples\MaterialColorUtilities.Samples.Console\MaterialColorUtilities.Samples.Console.csproj", "{14D6A693-7174-4A4C-B1EF-3528B98041B2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaterialColorUtilities.Samples.Maui", "Samples\MaterialColorUtilities.Samples.Maui\MaterialColorUtilities.Samples.Maui.csproj", "{1A4BD9E1-4EC5-4D39-B643-08EEDCA3F59E}"
 EndProject
@@ -25,10 +25,6 @@ Global
 		{0281EA50-1EDE-4AB7-BA15-DA37126A5E52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0281EA50-1EDE-4AB7-BA15-DA37126A5E52}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0281EA50-1EDE-4AB7-BA15-DA37126A5E52}.Release|Any CPU.Build.0 = Release|Any CPU
-		{14D6A693-7174-4A4C-B1EF-3528B98041B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{14D6A693-7174-4A4C-B1EF-3528B98041B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{14D6A693-7174-4A4C-B1EF-3528B98041B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{14D6A693-7174-4A4C-B1EF-3528B98041B2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{35FD1BCC-D495-463C-8DE8-4E18EBC1790E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{35FD1BCC-D495-463C-8DE8-4E18EBC1790E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35FD1BCC-D495-463C-8DE8-4E18EBC1790E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -37,6 +33,10 @@ Global
 		{13AF7E9C-9F4A-4D9C-BA64-0A7BAA23C0A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13AF7E9C-9F4A-4D9C-BA64-0A7BAA23C0A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13AF7E9C-9F4A-4D9C-BA64-0A7BAA23C0A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14D6A693-7174-4A4C-B1EF-3528B98041B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14D6A693-7174-4A4C-B1EF-3528B98041B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14D6A693-7174-4A4C-B1EF-3528B98041B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14D6A693-7174-4A4C-B1EF-3528B98041B2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1A4BD9E1-4EC5-4D39-B643-08EEDCA3F59E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1A4BD9E1-4EC5-4D39-B643-08EEDCA3F59E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A4BD9E1-4EC5-4D39-B643-08EEDCA3F59E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
@@ -48,6 +48,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{14D6A693-7174-4A4C-B1EF-3528B98041B2} = {097D3E8C-2CB9-49CE-B4D8-2F4BC94A78A5}
 		{1A4BD9E1-4EC5-4D39-B643-08EEDCA3F59E} = {097D3E8C-2CB9-49CE-B4D8-2F4BC94A78A5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
