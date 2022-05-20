@@ -38,8 +38,8 @@ jobs:
       with:
         dotnet-version: 6.0.x
 
-    - name: Restore .NET workloads
-      run: dotnet workload restore
+    - name: Install .NET MAUI workload
+      run: dotnet workload install maui
 
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1.0.6
