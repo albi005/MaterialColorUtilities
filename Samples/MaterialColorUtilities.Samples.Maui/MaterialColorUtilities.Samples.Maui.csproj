@@ -59,10 +59,10 @@
 
 	<ItemGroup>
 		<ProjectReference
-			Include="..\MaterialColorUtilities.SourceGenerators\MaterialColorUtilities.SourceGenerators.csproj"
+			Include="..\..\MaterialColorUtilities.SourceGenerators\MaterialColorUtilities.SourceGenerators.csproj"
 			OutputItemType="Analyzer"
 			ReferenceOutputAssembly="false"/>
-		<ProjectReference Include="..\MaterialColorUtilities\MaterialColorUtilities.csproj"  />
+		<ProjectReference Include="..\..\MaterialColorUtilities\MaterialColorUtilities.csproj"  />
 	</ItemGroup>
 
 	<ItemGroup>
