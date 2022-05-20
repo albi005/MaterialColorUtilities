@@ -44,8 +44,8 @@ jobs:
       with:
         dotnet-version: 6.0.x
 
-    - name: Install .NET MAUI workload
-      run: dotnet workload install maui
+    - name: Restore .NET workloads
+      run: dotnet workload restore
 
     - name: Build
       run: dotnet build $SOLUTION --configuration $BUILD_CONFIG -p:Version=$BUILD_VERSION --no-restore
