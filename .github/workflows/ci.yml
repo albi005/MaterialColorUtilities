@@ -45,13 +45,13 @@ jobs:
       uses: NuGet/setup-nuget@v1.0.6
 
     - name: Restore dependencies
-      run: nuget restore $SOLUTION
+      run: nuget restore $env:SOLUTION
 
     - name: Build
-      run: dotnet build $SOLUTION --configuration $BUILD_CONFIG -p:Version=$BUILD_VERSION --no-restore
+      run: dotnet build $env:SOLUTION --configuration $env:BUILD_CONFIG -p:Version=$env:BUILD_VERSION --no-restore
 
     - name: Run tests
-      run: dotnet test /p:Configuration=$BUILD_CONFIG --no-restore --no-build --verbosity normal
+      run: dotnet test /p:Configuration=$env:BUILD_CONFIG --no-restore --no-build --verbosity normal
       
     - name: Publish
       if: startsWith(github.ref, 'refs/tags/v')
