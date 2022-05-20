@@ -1,0 +1,95 @@
+﻿<?xml version = "1.0" encoding = "UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:MaterialColorUtilities.Samples.Maui"
+             x:Class="MaterialColorUtilities.Samples.Maui.App">
+    <Application.Resources>
+        <!--Placeholders for IntelliSense-->
+        <Color x:Key="Primary" />
+        <Color x:Key="PrimaryContainer" />
+        <Color x:Key="Secondary" />
+        <Color x:Key="SecondaryContainer" />
+        <Color x:Key="Tertiary" />
+        <Color x:Key="TertiaryContainer" />
+        <Color x:Key="Surface" />
+        <Color x:Key="SurfaceVariant" />
+        <Color x:Key="Background" />
+        <Color x:Key="Error" />
+        <Color x:Key="ErrorContainer" />
+        <Color x:Key="OnPrimary" />
+        <Color x:Key="OnPrimaryContainer" />
+        <Color x:Key="OnSecondary" />
+        <Color x:Key="OnSecondaryContainer" />
+        <Color x:Key="OnTertiary" />
+        <Color x:Key="OnTertiaryContainer" />
+        <Color x:Key="OnSurface" />
+        <Color x:Key="OnSurfaceVariant" />
+        <Color x:Key="OnError" />
+        <Color x:Key="OnErrorContainer" />
+        <Color x:Key="OnBackground" />
+        <Color x:Key="Outline" />
+        <Color x:Key="Shadow" />
+        <Color x:Key="InverseSurface" />
+        <Color x:Key="InverseOnSurface" />
+        <Color x:Key="InversePrimary" />
+        <Color x:Key="Elevation1" />
+        <Color x:Key="Elevation2" />
+        <Color x:Key="Elevation3" />
+        <Color x:Key="Elevation4" />
+        <Color x:Key="Elevation5" />
+        <SolidColorBrush x:Key="PrimaryBrush" />
+        <SolidColorBrush x:Key="PrimaryContainerBrush" />
+        <SolidColorBrush x:Key="SecondaryBrush" />
+        <SolidColorBrush x:Key="SecondaryContainerBrush" />
+        <SolidColorBrush x:Key="TertiaryBrush" />
+        <SolidColorBrush x:Key="TertiaryContainerBrush" />
+        <SolidColorBrush x:Key="SurfaceBrush" />
+        <SolidColorBrush x:Key="SurfaceVariantBrush" />
+        <SolidColorBrush x:Key="BackgroundBrush" />
+        <SolidColorBrush x:Key="ErrorBrush" />
+        <SolidColorBrush x:Key="ErrorContainerBrush" />
+        <SolidColorBrush x:Key="OnPrimaryBrush" />
+        <SolidColorBrush x:Key="OnPrimaryContainerBrush" />
+        <SolidColorBrush x:Key="OnSecondaryBrush" />
+        <SolidColorBrush x:Key="OnSecondaryContainerBrush" />
+        <SolidColorBrush x:Key="OnTertiaryBrush" />
+        <SolidColorBrush x:Key="OnTertiaryContainerBrush" />
+        <SolidColorBrush x:Key="OnSurfaceBrush" />
+        <SolidColorBrush x:Key="OnSurfaceVariantBrush" />
+        <SolidColorBrush x:Key="OnErrorBrush" />
+        <SolidColorBrush x:Key="OnErrorContainerBrush" />
+        <SolidColorBrush x:Key="OnBackgroundBrush" />
+        <SolidColorBrush x:Key="OutlineBrush" />
+        <SolidColorBrush x:Key="ShadowBrush" />
+        <SolidColorBrush x:Key="InverseSurfaceBrush" />
+        <SolidColorBrush x:Key="InverseOnSurfaceBrush" />
+        <SolidColorBrush x:Key="InversePrimaryBrush" />
+        <SolidColorBrush x:Key="Elevation1Brush" />
+        <SolidColorBrush x:Key="Elevation2Brush" />
+        <SolidColorBrush x:Key="Elevation3Brush" />
+        <SolidColorBrush x:Key="Elevation4Brush" />
+        <SolidColorBrush x:Key="Elevation5Brush" />
+
+        <Style TargetType="Page" ApplyToDerivedTypes="True">
+            <Setter Property="BackgroundColor" Value="{DynamicResource Background}" />
+        </Style>
+
+        <Style TargetType="Slider">
+            <Setter Property="MinimumTrackColor" Value="{DynamicResource Primary}" />
+            <Setter Property="MaximumTrackColor" Value="{OnPlatform Android={DynamicResource Primary}, Default={DynamicResource SurfaceVariant}}" />
+            <Setter Property="ThumbColor" Value="{DynamicResource Primary}" />
+        </Style>
+
+        <Style x:Key="BaseStyle" TargetType="Element">
+            <Setter Property="Shell.BackgroundColor" Value="{DynamicResource Elevation2}" />
+            <Setter Property="Shell.ForegroundColor" Value="{DynamicResource OnSurface}" />
+            <Setter Property="Shell.TitleColor" Value="{DynamicResource OnSurface}" />
+        </Style>
+        <Style BasedOn="{StaticResource BaseStyle}" TargetType="ShellItem" ApplyToDerivedTypes="True" />
+
+        <Style TargetType="Label">
+            <Setter Property="TextColor" Value="{DynamicResource OnSurface}" />
+        </Style>
+
+    </Application.Resources>
+</Application>
