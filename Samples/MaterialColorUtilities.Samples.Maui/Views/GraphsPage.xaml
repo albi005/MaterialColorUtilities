@@ -4,10 +4,8 @@
              x:Class="MaterialColorUtilities.Samples.Maui.GraphsPage"
              Title="Graphs"
              BackgroundColor="{DynamicResource Primary}">
-    <StackLayout BackgroundColor="{DynamicResource Background}">
-        <Label Text="Welcome to .NET MAUI!"
-                VerticalOptions="Center" 
-                HorizontalOptions="Center" />
-        <BoxView BackgroundColor="{DynamicResource Primary}" HeightRequest="100" />
-    </StackLayout>
+    <ScrollView>
+        <StackLayout BackgroundColor="{DynamicResource Background}" x:Name="stack" Padding="16">
+        </StackLayout>
+    </ScrollView>
 </ContentPage>
