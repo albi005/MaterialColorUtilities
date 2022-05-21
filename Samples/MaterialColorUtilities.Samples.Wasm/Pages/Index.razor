@@ -1,7 +1,39 @@
 ﻿@page "/"
+@using MaterialColorUtilities.ColorAppearance
+@using SkiaSharp
+@using SkiaSharp.Views.Blazor
 
 <PageTitle>Material Color Utilities for .NET</PageTitle>
 
-<h1>Hello, world!</h1>
+<SKCanvasView
+    @ref=@view
+    OnPaintSurface=OnPaintSurface
+    width="400"
+    height="200" />
 
-Welcome to your new app.
+@code
+{
+    private SKCanvasView view = new();
+    private SKBitmap bitmap = new(100, 50);
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        for (int x = 0; x < bitmap.Width; x++)
+        {
+            for (int y = 0; y < bitmap.Height; y++)
+            {
+                Hct hct = Hct.From(360 * x / bitmap.Width, 100, 100 * y / bitmap.Height);
+                bitmap.SetPixel(x, y, new SKColor((uint)hct.ToInt()));
+            }
+        }
+        bitmap = bitmap.Resize(new SKImageInfo(400,200), SKFilterQuality.None);
+        view.Invalidate();
+    }
+
+    public void OnPaintSurface(SkiaSharp.Views.Blazor.SKPaintSurfaceEventArgs args)
+    {
+        var canvas = args.Surface.Canvas;
+        canvas.DrawBitmap(bitmap, 0, 0);
+    }
+}
