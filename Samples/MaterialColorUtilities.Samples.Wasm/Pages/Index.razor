@@ -1,39 +1,28 @@
 ﻿@page "/"
 @using MaterialColorUtilities.ColorAppearance
+@using MaterialColorUtilities.Palettes
+@using MaterialColorUtilities.Samples.Wasm.Services
+@using MaterialColorUtilities.Schemes
+@using MaterialColorUtilities.Utils
+@using MudBlazor.Utilities
 @using SkiaSharp
 @using SkiaSharp.Views.Blazor
+@inject ThemeService themeService
 
 <PageTitle>Material Color Utilities for .NET</PageTitle>
 
-<SKCanvasView
-    @ref=@view
-    OnPaintSurface=OnPaintSurface
-    width="400"
-    height="200" />
+<MudMainContent>
+    <MudContainer>
 
-@code
-{
-    private SKCanvasView view = new();
-    private SKBitmap bitmap = new(100, 50);
+        <HctSliders />
+        
+        <div class="mx-auto">
+            <ColorPlot Resolution="100" />
+        </div>
 
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        for (int x = 0; x < bitmap.Width; x++)
-        {
-            for (int y = 0; y < bitmap.Height; y++)
-            {
-                Hct hct = Hct.From(360 * x / bitmap.Width, 100, 100 * y / bitmap.Height);
-                bitmap.SetPixel(x, y, new SKColor((uint)hct.ToInt()));
-            }
-        }
-        bitmap = bitmap.Resize(new SKImageInfo(400,200), SKFilterQuality.None);
-        view.Invalidate();
-    }
-
-    public void OnPaintSurface(SkiaSharp.Views.Blazor.SKPaintSurfaceEventArgs args)
-    {
-        var canvas = args.Surface.Canvas;
-        canvas.DrawBitmap(bitmap, 0, 0);
-    }
-}
+        <MudButton Variant="Variant.Filled" Color="Color.Primary">Primary</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary">Secondary</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Tertiary">Tertiary</MudButton>            
+            
+    </MudContainer>
+</MudMainContent>

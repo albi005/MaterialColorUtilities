@@ -1,0 +1,59 @@
+﻿@page "/hct"
+@using MaterialColorUtilities.ColorAppearance
+@using MaterialColorUtilities.Palettes
+@using MaterialColorUtilities.Samples.Wasm.Services
+@using MaterialColorUtilities.Schemes
+@using MaterialColorUtilities.Utils
+@using MudBlazor.Utilities
+@using SkiaSharp
+@using SkiaSharp.Views.Blazor
+@inject ThemeService themeService
+
+<SKCanvasView
+    @ref=@view
+    OnPaintSurface=OnPaintSurface
+    @onclick=OnClick
+    width="400"
+    height="200"
+    style="display: block" />
+
+@code
+{
+    private SKCanvasView view;
+    private SKBitmap bitmap;
+
+    /// <summary>
+    /// The width of the bitmap that will be generated.
+    /// </summary>
+    [Parameter] public int Resolution { get; set; } = 400;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        bitmap = new(Resolution, Resolution / 2);
+        for (int x = 0; x < bitmap.Width; x++)
+        {
+            for (int y = 0; y < bitmap.Height; y++)
+            {
+                Hct hct = Hct.From(360 * x / bitmap.Width, 100, 100 * y / bitmap.Height);
+                bitmap.SetPixel(x, y, new SKColor((uint)hct.ToInt()));
+            }
+        }
+        bitmap = bitmap.Resize(new SKImageInfo(400, 200), SKFilterQuality.None);
+    }
+
+    public void OnPaintSurface(SkiaSharp.Views.Blazor.SKPaintSurfaceEventArgs args)
+    {
+        var canvas = args.Surface.Canvas;
+        canvas.DrawBitmap(bitmap, 0, 0);
+    }
+
+    public void OnClick(MouseEventArgs args)
+    {
+        var x = args.OffsetX;
+        var y = args.OffsetY;
+        var hct = Hct.From(360 * x / bitmap.Width, 100, 100 * y / bitmap.Height);
+        Console.WriteLine($"H = {hct.Hue}, C = {hct.Chroma}, T = {hct.Tone}");
+        themeService.Seed = hct.ToInt();
+    }
+}

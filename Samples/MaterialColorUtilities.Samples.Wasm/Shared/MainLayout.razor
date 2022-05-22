@@ -1,17 +1,39 @@
-﻿@inherits LayoutComponentBase
+﻿@using MaterialColorUtilities.Samples.Wasm.Services
+@inherits LayoutComponentBase
+@inject ThemeService ThemeService
+@implements IDisposable
 
-<div class="page">
-    <div class="sidebar">
+<MudThemeProvider Theme="@ThemeService.MudTheme"/>
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="0">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => _drawerOpen = !_drawerOpen)" />
+        <a href="/">
+            <MudText Typo="Typo.h5" Style="color: var(--mud-palette-appbar-text)">
+                Material Color Utilities for .NET
+            </MudText>
+        </a>
+    </MudAppBar>
+    <MudDrawer Elevation="0" @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Always" >
         <NavMenu />
-    </div>
+    </MudDrawer>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
+@code {
+    bool _drawerOpen = true;
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        ThemeService.ThemeChanged += UpdateTheme;
+    }
+
+    public void Dispose() => ThemeService.ThemeChanged -= UpdateTheme;
+
+    void UpdateTheme(object sender, EventArgs e) => StateHasChanged();
+}
