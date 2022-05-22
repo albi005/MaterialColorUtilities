@@ -1,0 +1,28 @@
+﻿@page "/"
+@using MaterialColorUtilities.ColorAppearance
+@using MaterialColorUtilities.Palettes
+@using MaterialColorUtilities.Samples.Wasm.Services
+@using MaterialColorUtilities.Schemes
+@using MaterialColorUtilities.Utils
+@using MudBlazor.Utilities
+@using SkiaSharp
+@using SkiaSharp.Views.Blazor
+@inject ThemeService themeService
+
+<PageTitle>Material Color Utilities for .NET</PageTitle>
+
+<MudMainContent>
+    <MudContainer>
+
+        <HctSliders />
+        
+        <div class="mx-auto">
+            <ColorPlot Resolution="100" />
+        </div>
+
+        <MudButton Variant="Variant.Filled" Color="Color.Primary">Primary</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary">Secondary</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Tertiary">Tertiary</MudButton>            
+            
+    </MudContainer>
+</MudMainContent>
