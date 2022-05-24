@@ -1,4 +1,5 @@
 ﻿using MaterialColorUtilities.Palettes;
+using MaterialColorUtilities.Samples.Shared;
 using MaterialColorUtilities.Samples.Wasm.Extensions;
 using MudBlazor;
 using MudBlazor.Utilities;

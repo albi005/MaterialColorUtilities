@@ -11,18 +11,28 @@
 
 <PageTitle>Material Color Utilities for .NET</PageTitle>
 
-<MudMainContent>
-    <MudContainer>
-
-        <HctSliders />
+<MudContainer MaxWidth="@MaxWidth.Large" Class="pt-10">
+    <MudGrid>
+        <MudItem>
+            <MudPaper Class="pa-4">
+                <ColorPlot Resolution="50" />                
+            </MudPaper>
+        </MudItem>
+        <MudItem md="6" lg="4">
+            <MudPaper Class="pa-4">
+                <HctSliders />
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="6" sm="4" md="3">
+            <MudPaper Class="pa-4">
+                <MudStack>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary">Primary</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Secondary">Secondary</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Tertiary">Tertiary</MudButton>                    
+                </MudStack>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
         
-        <div class="mx-auto">
-            <ColorPlot Resolution="100" />
-        </div>
-
-        <MudButton Variant="Variant.Filled" Color="Color.Primary">Primary</MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Secondary">Secondary</MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Tertiary">Tertiary</MudButton>            
             
-    </MudContainer>
-</MudMainContent>
+</MudContainer>
