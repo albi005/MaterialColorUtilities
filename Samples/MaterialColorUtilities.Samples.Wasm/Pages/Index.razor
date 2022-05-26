@@ -11,7 +11,7 @@
 
 <PageTitle>Material Color Utilities for .NET</PageTitle>
 
-<MudContainer MaxWidth="@MaxWidth.Large" Class="pt-10">
+<MudContainer MaxWidth="@MaxWidth.ExtraLarge" Class="pt-10">
     <MudGrid>
         <MudItem>
             <Colors />
@@ -19,13 +19,18 @@
         <MudItem>
             <ColorInput />
         </MudItem>
-        <MudItem >
+        <MudItem>
             <MudPaper Class="pa-4">
+                <h3>HCT</h3>
+                <p class="pb-4">
+                    chroma is set to the maximum
+                </p>
                 <ColorPlot Resolution="50" />
             </MudPaper>
         </MudItem>
         <MudItem md="6" lg="4">
             <MudPaper Class="pa-4">
+                <h3>HCT</h3>
                 <HctSliders />
             </MudPaper>
         </MudItem>
