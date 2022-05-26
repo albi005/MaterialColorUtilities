@@ -14,8 +14,14 @@
 <MudContainer MaxWidth="@MaxWidth.Large" Class="pt-10">
     <MudGrid>
         <MudItem>
+            <Colors />
+        </MudItem>
+        <MudItem>
+            <ColorInput />
+        </MudItem>
+        <MudItem >
             <MudPaper Class="pa-4">
-                <ColorPlot Resolution="50" />                
+                <ColorPlot Resolution="50" />
             </MudPaper>
         </MudItem>
         <MudItem md="6" lg="4">
@@ -23,16 +29,5 @@
                 <HctSliders />
             </MudPaper>
         </MudItem>
-        <MudItem xs="6" sm="4" md="3">
-            <MudPaper Class="pa-4">
-                <MudStack>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary">Primary</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Secondary">Secondary</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Tertiary">Tertiary</MudButton>                    
-                </MudStack>
-            </MudPaper>
-        </MudItem>
     </MudGrid>
-        
-            
 </MudContainer>

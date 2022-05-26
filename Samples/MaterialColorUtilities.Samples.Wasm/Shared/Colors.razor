@@ -1,0 +1,57 @@
+﻿@using MaterialColorUtilities.ColorAppearance
+@using MaterialColorUtilities.Utils
+@inherits SeedColorSelector
+
+<MudHidden Breakpoint="@Breakpoint.Xs">
+    <MudStack>
+        <MudPaper Style="@ToStyle(ThemeService.Seed)" Class="pa-4">
+            Seed
+        </MudPaper>
+        <MudPaper Style="@ToStyle(ThemeService.Scheme.Primary)" Class="pa-4">
+            Primary
+        </MudPaper>
+        <MudPaper Style="@ToStyle(ThemeService.Scheme.Secondary)" Class="pa-4">
+            Secondary
+        </MudPaper>
+        <MudPaper Style="@ToStyle(ThemeService.Scheme.Tertiary)" Class="pa-4">
+            Tertiary
+        </MudPaper>
+    </MudStack>
+</MudHidden>
+<MudHidden Breakpoint="@Breakpoint.Xs" Invert="true">
+    <MudGrid>
+        <MudItem xs="6">
+            <MudPaper Style="@ToStyle(ThemeService.Seed)" Class="pa-4">
+                Seed
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="6">
+            <MudPaper Style="@ToStyle(ThemeService.Scheme.Primary)" Class="pa-4">
+                Primary
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="6">
+            <MudPaper Style="@ToStyle(ThemeService.Scheme.Secondary)" Class="pa-4">
+                Secondary
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="6">
+            <MudPaper Style="@ToStyle(ThemeService.Scheme.Tertiary)" Class="pa-4">
+                Tertiary
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudHidden>
+
+@code {
+    protected override void SetFromSeed(int seed) { }
+
+    string ToStyle(int color)
+    {
+        double tone = ColorUtils.LStarFromArgb(color);
+        string textColor = tone > 50
+            ? "black"
+            : "white";
+        return $"background-color: {StringUtils.HexFromArgb(color)}; color: {textColor}";
+    }
+}

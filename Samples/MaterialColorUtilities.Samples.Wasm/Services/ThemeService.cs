@@ -22,22 +22,23 @@ public class ThemeService
         }
     }
 
+    public AppScheme<int> Scheme { get; set; }
+
     public void Apply()
     {
         CorePalette corePalette = new(Seed);
-        AppScheme<MudColor> lightScheme = new LightAppSchemeMapper()
-            .Map(corePalette)
-            .ConvertTo(IntExtensions.ToMudColor);
+        Scheme = new LightAppSchemeMapper().Map(corePalette);
+        AppScheme<MudColor> mudScheme = Scheme.ConvertTo(IntExtensions.ToMudColor);
         MudTheme.Palette = new()
         {
-            Primary = lightScheme.Primary,
-            Secondary = lightScheme.Secondary,
-            Tertiary = lightScheme.Tertiary,
-            Background = lightScheme.Background,
-            AppbarBackground = lightScheme.Elevation2,
-            AppbarText = lightScheme.OnBackground,
-            DrawerBackground = lightScheme.Elevation1,
-            Surface = lightScheme.Elevation1,
+            Primary = mudScheme.Primary,
+            Secondary = mudScheme.Secondary,
+            Tertiary = mudScheme.Tertiary,
+            Background = mudScheme.Background,
+            AppbarBackground = mudScheme.Elevation2,
+            AppbarText = mudScheme.OnBackground,
+            DrawerBackground = mudScheme.Elevation1,
+            Surface = mudScheme.Elevation1,
         };
         ThemeChanged?.Invoke(this, EventArgs.Empty);
     }

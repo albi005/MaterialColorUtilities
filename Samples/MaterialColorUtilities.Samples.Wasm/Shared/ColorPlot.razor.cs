@@ -12,6 +12,7 @@ namespace MaterialColorUtilities.Samples.Wasm.Shared
         private SKCanvasView view;
         private double x;
         private double y;
+        private SKPaint paint = new() { Color = SKColors.White, Style = SKPaintStyle.Stroke, StrokeWidth = 2 };
 
         /// <summary>
         /// The width of the bitmap that will be generated.
@@ -37,7 +38,7 @@ namespace MaterialColorUtilities.Samples.Wasm.Shared
         {
             var canvas = args.Surface.Canvas;
             canvas.DrawBitmap(bitmap, 0, 0);
-            canvas.DrawCircle((float)x, (float)y, 4, new SKPaint { Color = SKColors.White, Style = SKPaintStyle.Stroke });
+            canvas.DrawCircle((float)x, (float)y, 4, paint);
         }
 
         public void OnClick(MouseEventArgs args)
