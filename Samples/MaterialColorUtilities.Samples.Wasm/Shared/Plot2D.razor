@@ -1,0 +1,55 @@
+@using SkiaSharp.Views.Blazor
+@using SkiaSharp
+
+
+<SKCanvasView OnPaintSurface="OnPaintSurface" IgnorePixelScaling="true" height="440" width="440" />
+
+@code {
+    [Parameter] public Func<double, double> Func { get; set; }
+    [Parameter] public double MinX { get; set; } = 0;
+    [Parameter] public double MaxX { get; set; } = 100;
+    [Parameter] public double MinY { get; set; } = 0;
+    [Parameter] public double MaxY { get; set; } = 100;
+    [Parameter] public string LabelX { get; set; } = "X";
+    [Parameter] public string LabelY { get; set; } = "Y";
+    private SKPaint black = new()
+    {
+        Color = SKColors.Black,
+        IsStroke = true
+    };
+    private SKPaint gray = new()
+    {
+        Color = new(0xFF787777),
+        IsStroke = true
+    };
+    private SKPaint grayCenter = new()
+    {
+        Color = new(0xFF787777),
+        TextAlign = SKTextAlign.Center
+    };
+    private SKPaint grayRight = new()
+    {
+        Color = new(0xFF787777),
+        TextAlign = SKTextAlign.Right
+    };
+
+
+    void OnPaintSurface(SKPaintSurfaceEventArgs args)
+    {
+        var canvas = args.Surface.Canvas;
+        canvas.DrawRect(20, 20, 400, 400, gray);
+        for (int x = 0; x < 400; x++)
+        {
+            double y = Func(x * MaxX / 400) / MaxY * 400;
+            canvas.DrawPoint((float)x + 20, 400 - (float)y + 20, black);
+        }
+        canvas.DrawText(MinX.ToString(), 20, 435, gray);
+        canvas.DrawText(LabelX, 220, 435, grayCenter);
+        canvas.DrawText(MaxX.ToString(), 420, 435, grayRight);
+        canvas.RotateDegrees(-90);
+        canvas.DrawText(MinY.ToString(), -420, 10, gray);
+        canvas.DrawText(LabelY, -220, 10, gray);
+        canvas.DrawText(MaxY.ToString(), -20, 10, grayRight);
+    }
+}
+
