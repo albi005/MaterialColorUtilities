@@ -13,7 +13,7 @@
 
 <MudContainer MaxWidth="@MaxWidth.ExtraLarge" Class="pt-10">
     <MudGrid>
-        <MudItem>
+        <MudItem xs="12" sm="3" md="2" xl="1">
             <Colors />
         </MudItem>
         <MudItem>
@@ -22,10 +22,33 @@
         <MudItem>
             <MudPaper Class="pa-4">
                 <h3>HCT</h3>
-                <p class="pb-4">
-                    chroma is set to the maximum
-                </p>
-                <ColorPlot Resolution="50" />
+                chroma is maximized
+                <ColorPlot
+                    Resolution="200"
+                    Func="@((x,y) => Hct.From(x, 100, y).ToInt())"
+                    FuncInverse="@(color => { Hct hct = Hct.FromInt(color); return (hct.Hue, hct.Tone); })"
+                    LabelX="Hue"
+                    LabelY="Tone"
+                    MaxX="360"
+                    MaxY="100"
+                    MinX="0"
+                    MinY="0"/>
+            </MudPaper>
+        </MudItem>
+        <MudItem>
+            <MudPaper Class="pa-4">
+                <h3>CAM16</h3>
+                from JCh, chroma is maximized
+                <ColorPlot
+                    Resolution="200"
+                    Func="@((x,y) => Cam16.FromJch(y, 100, x).ToInt())"
+                    FuncInverse="@(color => { Cam16 cam16 = Cam16.FromInt(color); return (cam16.Hue, cam16.J); })"
+                    LabelX="h"
+                    LabelY="J"
+                    MaxX="360"
+                    MaxY="100"
+                    MinX="0"
+                    MinY="0"/>
             </MudPaper>
         </MudItem>
         <MudItem md="6" lg="4">
