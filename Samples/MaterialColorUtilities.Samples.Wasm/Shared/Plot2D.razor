@@ -2,7 +2,11 @@
 @using SkiaSharp.Views.Blazor
 @using SkiaSharp
 
-<SKCanvasView OnPaintSurface="OnPaintSurface" IgnorePixelScaling="true" height="440" width="440" />
+<SKCanvasView
+    OnPaintSurface="OnPaintSurface"
+    IgnorePixelScaling="true"
+    style="display: block; height: 440px; width: 440px;"
+    />
 
 @code {
     [Parameter] public Func<double, double> Func { get; set; }

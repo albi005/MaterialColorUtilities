@@ -10,8 +10,8 @@ public partial class ColorPlot : SeedColorSelector
 {
     private SKBitmap bitmap;
     private SKCanvasView view;
-    private double seedX;
-    private double seedY;
+    private double seedX = -10000000;
+    private double seedY = -10000000;
     private readonly SKPaint seedPaint = new()
     {
         Color = SKColors.White,
@@ -72,6 +72,7 @@ public partial class ColorPlot : SeedColorSelector
 
     protected override void SetFromSeed(int seed)
     {
+        if (FuncInverse == null) return;
         var xy = FuncInverse(seed);
         double percentX = (xy.Item1 - MinX) / (MaxX - MinX);
         double percentY = (xy.Item2 - MinY) / (MaxY - MinY);

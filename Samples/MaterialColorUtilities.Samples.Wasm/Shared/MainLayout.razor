@@ -12,9 +12,15 @@
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => _drawerOpen = !_drawerOpen)" />
         <a href="">
             <MudText Typo="Typo.h5" Style="color: var(--mud-palette-appbar-text)">
-                Material Color Utilities for .NET
+                Material Color
+                <MudHidden Breakpoint="@Breakpoint.Xs">
+                    Utilities
+                </MudHidden>
+                for .NET
             </MudText>
         </a>
+        <MudSpacer />
+        <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Href="https://github.com/albi005/MaterialColorUtilities" Style="color: var(--mud-palette-appbar-text)" />
     </MudAppBar>
     <MudDrawer Elevation="0" @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Always" >
         <NavMenu />
