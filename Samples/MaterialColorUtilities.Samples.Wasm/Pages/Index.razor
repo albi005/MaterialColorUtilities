@@ -51,6 +51,22 @@
                     MinY="0"/>
             </MudPaper>
         </MudItem>
+        <MudItem>
+            <MudPaper Class="pa-4">
+                <h3>HSV</h3>
+                saturation is maximized
+                <ColorPlot
+                    Resolution="200"
+                    Func="@Hsl"
+                    FuncInverse="@HslInverse"
+                    LabelX="H"
+                    LabelY="L"
+                    MaxX="360"
+                    MaxY="1"
+                    MinX="0"
+                    MinY="0"/>
+            </MudPaper>
+        </MudItem>
         <MudItem md="6" lg="4">
             <MudPaper Class="pa-4">
                 <h3>HCT</h3>
@@ -60,3 +76,17 @@
     </MudGrid>
     <Graphs />
 </MudContainer>
+
+@code {
+    private int Hsl(double x, double y)
+    {
+        MudColor mudColor = new(x, 1, y, 1);
+        return ColorUtils.ArgbFromRgb(mudColor.R, mudColor.G, mudColor.B);
+    }
+
+    private (double, double) HslInverse(int color)
+    {
+        MudColor mudColor = new(ColorUtils.RedFromArgb(color), ColorUtils.GreenFromArgb(color), ColorUtils.BlueFromArgb(color), 255);
+        return (mudColor.H, mudColor.L);
+    }
+}
