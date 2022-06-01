@@ -7,9 +7,9 @@
   "linkerEnabled": true,
   "resources": {
     "assembly": {
-      "MaterialColorUtilities.dll": "sha256-u7kgoh9ouWv6FadAHqZuQ4BJ31X4qFSTD2zUjfzJbDM=",
-      "MaterialColorUtilities.Samples.Shared.dll": "sha256-+aO8egoWhLuhoGyrd\/BmVetXvQ5bO8pWh3u8yA0RtGY=",
-      "MaterialColorUtilities.Samples.Wasm.dll": "sha256-MSmx6Lr9I4xarzgzFSNCgmfbnndPdCk8G\/ddbc8s2Do=",
+      "MaterialColorUtilities.dll": "sha256-6n143F\/p0Z5LztjjR1MwPudFB6eZpW34U10m31mMwDI=",
+      "MaterialColorUtilities.Samples.Shared.dll": "sha256-NWI4sCRmzkssy0RJ4njSbM1V1PbWRN3W3OHEjhrP2KE=",
+      "MaterialColorUtilities.Samples.Wasm.dll": "sha256-i9focKljUTnnPlgh0Snv5mWlNEECxvNGANaFEZhnhmc=",
       "Microsoft.AspNetCore.Components.dll": "sha256-g2CofOUFdp8kTwmN\/uBz1PYKOWNc++vFsCzYwp9cYvE=",
       "Microsoft.AspNetCore.Components.Forms.dll": "sha256-\/7\/rwea8I\/vOZ8UQlhaBZAVWyCo1wIT5Rbhe4q6mN3o=",
       "Microsoft.AspNetCore.Components.Web.dll": "sha256-BlM9Y\/gedvUWuGR5XjA7h7JwGWJWpltVHj\/uPxsGQGs=",
