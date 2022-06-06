@@ -25,7 +25,7 @@
     void OnPaintSurface(SKPaintSurfaceEventArgs args)
     {
         var canvas = args.Surface.Canvas;
-        args.DrawLabels(MinX, MaxX, MinY, MaxY, LabelX, LabelY);
+        args.DrawLabels(MinX, MinY, MaxX, MaxY, LabelX, LabelY);
         for (int x = 0; x < 400; x++)
         {
             double y = Func(x * MaxX / 400) / MaxY * 400;

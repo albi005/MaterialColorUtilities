@@ -67,6 +67,29 @@
                     MinY="0"/>
             </MudPaper>
         </MudItem>
+        <MudItem>
+            <MudPaper Class="pa-4">
+                <h3>
+                    OKHSL
+                    <MudIconButton
+                        Href="https://bottosson.github.io/misc/colorpicker/"
+                        Icon="@Icons.Material.Outlined.OpenInNew"
+                        Size="@Size.Small"
+                        Target="_blank" />
+                </h3>
+                saturation is maximized
+                <ColorPlot
+                    Resolution="200"
+                    Func="@Okhsl"
+                    FuncInverse="@OkhslInverse"
+                    LabelX="H"
+                    LabelY="L"
+                    MaxX="1"
+                    MaxY="1"
+                    MinX="0"
+                    MinY="0"/>
+            </MudPaper>
+        </MudItem>
         <MudItem md="6" lg="4">
             <MudPaper Class="pa-4">
                 <h3>HCT</h3>
@@ -88,5 +111,23 @@
     {
         MudColor mudColor = new(ColorUtils.RedFromArgb(color), ColorUtils.GreenFromArgb(color), ColorUtils.BlueFromArgb(color), 255);
         return (mudColor.H, mudColor.L);
+    }
+
+    private int Okhsl(double x, double y)
+    {
+        var (r,g,b) = OkColor.OkHslToSrgb((x, 1, y));
+        return ColorUtils.ArgbFromRgb(
+            (int)(r * 255),
+            (int)(g * 255),
+            (int)(b * 255));
+    }
+
+    private (double, double) OkhslInverse(int color)
+    {
+        var okhsl = OkColor.SrgbToOkHsl((
+            ColorUtils.RedFromArgb(color) / 255.0,
+            ColorUtils.GreenFromArgb(color) / 255.0,
+            ColorUtils.BlueFromArgb(color) / 255.0));
+        return (okhsl.h, okhsl.l);
     }
 }
