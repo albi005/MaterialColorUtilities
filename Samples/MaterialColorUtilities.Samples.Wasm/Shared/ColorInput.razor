@@ -1,0 +1,33 @@
+﻿@using MaterialColorUtilities.Utils
+@using System.Globalization
+@using MudBlazor.Utilities
+@inherits SeedColorSelector
+
+<MudColorPicker
+    Value="@_color"
+    ValueChanged="@ValueChanged"
+    ColorPickerMode="@ColorPickerMode.HEX"
+    Label="Seed color"
+    PickerVariant="@PickerVariant.Static"
+    Elevation="1"
+    DisableAlpha="true"
+    DisablePreview="true" />
+
+@code {
+    string _color;
+
+    protected override void SetFromSeed(int seed)
+    {
+        string color = StringUtils.HexFromArgb(seed);
+        _color = color;
+    }
+
+    void ValueChanged(MudColor mudColor)
+    {
+        ThemeService.Seed = ColorUtils.ArgbFromRgb(
+            mudColor.R,
+            mudColor.G,
+            mudColor.B
+        );
+    }
+}

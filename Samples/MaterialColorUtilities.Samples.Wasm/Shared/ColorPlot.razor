@@ -1,19 +1,14 @@
-﻿@page "/hct"
-@using MaterialColorUtilities.ColorAppearance
-@using MaterialColorUtilities.Palettes
-@using MaterialColorUtilities.Samples.Wasm.Services
-@using MaterialColorUtilities.Schemes
-@using MaterialColorUtilities.Utils
-@using MudBlazor.Utilities
-@using SkiaSharp
+﻿@using MaterialColorUtilities.Samples.Wasm.Services
 @using SkiaSharp.Views.Blazor
+
 @inject ThemeService themeService
+
 @inherits SeedColorSelector
 
 <SKCanvasView
     @ref=@view
     OnPaintSurface=OnPaintSurface
     @onclick=OnClick
-    width="400"
-    height="200"
-    style="display: block" />
+    style="display: block; height: 240px; width: 440px;"
+    IgnorePixelScaling="true"
+    />

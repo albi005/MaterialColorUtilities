@@ -2,7 +2,7 @@
 using MaterialColorUtilities.Palettes;
 using MaterialColorUtilities.Schemes;
 
-namespace MaterialColorUtilities.Samples.Wasm;
+namespace MaterialColorUtilities.Samples.Shared;
 
 public partial class AppScheme<TColor> : Scheme<TColor>
 {

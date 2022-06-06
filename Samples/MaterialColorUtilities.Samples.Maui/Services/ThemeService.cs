@@ -1,4 +1,5 @@
 ﻿using MaterialColorUtilities.Palettes;
+using MaterialColorUtilities.Samples.Shared;
 using MaterialColorUtilities.Schemes;
 
 namespace MaterialColorUtilities.Samples.Maui.Services;

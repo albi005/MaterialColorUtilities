@@ -13,9 +13,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaterialColorUtilities.Samp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaterialColorUtilities.Samples.Maui", "Samples\MaterialColorUtilities.Samples.Maui\MaterialColorUtilities.Samples.Maui.csproj", "{1A4BD9E1-4EC5-4D39-B643-08EEDCA3F59E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaterialColorUtilities.Samples.Shared", "Samples\MaterialColorUtilities.Samples.Shared\MaterialColorUtilities.Samples.Shared.csproj", "{18275535-E672-4C50-A459-CF768116B544}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaterialColorUtilities.Samples.Wasm", "Samples\MaterialColorUtilities.Samples.Wasm\MaterialColorUtilities.Samples.Wasm.csproj", "{C3E52F2E-BA86-4BA2-A4F4-C88C50516B68}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{097D3E8C-2CB9-49CE-B4D8-2F4BC94A78A5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{37DE3A3E-58B3-41FD-8DFB-231209ACCBC2}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +52,10 @@ Global
 		{1A4BD9E1-4EC5-4D39-B643-08EEDCA3F59E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A4BD9E1-4EC5-4D39-B643-08EEDCA3F59E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1A4BD9E1-4EC5-4D39-B643-08EEDCA3F59E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{18275535-E672-4C50-A459-CF768116B544}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18275535-E672-4C50-A459-CF768116B544}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18275535-E672-4C50-A459-CF768116B544}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18275535-E672-4C50-A459-CF768116B544}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C3E52F2E-BA86-4BA2-A4F4-C88C50516B68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C3E52F2E-BA86-4BA2-A4F4-C88C50516B68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3E52F2E-BA86-4BA2-A4F4-C88C50516B68}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -56,6 +67,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{14D6A693-7174-4A4C-B1EF-3528B98041B2} = {097D3E8C-2CB9-49CE-B4D8-2F4BC94A78A5}
 		{1A4BD9E1-4EC5-4D39-B643-08EEDCA3F59E} = {097D3E8C-2CB9-49CE-B4D8-2F4BC94A78A5}
+		{18275535-E672-4C50-A459-CF768116B544} = {097D3E8C-2CB9-49CE-B4D8-2F4BC94A78A5}
 		{C3E52F2E-BA86-4BA2-A4F4-C88C50516B68} = {097D3E8C-2CB9-49CE-B4D8-2F4BC94A78A5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
