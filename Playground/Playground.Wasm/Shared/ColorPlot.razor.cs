@@ -1,10 +1,10 @@
-﻿using MaterialColorUtilities.Samples.Wasm.Extensions;
+﻿using Playground.Wasm.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using SkiaSharp;
 using SkiaSharp.Views.Blazor;
 
-namespace MaterialColorUtilities.Samples.Wasm.Shared;
+namespace Playground.Wasm.Shared;
 
 public partial class ColorPlot : SeedColorSelector
 {

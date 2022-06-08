@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using MaterialColorUtilities.ColorAppearance;
-using MaterialColorUtilities.Samples.Maui.Services;
+using Playground.Maui.Services;
 
-namespace MaterialColorUtilities.Samples.Maui.ViewModels;
+namespace Playground.Maui.ViewModels;
 
 public partial class ThemeViewModel : ObservableObject
 {

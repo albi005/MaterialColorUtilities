@@ -1,7 +1,7 @@
-﻿using MaterialColorUtilities.Samples.Wasm.Services;
+﻿using Playground.Wasm.Services;
 using Microsoft.AspNetCore.Components;
 
-namespace MaterialColorUtilities.Samples.Wasm.Shared
+namespace Playground.Wasm.Shared
 {
     public abstract class SeedColorSelector : ComponentBase, IDisposable
     {

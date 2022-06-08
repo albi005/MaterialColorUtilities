@@ -10,7 +10,7 @@ using System.Reflection;
 // Extract a seed color from an image:
 // Load the image into an int[].
 // The image is stored in an embedded resource, and then decoded and resized using SkiaSharp.
-string imageResourceId = "MaterialColorUtilities.Samples.Console.Resources.wallpaper.webp";
+string imageResourceId = "Playground.Console.Resources.wallpaper.webp";
 using Stream resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(imageResourceId);
 SKBitmap bitmap = SKBitmap.Decode(resourceStream).Resize(new SKImageInfo(112, 112), SKFilterQuality.Medium);
 int[] pixels = bitmap.Pixels.Select(p => (int)(uint)p).ToArray();

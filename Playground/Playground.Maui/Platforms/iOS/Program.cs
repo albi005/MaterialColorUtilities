@@ -1,7 +1,7 @@
 ﻿using ObjCRuntime;
 using UIKit;
 
-namespace MaterialColorUtilities.Samples.Maui
+namespace Playground.Maui.Platforms.iOS
 {
     public class Program
     {

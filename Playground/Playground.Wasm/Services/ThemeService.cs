@@ -1,14 +1,15 @@
 ﻿using MaterialColorUtilities.Palettes;
-using MaterialColorUtilities.Samples.Shared;
-using MaterialColorUtilities.Samples.Wasm.Extensions;
+using MaterialColorUtilities.Score;
 using MudBlazor;
 using MudBlazor.Utilities;
+using Playground.Shared;
+using Playground.Wasm.Extensions;
 
-namespace MaterialColorUtilities.Samples.Wasm.Services;
+namespace Playground.Wasm.Services;
 
 public class ThemeService
 {
-    private int _seed = Score.Scorer.Default;
+    private int _seed = Scorer.Default;
 
     public ThemeService() => Apply();
 

@@ -1,4 +1,4 @@
-﻿namespace MaterialColorUtilities.Samples.Maui
+﻿namespace Playground.Maui
 {
     public partial class AppShell : Shell
     {

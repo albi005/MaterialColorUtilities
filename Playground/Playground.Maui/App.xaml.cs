@@ -1,17 +1,16 @@
-﻿using MaterialColorUtilities.Samples.Maui.Services;
+﻿using Playground.Maui.Services;
 
-namespace MaterialColorUtilities.Samples.Maui
+namespace Playground.Maui;
+
+public partial class App : Application
 {
-    public partial class App : Application
+    public App(ThemeService themeService)
     {
-        public App(ThemeService themeService)
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-            themeService.Apply();
-            RequestedThemeChanged += (sender, args) => themeService.Apply();
+        themeService.Apply();
+        RequestedThemeChanged += (sender, args) => themeService.Apply();
 
-            MainPage = new AppShell();
-        }
+        MainPage = new AppShell();
     }
 }

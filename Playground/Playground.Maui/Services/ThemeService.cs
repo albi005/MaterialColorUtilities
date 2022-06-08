@@ -1,12 +1,13 @@
 ﻿using MaterialColorUtilities.Palettes;
-using MaterialColorUtilities.Samples.Shared;
 using MaterialColorUtilities.Schemes;
+using MaterialColorUtilities.Score;
+using Playground.Shared;
 
-namespace MaterialColorUtilities.Samples.Maui.Services;
+namespace Playground.Maui.Services;
 
 public class ThemeService
 {
-    private int seed = Score.Scorer.Default;
+    private int seed = Scorer.Default;
 
     public int Seed
     {

@@ -1,22 +1,22 @@
-﻿namespace MaterialColorUtilities.Samples.Maui.Components;
+﻿namespace Playground.Maui.Components;
 
 public class ColorPlot : GraphicsView
 {
     private readonly Func<double, double, int> _func;
     private readonly double _xMax;
     private readonly double _yMax;
-    private readonly Color[,] _pixels = new Color[400,200];
+    private readonly Color[,] _pixels = new Color[400, 200];
 
     public ColorPlot(Func<double, double, int> func, string xLabel, double xMax, string yLabel, double yMax)
     {
         _func = func;
         _xMax = xMax;
         _yMax = yMax;
-        
+
         HeightRequest = 240;
         WidthRequest = 460;
         HorizontalOptions = LayoutOptions.Start;
-        
+
         _ = Task.Run(Calculate).ContinueWith(t =>
         {
             MainThread.BeginInvokeOnMainThread(() =>
@@ -78,6 +78,6 @@ public class ColorPlot : GraphicsView
             canvas.DrawString(yMax.ToString(), 2, 234, HorizontalAlignment.Left);
             canvas.Rotate(-90);
             canvas.DrawString(yLabel, -120, 12, HorizontalAlignment.Center);
-        }        
+        }
     }
 }

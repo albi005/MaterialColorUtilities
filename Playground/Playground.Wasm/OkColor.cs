@@ -18,7 +18,7 @@
 
 // From https://github.com/behreajj/UnityOkHsl/blob/93d5c86a9e107f53dc72d951cce624f8404f0ba1/OkColor.cs
 
-namespace MaterialColorUtilities.Samples.Wasm;
+namespace Playground.Wasm;
 
 public static class OkColor
 {

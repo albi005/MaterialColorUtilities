@@ -1,7 +1,7 @@
 ﻿using MaterialColorUtilities.Utils;
 using MudBlazor.Utilities;
 
-namespace MaterialColorUtilities.Samples.Wasm.Extensions
+namespace Playground.Wasm.Extensions
 {
     public static class IntExtensions
     {

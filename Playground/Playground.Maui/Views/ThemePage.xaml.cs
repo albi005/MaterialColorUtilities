@@ -1,7 +1,6 @@
-using MaterialColorUtilities.Samples.Maui.Services;
-using MaterialColorUtilities.Samples.Maui.ViewModels;
+using Playground.Maui.ViewModels;
 
-namespace MaterialColorUtilities.Samples.Maui;
+namespace Playground.Maui;
 
 public partial class ThemePage : ContentPage
 {

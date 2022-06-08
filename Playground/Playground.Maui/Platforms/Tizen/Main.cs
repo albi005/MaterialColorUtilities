@@ -2,7 +2,7 @@ using Microsoft.Maui;
 using Microsoft.Maui.Hosting;
 using System;
 
-namespace MaterialColorUtilities.Samples.Maui
+namespace Playground.Maui
 {
     internal class Program : MauiApplication
     {

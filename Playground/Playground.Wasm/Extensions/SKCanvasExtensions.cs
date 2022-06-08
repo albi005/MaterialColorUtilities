@@ -1,7 +1,7 @@
 ﻿using SkiaSharp;
 using SkiaSharp.Views.Blazor;
 
-namespace MaterialColorUtilities.Samples.Wasm.Extensions;
+namespace Playground.Wasm.Extensions;
 
 public static class SKPaintSurfaceEventArgsExtensions
 {

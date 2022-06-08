@@ -1,7 +1,8 @@
 ﻿using Android.App;
 using Android.Runtime;
+using Playground.Maui;
 
-namespace MaterialColorUtilities.Samples.Maui
+namespace Playground.Maui.Platforms.Android
 {
     [Application]
     public class MainApplication : MauiApplication

@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace MaterialColorUtilities.Samples.Maui
+namespace Playground.Maui.Platforms.iOS
 {
     [Register("AppDelegate")]
     public class AppDelegate : MauiUIApplicationDelegate

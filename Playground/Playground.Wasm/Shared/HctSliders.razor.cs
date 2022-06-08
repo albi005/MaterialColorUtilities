@@ -1,7 +1,7 @@
 ﻿using MaterialColorUtilities.ColorAppearance;
-using MaterialColorUtilities.Samples.Wasm.Services;
+using Playground.Wasm.Services;
 
-namespace MaterialColorUtilities.Samples.Wasm.Shared
+namespace Playground.Wasm.Shared
 {
     public partial class HctSliders 
     {

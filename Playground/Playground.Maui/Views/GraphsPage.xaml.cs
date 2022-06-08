@@ -1,7 +1,7 @@
 using MaterialColorUtilities.ColorAppearance;
-using MaterialColorUtilities.Samples.Maui.Components;
+using Playground.Maui.Components;
 
-namespace MaterialColorUtilities.Samples.Maui;
+namespace Playground.Maui;
 
 public partial class GraphsPage : ContentPage
 {

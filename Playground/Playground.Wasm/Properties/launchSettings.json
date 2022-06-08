@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "MaterialColorUtilities.Samples.Wasm": {
+    "Playground.Wasm": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

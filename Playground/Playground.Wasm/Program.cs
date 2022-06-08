@@ -1,5 +1,5 @@
-using MaterialColorUtilities.Samples.Wasm;
-using MaterialColorUtilities.Samples.Wasm.Services;
+using Playground.Wasm;
+using Playground.Wasm.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor;
