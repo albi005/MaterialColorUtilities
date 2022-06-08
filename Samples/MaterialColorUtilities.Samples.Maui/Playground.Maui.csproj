@@ -59,7 +59,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\MaterialColorUtilities.SourceGenerators\MaterialColorUtilities.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 		<ProjectReference Include="..\..\MaterialColorUtilities\MaterialColorUtilities.csproj" />
-		<ProjectReference Include="..\MaterialColorUtilities.Samples.Shared\MaterialColorUtilities.Samples.Shared.csproj" />
+		<ProjectReference Include="..\MaterialColorUtilities.Samples.Shared\Playground.Shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
