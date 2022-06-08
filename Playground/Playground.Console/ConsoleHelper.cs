@@ -1,4 +1,4 @@
-﻿namespace MaterialColorUtilities.Samples.Console
+﻿namespace Playground.Console
 {
     public class ConsoleHelper
     {

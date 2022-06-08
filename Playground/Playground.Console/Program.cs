@@ -1,8 +1,8 @@
 ﻿using MaterialColorUtilities.Blend;
 using MaterialColorUtilities.Palettes;
-using MaterialColorUtilities.Samples.Console;
 using MaterialColorUtilities.Schemes;
 using MaterialColorUtilities.Utils;
+using Playground.Console;
 using SkiaSharp;
 using System.Drawing;
 using System.Reflection;
