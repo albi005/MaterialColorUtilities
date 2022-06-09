@@ -21,7 +21,7 @@ jobs:
       run: dotnet workload install wasm-tools
 
     - name: Publish .NET Core Project
-      run: dotnet publish "Samples\MaterialColorUtilities.Samples.Wasm\MaterialColorUtilities.Samples.Wasm.csproj" -c Release -o release --nologo
+      run: dotnet publish "Playground\Playground.Wasm\Playground.Wasm.csproj" -c Release -o release --nologo
     
     # change the base-tag in index.html from '/' to 'MaterialColorUtilities' to match GitHub Pages repository subdirectory
     - name: Change base-tag in index.html from / to MaterialColorUtilities

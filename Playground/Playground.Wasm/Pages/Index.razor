@@ -1,0 +1,133 @@
+﻿@page "/"
+@using MaterialColorUtilities.ColorAppearance
+@using MaterialColorUtilities.Palettes
+@using Playground.Wasm.Services
+@using MaterialColorUtilities.Schemes
+@using MaterialColorUtilities.Utils
+@using MudBlazor.Utilities
+@using SkiaSharp
+@using SkiaSharp.Views.Blazor
+@inject ThemeService themeService
+
+<PageTitle>Material Color Utilities for .NET</PageTitle>
+
+<MudContainer MaxWidth="@MaxWidth.ExtraLarge" Class="pt-10">
+    <MudGrid>
+        <MudItem xs="12" sm="3" md="2" xl="1">
+            <Colors />
+        </MudItem>
+        <MudItem>
+            <ColorInput />
+        </MudItem>
+        <MudItem>
+            <MudPaper Class="pa-4">
+                <h3>HCT</h3>
+                chroma is maximized
+                <ColorPlot
+                    Resolution="200"
+                    Func="@((x,y) => Hct.From(x, 100, y).ToInt())"
+                    FuncInverse="@(color => { Hct hct = Hct.FromInt(color); return (hct.Hue, hct.Tone); })"
+                    LabelX="Hue"
+                    LabelY="Tone"
+                    MaxX="360"
+                    MaxY="100"
+                    MinX="0"
+                    MinY="0"/>
+            </MudPaper>
+        </MudItem>
+        <MudItem>
+            <MudPaper Class="pa-4">
+                <h3>CAM16</h3>
+                from JCh, chroma is maximized
+                <ColorPlot
+                    Resolution="200"
+                    Func="@((x,y) => Cam16.FromJch(y, 100, x).ToInt())"
+                    FuncInverse="@(color => { Cam16 cam16 = Cam16.FromInt(color); return (cam16.Hue, cam16.J); })"
+                    LabelX="h"
+                    LabelY="J"
+                    MaxX="360"
+                    MaxY="100"
+                    MinX="0"
+                    MinY="0"/>
+            </MudPaper>
+        </MudItem>
+        <MudItem>
+            <MudPaper Class="pa-4">
+                <h3>HSL</h3>
+                saturation is maximized
+                <ColorPlot
+                    Resolution="200"
+                    Func="@Hsl"
+                    FuncInverse="@HslInverse"
+                    LabelX="H"
+                    LabelY="L"
+                    MaxX="360"
+                    MaxY="1"
+                    MinX="0"
+                    MinY="0"/>
+            </MudPaper>
+        </MudItem>
+        <MudItem>
+            <MudPaper Class="pa-4">
+                <h3>
+                    OKHSL
+                    <MudIconButton
+                        Href="https://bottosson.github.io/misc/colorpicker/"
+                        Icon="@Icons.Material.Outlined.OpenInNew"
+                        Size="@Size.Small"
+                        Target="_blank" />
+                </h3>
+                saturation is maximized
+                <ColorPlot
+                    Resolution="200"
+                    Func="@Okhsl"
+                    FuncInverse="@OkhslInverse"
+                    LabelX="H"
+                    LabelY="L"
+                    MaxX="1"
+                    MaxY="1"
+                    MinX="0"
+                    MinY="0"/>
+            </MudPaper>
+        </MudItem>
+        <MudItem md="6" lg="4">
+            <MudPaper Class="pa-4">
+                <h3>HCT</h3>
+                <HctSliders />
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+    <Graphs />
+</MudContainer>
+
+@code {
+    private int Hsl(double x, double y)
+    {
+        MudColor mudColor = new(x, 1, y, 1);
+        return ColorUtils.ArgbFromRgb(mudColor.R, mudColor.G, mudColor.B);
+    }
+
+    private (double, double) HslInverse(int color)
+    {
+        MudColor mudColor = new(ColorUtils.RedFromArgb(color), ColorUtils.GreenFromArgb(color), ColorUtils.BlueFromArgb(color), 255);
+        return (mudColor.H, mudColor.L);
+    }
+
+    private int Okhsl(double x, double y)
+    {
+        var (r,g,b) = OkColor.OkHslToSrgb((x, 1, y));
+        return ColorUtils.ArgbFromRgb(
+            (int)(r * 255),
+            (int)(g * 255),
+            (int)(b * 255));
+    }
+
+    private (double, double) OkhslInverse(int color)
+    {
+        var okhsl = OkColor.SrgbToOkHsl((
+            ColorUtils.RedFromArgb(color) / 255.0,
+            ColorUtils.GreenFromArgb(color) / 255.0,
+            ColorUtils.BlueFromArgb(color) / 255.0));
+        return (okhsl.h, okhsl.l);
+    }
+}

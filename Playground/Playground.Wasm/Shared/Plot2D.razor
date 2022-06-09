@@ -1,0 +1,36 @@
+@using Playground.Wasm.Extensions
+@using SkiaSharp.Views.Blazor
+@using SkiaSharp
+
+<SKCanvasView
+    OnPaintSurface="OnPaintSurface"
+    IgnorePixelScaling="true"
+    style="display: block; height: 440px; width: 440px;"
+    />
+
+@code {
+    [Parameter] public Func<double, double> Func { get; set; }
+    [Parameter] public double MinX { get; set; } = 0;
+    [Parameter] public double MinY { get; set; } = 0;
+    [Parameter] public double MaxX { get; set; } = 100;
+    [Parameter] public double MaxY { get; set; } = 100;
+    [Parameter] public string LabelX { get; set; } = "X";
+    [Parameter] public string LabelY { get; set; } = "Y";
+    private SKPaint black = new()
+    {
+        Color = SKColors.Black,
+        IsStroke = true
+    };
+    
+    void OnPaintSurface(SKPaintSurfaceEventArgs args)
+    {
+        var canvas = args.Surface.Canvas;
+        args.DrawLabels(MinX, MinY, MaxX, MaxY, LabelX, LabelY);
+        for (int x = 0; x < 400; x++)
+        {
+            double y = Func(x * MaxX / 400) / MaxY * 400;
+            canvas.DrawPoint((float)x + 20, 400 - (float)y + 20, black);
+        }
+    }
+}
+

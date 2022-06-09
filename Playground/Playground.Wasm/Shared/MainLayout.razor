@@ -1,0 +1,45 @@
+﻿@using Playground.Wasm.Services
+@inherits LayoutComponentBase
+@inject ThemeService ThemeService
+@implements IDisposable
+
+<MudThemeProvider Theme="@ThemeService.MudTheme"/>
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="0">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => _drawerOpen = !_drawerOpen)" />
+        <a href="">
+            <MudText Typo="Typo.h5" Style="color: var(--mud-palette-appbar-text)">
+                Material Color
+                <MudHidden Breakpoint="@Breakpoint.Xs">
+                    Utilities
+                </MudHidden>
+                for .NET
+            </MudText>
+        </a>
+        <MudSpacer />
+        <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Href="https://github.com/albi005/MaterialColorUtilities" Style="color: var(--mud-palette-appbar-text)" />
+    </MudAppBar>
+    <MudDrawer Elevation="0" @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Always" >
+        <NavMenu />
+    </MudDrawer>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    bool _drawerOpen = true;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        ThemeService.ThemeChanged += UpdateTheme;
+    }
+
+    public void Dispose() => ThemeService.ThemeChanged -= UpdateTheme;
+
+    void UpdateTheme(object sender, EventArgs e) => StateHasChanged();
+}
