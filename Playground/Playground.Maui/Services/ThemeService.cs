@@ -1,11 +1,12 @@
 ﻿using MaterialColorUtilities.Palettes;
 using MaterialColorUtilities.Schemes;
 using MaterialColorUtilities.Score;
+using MaterialColorUtilities.Utils;
 using Playground.Shared;
 
 namespace Playground.Maui.Services;
 
-public class ThemeService
+public partial class ThemeService
 {
     private int seed = Scorer.Default;
 
@@ -35,5 +36,22 @@ public class ThemeService
             Application.Current.Resources[key] = value;
             Application.Current.Resources[key + "Brush"] = new SolidColorBrush(value);
         }
+    }
+
+#if ANDROID || WINDOWS
+    public async void TrySetFromWallpaper()
+    {
+        int[] pixels = await GetWallpaperPixels();
+        if (pixels == null) return;
+        int color = ImageUtils.ColorsFromImage(pixels).First();
+        Seed = color;
+    }
+#endif
+
+    public void Initialize(App app)
+    {
+        app.RequestedThemeChanged += (sender, args) => Apply();
+
+        Apply();
     }
 }

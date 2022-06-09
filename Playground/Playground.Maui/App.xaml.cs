@@ -8,9 +8,8 @@ public partial class App : Application
     {
         InitializeComponent();
 
-        themeService.Apply();
-        RequestedThemeChanged += (sender, args) => themeService.Apply();
+        themeService.Initialize(this);
 
-        MainPage = new AppShell();
+        MainPage = new AppShell(themeService);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Android.App;
 using Android.Runtime;
-using Playground.Maui;
 
 namespace Playground.Maui.Platforms.Android
 {
@@ -10,6 +9,7 @@ namespace Playground.Maui.Platforms.Android
         public MainApplication(IntPtr handle, JniHandleOwnership ownership)
             : base(handle, ownership)
         {
+            Platform.Init(this);
         }
 
         protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
