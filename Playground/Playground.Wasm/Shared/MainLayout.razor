@@ -3,7 +3,10 @@
 @inject ThemeService ThemeService
 @implements IDisposable
 
-<MudThemeProvider Theme="@ThemeService.MudTheme"/>
+<MudThemeProvider
+    @ref="@_mudThemeProvider"
+    @bind-IsDarkMode="@_isDarkMode"
+    Theme="@ThemeService.MudTheme"/>
 <MudDialogProvider />
 <MudSnackbarProvider />
 
@@ -32,14 +35,18 @@
 
 @code {
     bool _drawerOpen = true;
+    bool _isDarkMode;
+    MudThemeProvider _mudThemeProvider;
 
-    protected override void OnInitialized()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        base.OnInitialized();
-        ThemeService.ThemeChanged += UpdateTheme;
+        if (firstRender)
+        {
+            _isDarkMode = await _mudThemeProvider.GetSystemPreference();
+            ThemeService.IsDark = _isDarkMode;
+            ThemeService.ThemeChanged += StateHasChanged;
+        }
     }
 
-    public void Dispose() => ThemeService.ThemeChanged -= UpdateTheme;
-
-    void UpdateTheme(object sender, EventArgs e) => StateHasChanged();
+    public void Dispose() => ThemeService.ThemeChanged -= StateHasChanged;
 }

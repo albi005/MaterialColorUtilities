@@ -24,10 +24,11 @@
 
     void ValueChanged(MudColor mudColor)
     {
-        ThemeService.Seed = ColorUtils.ArgbFromRgb(
+        int color = ColorUtils.ArgbFromRgb(
             mudColor.R,
             mudColor.G,
             mudColor.B
         );
+        ThemeService.SetSeed(color, this);
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using SkiaSharp;
 using SkiaSharp.Views.Blazor;
+using Playground.Wasm.Services;
 
 namespace Playground.Wasm.Shared;
 
@@ -53,7 +54,7 @@ public partial class ColorPlot : SeedColorSelector
     {
         var canvas = args.Surface.Canvas;
         canvas.Clear();
-        args.DrawLabels(MinX, MinY, MaxX, MaxY, LabelX, LabelY);
+        args.DrawLabels(MinX, MinY, MaxX, MaxY, LabelX, LabelY, ThemeService.Scheme);
         canvas.DrawBitmap(bitmap, 20, 20);
         canvas.DrawCircle((float)(seedX + 20), (float)(bitmap.Height - seedY + 20), 6, seedPaint);
     }
@@ -67,7 +68,8 @@ public partial class ColorPlot : SeedColorSelector
             return;
         seedX = args.OffsetX - 20;
         seedY = bitmap.Height - (args.OffsetY - 20);
-        themeService.Seed = GetColor(seedX, seedY);
+        int color = GetColor(seedX, seedY);
+        themeService.SetSeed(color, this);
     }
 
     protected override void SetFromSeed(int seed)

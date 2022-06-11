@@ -24,7 +24,8 @@ namespace Playground.Wasm.Shared
         void HctChanged()
         {
             Hct hct = Hct.From(Hue, Chroma, Tone);
-            ThemeService.Seed = hct.ToInt();
+            int color = hct.ToInt();
+            ThemeService.SetSeed(color, this);
         }
     }
 }

@@ -17,10 +17,10 @@ public partial class ThemeService
     {
         _seed = value;
         Apply();
-        _weakEventManager.HandleEvent(sender, EventArgs.Empty, nameof(SeedChanged));
+        _weakEventManager.HandleEvent(sender, value, nameof(SeedChanged));
     }
 
-    public event EventHandler SeedChanged
+    public event EventHandler<int> SeedChanged
     {
         add => _weakEventManager.AddEventHandler(value);
         remove => _weakEventManager.RemoveEventHandler(value);
