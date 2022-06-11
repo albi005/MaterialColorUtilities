@@ -10,6 +10,14 @@ public partial class App : Application
 
         themeService.Initialize(this);
 
-        MainPage = new AppShell(themeService);
+        MainPage = new AppShell();
+    }
+
+    public event EventHandler Resumed;
+
+    protected override void OnResume()
+    {
+        base.OnResume();
+        Resumed?.Invoke(this, EventArgs.Empty);
     }
 }

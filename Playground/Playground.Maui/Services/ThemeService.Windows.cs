@@ -10,7 +10,7 @@ public partial class ThemeService
     private Task<int[]> GetWallpaperPixels()
     {
         string path = GetWallpaperPath();
-        if (path == prevPath || string.IsNullOrWhiteSpace(path)) return null;
+        if (path == prevPath || string.IsNullOrWhiteSpace(path)) return Task.FromResult<int[]>(null);
         prevPath = path;
 
         using FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read);

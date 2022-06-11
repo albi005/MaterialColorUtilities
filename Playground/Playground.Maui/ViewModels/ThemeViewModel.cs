@@ -15,21 +15,31 @@ public partial class ThemeViewModel : ObservableObject
     public ThemeViewModel(ThemeService themeService)
     {
         _themeService = themeService;
-        Hct hct = Hct.FromInt(_themeService.Seed);
-        _h = hct.Hue;
-        _c = hct.Chroma;
-        _t = hct.Tone;
-        OnHctChanged();
+        _themeService.SeedChanged += (sender, _) =>
+        {
+            if (sender == this) return;
+            MainThread.BeginInvokeOnMainThread(SetFromSeed);
+        };
+        SetFromSeed();
     }
 
-    partial void OnHChanged(double value) => OnHctChanged();
-    partial void OnCChanged(double value) => OnHctChanged();
-    partial void OnTChanged(double value) => OnHctChanged();
+    partial void OnHChanged(double value) => SetSeed();
+    partial void OnCChanged(double value) => SetSeed();
+    partial void OnTChanged(double value) => SetSeed();
 
-    void OnHctChanged()
+    void SetSeed()
     {
         Hct hct = Hct.From(H, C, T);
         Seed = Color.FromInt(hct.ToInt());
-        _themeService.Seed = hct.ToInt();
+        _themeService.SetSeed(hct.ToInt(), this);
+    }
+
+    void SetFromSeed()
+    {
+        Seed = Color.FromInt(_themeService.Seed);
+        Hct hct = Hct.FromInt(_themeService.Seed);
+        H = hct.Hue;
+        C = hct.Chroma;
+        T = hct.Tone;
     }
 }

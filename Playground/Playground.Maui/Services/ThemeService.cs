@@ -8,13 +8,24 @@ namespace Playground.Maui.Services;
 
 public partial class ThemeService
 {
-    private int seed = Scorer.Default;
+    private int _seed = Scorer.Default;
+    private readonly WeakEventManager _weakEventManager = new();
 
-    public int Seed
+    public int Seed => _seed;
+
+    public void SetSeed(int value, object sender)
     {
-        get => seed;
-        set { seed = value; Apply(); }
+        _seed = value;
+        Apply();
+        _weakEventManager.HandleEvent(sender, EventArgs.Empty, nameof(SeedChanged));
     }
+
+    public event EventHandler SeedChanged
+    {
+        add => _weakEventManager.AddEventHandler(value);
+        remove => _weakEventManager.RemoveEventHandler(value);
+    }
+
     public AppScheme<Color> Scheme { get; private set; }
 
     public void Apply()
@@ -44,14 +55,18 @@ public partial class ThemeService
         int[] pixels = await GetWallpaperPixels();
         if (pixels == null) return;
         int color = ImageUtils.ColorsFromImage(pixels).First();
-        Seed = color;
+        SetSeed(color, this);
     }
 #endif
 
     public void Initialize(App app)
     {
-        app.RequestedThemeChanged += (sender, args) => Apply();
+#if ANDROID || WINDOWS
+        app.Resumed += (sender, args) => TrySetFromWallpaper();
+        TrySetFromWallpaper();
+#endif
 
+        app.RequestedThemeChanged += (sender, args) => Apply();
         Apply();
     }
 }
