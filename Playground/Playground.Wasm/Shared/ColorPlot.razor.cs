@@ -70,6 +70,7 @@ public partial class ColorPlot : SeedColorSelector
         seedY = bitmap.Height - (args.OffsetY - 20);
         int color = GetColor(seedX, seedY);
         themeService.SetSeed(color, this);
+        view?.Invalidate();
     }
 
     protected override void SetFromSeed(int seed)

@@ -16,6 +16,7 @@ namespace Playground.Wasm.Shared
 
         private void OnSeedChanged(object sender, int e)
         {
+            if (sender == this) return;
             SetFromSeed(e);
             StateHasChanged();
         }

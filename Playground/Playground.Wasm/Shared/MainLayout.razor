@@ -45,6 +45,7 @@
             _isDarkMode = await _mudThemeProvider.GetSystemPreference();
             ThemeService.IsDark = _isDarkMode;
             ThemeService.ThemeChanged += StateHasChanged;
+            StateHasChanged();
         }
     }
 
