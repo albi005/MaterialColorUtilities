@@ -8,9 +8,16 @@ public partial class App : Application
     {
         InitializeComponent();
 
-        themeService.Apply();
-        RequestedThemeChanged += (sender, args) => themeService.Apply();
+        themeService.Initialize(this);
 
         MainPage = new AppShell();
+    }
+
+    public event EventHandler Resumed;
+
+    protected override void OnResume()
+    {
+        base.OnResume();
+        Resumed?.Invoke(this, EventArgs.Empty);
     }
 }

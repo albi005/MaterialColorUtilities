@@ -1,19 +1,31 @@
 ﻿using MaterialColorUtilities.Palettes;
 using MaterialColorUtilities.Schemes;
 using MaterialColorUtilities.Score;
+using MaterialColorUtilities.Utils;
 using Playground.Shared;
 
 namespace Playground.Maui.Services;
 
-public class ThemeService
+public partial class ThemeService
 {
-    private int seed = Scorer.Default;
+    private int _seed = Scorer.Default;
+    private readonly WeakEventManager _weakEventManager = new();
 
-    public int Seed
+    public int Seed => _seed;
+
+    public void SetSeed(int value, object sender)
     {
-        get => seed;
-        set { seed = value; Apply(); }
+        _seed = value;
+        Apply();
+        _weakEventManager.HandleEvent(sender, value, nameof(SeedChanged));
     }
+
+    public event EventHandler<int> SeedChanged
+    {
+        add => _weakEventManager.AddEventHandler(value);
+        remove => _weakEventManager.RemoveEventHandler(value);
+    }
+
     public AppScheme<Color> Scheme { get; private set; }
 
     public void Apply()
@@ -35,5 +47,26 @@ public class ThemeService
             Application.Current.Resources[key] = value;
             Application.Current.Resources[key + "Brush"] = new SolidColorBrush(value);
         }
+    }
+
+#if ANDROID || WINDOWS
+    public async void TrySetFromWallpaper()
+    {
+        int[] pixels = await GetWallpaperPixels();
+        if (pixels == null) return;
+        int color = ImageUtils.ColorsFromImage(pixels).First();
+        SetSeed(color, this);
+    }
+#endif
+
+    public void Initialize(App app)
+    {
+#if ANDROID || WINDOWS
+        app.Resumed += (sender, args) => TrySetFromWallpaper();
+        TrySetFromWallpaper();
+#endif
+
+        app.RequestedThemeChanged += (sender, args) => Apply();
+        Apply();
     }
 }

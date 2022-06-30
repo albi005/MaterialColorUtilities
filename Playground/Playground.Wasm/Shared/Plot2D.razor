@@ -1,6 +1,8 @@
 @using Playground.Wasm.Extensions
+@using Playground.Wasm.Services
 @using SkiaSharp.Views.Blazor
 @using SkiaSharp
+@inject ThemeService ThemeService
 
 <SKCanvasView
     OnPaintSurface="OnPaintSurface"
@@ -16,20 +18,22 @@
     [Parameter] public double MaxY { get; set; } = 100;
     [Parameter] public string LabelX { get; set; } = "X";
     [Parameter] public string LabelY { get; set; } = "Y";
-    private SKPaint black = new()
+    private SKPaint stroke = new()
     {
         Color = SKColors.Black,
         IsStroke = true
     };
-    
+
     void OnPaintSurface(SKPaintSurfaceEventArgs args)
     {
+        stroke.Color = new((uint)ThemeService.Scheme.OnSurface);
+
         var canvas = args.Surface.Canvas;
-        args.DrawLabels(MinX, MinY, MaxX, MaxY, LabelX, LabelY);
+        args.DrawLabels(MinX, MinY, MaxX, MaxY, LabelX, LabelY, ThemeService.Scheme);
         for (int x = 0; x < 400; x++)
         {
             double y = Func(x * MaxX / 400) / MaxY * 400;
-            canvas.DrawPoint((float)x + 20, 400 - (float)y + 20, black);
+            canvas.DrawPoint((float)x + 20, 400 - (float)y + 20, stroke);
         }
     }
 }

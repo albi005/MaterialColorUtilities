@@ -10,13 +10,14 @@ namespace Playground.Wasm.Shared
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            ThemeService.ThemeChanged += OnSeedChanged;
-            OnSeedChanged(null, null);
+            ThemeService.SeedChanged += OnSeedChanged;
+            OnSeedChanged(null, ThemeService.Seed);
         }
 
-        private void OnSeedChanged(object sender, EventArgs e)
+        private void OnSeedChanged(object sender, int e)
         {
-            SetFromSeed(ThemeService.Seed);
+            if (sender == this) return;
+            SetFromSeed(e);
             StateHasChanged();
         }
 
@@ -24,7 +25,7 @@ namespace Playground.Wasm.Shared
 
         public void Dispose()
         {
-            ThemeService.ThemeChanged -= OnSeedChanged;
+            ThemeService.SeedChanged -= OnSeedChanged;
         }
     }
 }

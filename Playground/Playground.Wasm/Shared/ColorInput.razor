@@ -4,8 +4,7 @@
 @inherits SeedColorSelector
 
 <MudColorPicker
-    Value="@_color"
-    ValueChanged="@ValueChanged"
+    @bind-Value="@Color"
     ColorPickerMode="@ColorPickerMode.HEX"
     Label="Seed color"
     PickerVariant="@PickerVariant.Static"
@@ -14,20 +13,25 @@
     DisablePreview="true" />
 
 @code {
-    string _color;
+    MudColor _color;
+    MudColor Color
+    {
+        get => _color;
+        set
+        {
+            if (_color == value) return;
+            _color = value;
+            int color = ColorUtils.ArgbFromRgb(
+                value.R,
+                value.G,
+                value.B
+            );
+            ThemeService.SetSeed(color, this);
+        }
+    }
 
     protected override void SetFromSeed(int seed)
     {
-        string color = StringUtils.HexFromArgb(seed);
-        _color = color;
-    }
-
-    void ValueChanged(MudColor mudColor)
-    {
-        ThemeService.Seed = ColorUtils.ArgbFromRgb(
-            mudColor.R,
-            mudColor.G,
-            mudColor.B
-        );
+        _color = StringUtils.HexFromArgb(seed);
     }
 }

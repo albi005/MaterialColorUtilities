@@ -1,29 +1,30 @@
-﻿using SkiaSharp;
+﻿using MaterialColorUtilities.Schemes;
+using SkiaSharp;
 using SkiaSharp.Views.Blazor;
 
 namespace Playground.Wasm.Extensions;
 
 public static class SKPaintSurfaceEventArgsExtensions
 {
-    private static readonly SKPaint grayStroke = new()
+    private static readonly SKPaint stroke = new()
     {
         Color = new(0xFF787777),
         IsStroke = true,
     };
-    private static readonly SKPaint grayLeft = new()
+    private static readonly SKPaint left = new()
     {
         Color = new(0xFF787777),
         TextSize = 16,
         IsAntialias = true,
     };
-    private static readonly SKPaint grayCenter = new()
+    private static readonly SKPaint center = new()
     {
         Color = new(0xFF787777),
         TextAlign = SKTextAlign.Center,
         TextSize = 16,
         IsAntialias = true,
     };
-    private static readonly SKPaint grayRight = new()
+    private static readonly SKPaint right = new()
     {
         Color = new(0xFF787777),
         TextAlign = SKTextAlign.Right,
@@ -38,21 +39,24 @@ public static class SKPaintSurfaceEventArgsExtensions
         double maxX,
         double maxY,
         string labelX,
-        string labelY)
+        string labelY,
+        Scheme<int> scheme)
     {
+        stroke.Color = left.Color = center.Color = right.Color = new((uint)scheme.Outline);
+
         var canvas = args.Surface.Canvas;
         float width = args.Info.Width;
         float height = args.Info.Height;
-        canvas.DrawRect(19, 19, width - 39, height - 39, grayStroke);
+        canvas.DrawRect(19, 19, width - 39, height - 39, stroke);
         
-        canvas.DrawText(minX.ToString(), 20, height - 4, grayLeft);
-        canvas.DrawText(labelX, width / 2, height - 4, grayCenter);
-        canvas.DrawText(maxX.ToString(), width - 20, height - 4, grayRight);
+        canvas.DrawText(minX.ToString(), 20, height - 4, left);
+        canvas.DrawText(labelX, width / 2, height - 4, center);
+        canvas.DrawText(maxX.ToString(), width - 20, height - 4, right);
         
         canvas.RotateDegrees(-90);
-        canvas.DrawText(minY.ToString(), -(height - 20), 16, grayLeft);
-        canvas.DrawText(labelY, -(height / 2), 16, grayCenter);
-        canvas.DrawText(maxY.ToString(), -20, 16, grayRight);
+        canvas.DrawText(minY.ToString(), -(height - 20), 16, left);
+        canvas.DrawText(labelY, -(height / 2), 16, center);
+        canvas.DrawText(maxY.ToString(), -20, 16, right);
         canvas.RotateDegrees(90);
     }
 }
