@@ -1,42 +1,97 @@
 ﻿using Android.App;
 using Android.Graphics.Drawables;
 using Android.Graphics;
+using MaterialColorUtilities.Utils;
+using System.Runtime.Versioning;
 
 namespace MaterialColorUtilities.Maui;
 
 public partial class DynamicColorService
 {
-	private int prevWallpaperId = -1;
+    private int prevWallpaperId = -1;
+    private readonly WallpaperManager wallpaperManager = WallpaperManager.GetInstance(Platform.AppContext);
 
-	private async Task<int[]> GetWallpaperPixels()
+    partial void PlatformInitialize()
     {
-		WallpaperManager wallpaperManager = WallpaperManager.GetInstance(Platform.AppContext);
-		if (wallpaperManager == null) return null;
+        if (wallpaperManager == null) return;
+        try
+        {
+            if (OperatingSystem.IsAndroidVersionAtLeast(27))
+            {
+                if (OperatingSystem.IsAndroidVersionAtLeast(31))
+                    SetFromAndroid12AccentColor();
+                else
+                    SetFromAndroid8PrimaryWallpaperColor();
 
-		if (OperatingSystem.IsAndroidVersionAtLeast(24))
-		{
-			int wallpaperId = wallpaperManager.GetWallpaperId(WallpaperManagerFlags.System);
-			if (prevWallpaperId == wallpaperId) return null;
-			prevWallpaperId = wallpaperId;
-		}
+                wallpaperManager.ColorsChanged += (sender, args) =>
+                {
+                    if (args.Which == (int)WallpaperManagerFlags.Lock) return;
 
-        if (!await RequestAccessToWallpaper()) return null;
+                    // version checker complains without this
+                    if (!OperatingSystem.IsAndroidVersionAtLeast(27)) return;
 
-		Drawable drawable = WallpaperManager.GetInstance(Platform.AppContext)?.Drawable;
-		if (drawable is not BitmapDrawable bitmapDrawable) return null;
-		Bitmap bitmap = Bitmap.CreateScaledBitmap(bitmapDrawable.Bitmap, 112, 112, false);
-		int[] pixels = new int[bitmap.ByteCount / 4];
-		bitmap.GetPixels(pixels, 0, bitmap.Width, 0, 0, bitmap.Width, bitmap.Height);
+                    MainThread.BeginInvokeOnMainThread(
+                        OperatingSystem.IsAndroidVersionAtLeast(31)
+                        ? SetFromAndroid12AccentColor
+                        : SetFromAndroid8PrimaryWallpaperColor);
+                };
+            }
+            else
+            {
+                SetFromQuantizedWallpaperColors();
+            }
+        }
+        catch { }
+    }
 
-		return pixels;
-	}
+    [SupportedOSPlatform("android31.0")]
+    private void SetFromAndroid12AccentColor()
+    {
+        int color = Platform.AppContext.Resources.GetColor(Android.Resource.Color.SystemAccent1500, null);
+        SetSeed(color);
+    }
 
-	private static async Task<bool> RequestAccessToWallpaper()
-	{
-		PermissionStatus permissionStatus = await Permissions.CheckStatusAsync<Permissions.StorageRead>();
-		return permissionStatus == PermissionStatus.Granted
-			|| ((permissionStatus == PermissionStatus.Unknown || permissionStatus == PermissionStatus.Denied)
-			&& Platform.CurrentActivity != null
-			&& await Permissions.RequestAsync<Permissions.StorageRead>() == PermissionStatus.Granted);
-	}
+    [SupportedOSPlatform("android27.0")]
+    private void SetFromAndroid8PrimaryWallpaperColor()
+    {
+        int color = wallpaperManager.GetWallpaperColors((int)WallpaperManagerFlags.System).PrimaryColor.ToArgb();
+        SetSeed(color);
+    }
+
+    private async void SetFromQuantizedWallpaperColors()
+    {
+        List<int> colors = await Task.Run(async () =>
+        {
+            int[] pixels = await GetWallpaperPixels();
+            if (pixels == null) return null;
+            return ImageUtils.ColorsFromImage(pixels);
+        });
+        if (colors == null) return;
+
+        SetSeed(colors.First());
+    }
+
+    private async Task<int[]> GetWallpaperPixels()
+    {
+        if (wallpaperManager == null) return null;
+
+        if (OperatingSystem.IsAndroidVersionAtLeast(24))
+        {
+            int wallpaperId = wallpaperManager.GetWallpaperId(WallpaperManagerFlags.System);
+            if (prevWallpaperId == wallpaperId) return null;
+            prevWallpaperId = wallpaperId;
+        }
+
+        // Need permission to read wallpaper
+        if ((await Permissions.CheckStatusAsync<Permissions.StorageRead>()) != PermissionStatus.Granted)
+            return null;
+
+        Drawable drawable = wallpaperManager.Drawable;
+        if (drawable is not BitmapDrawable bitmapDrawable) return null;
+        Bitmap bitmap = Bitmap.CreateScaledBitmap(bitmapDrawable.Bitmap, 112, 112, false);
+        int[] pixels = new int[bitmap.ByteCount / 4];
+        bitmap.GetPixels(pixels, 0, bitmap.Width, 0, 0, bitmap.Width, bitmap.Height);
+
+        return pixels;
+    }
 }

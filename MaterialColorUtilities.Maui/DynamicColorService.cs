@@ -6,17 +6,11 @@ namespace MaterialColorUtilities.Maui;
 
 public partial class DynamicColorService : IMauiInitializeService
 {
-    private readonly DynamicColorOptions _options;
+    private DynamicColorOptions _options;
     private readonly WeakEventManager _weakEventManager = new();
     private int _seed;
     private bool _initialized;
     private ResourceDictionary _appResources;
-
-    public DynamicColorService(IOptions<DynamicColorOptions> options)
-    {
-        _options = options.Value;
-        _seed = _options.FallbackSeed;
-    }
 
     public int Seed => _seed;
     public CorePalette CorePalette { get; protected set; }
@@ -41,10 +35,11 @@ public partial class DynamicColorService : IMauiInitializeService
 
     public void Initialize(IServiceProvider services)
     {
+        _options = services.GetRequiredService<IOptions<DynamicColorOptions>>().Value;
+        _seed = _options.FallbackSeed;
+
         Application application = services.GetRequiredService<IApplication>() as Application;
         _appResources = application.Resources;
-
-        _seed = _options.FallbackSeed;
 
         PlatformInitialize();
 

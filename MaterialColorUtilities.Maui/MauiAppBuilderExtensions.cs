@@ -6,8 +6,9 @@ public static class MauiAppBuilderExtensions
     {
         builder.Services.Configure(configureOptions ?? (_ => { }));
 
-        builder.Services.AddSingleton<IMauiInitializeService, DynamicColorService>();
-        builder.Services.AddSingleton<DynamicColorService>();
+        DynamicColorService service = new();
+        builder.Services.AddSingleton<IMauiInitializeService, DynamicColorService>((_) => service);
+        builder.Services.AddSingleton(service);
 
         return builder;
     }
