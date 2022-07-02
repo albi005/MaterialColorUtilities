@@ -1,4 +1,4 @@
-﻿using Playground.Maui.Services;
+﻿using MaterialColorUtilities.Maui;
 using Playground.Maui.ViewModels;
 
 namespace Playground.Maui;
@@ -9,9 +9,9 @@ public static class MauiProgram
     {
         MauiAppBuilder builder = MauiApp
             .CreateBuilder()
+            .UseMaterialDynamicColors()
             .UseMauiApp<App>();
 
-        builder.Services.AddSingleton<ThemeService>();
         builder.Services.AddTransient<ThemeViewModel>();
         builder.Services.AddTransient<ThemePage>();
 

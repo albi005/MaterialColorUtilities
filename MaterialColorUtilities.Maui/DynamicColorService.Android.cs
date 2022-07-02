@@ -2,9 +2,9 @@
 using Android.Graphics.Drawables;
 using Android.Graphics;
 
-namespace Playground.Maui.Services;
+namespace MaterialColorUtilities.Maui;
 
-public partial class ThemeService
+public partial class DynamicColorService
 {
 	private int prevWallpaperId = -1;
 
@@ -13,9 +13,12 @@ public partial class ThemeService
 		WallpaperManager wallpaperManager = WallpaperManager.GetInstance(Platform.AppContext);
 		if (wallpaperManager == null) return null;
 
-        int wallpaperId = wallpaperManager.GetWallpaperId(WallpaperManagerFlags.System);
-        if (prevWallpaperId == wallpaperId) return null;
-        prevWallpaperId = wallpaperId;
+		if (OperatingSystem.IsAndroidVersionAtLeast(24))
+		{
+			int wallpaperId = wallpaperManager.GetWallpaperId(WallpaperManagerFlags.System);
+			if (prevWallpaperId == wallpaperId) return null;
+			prevWallpaperId = wallpaperId;
+		}
 
         if (!await RequestAccessToWallpaper()) return null;
 
