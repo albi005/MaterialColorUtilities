@@ -1,6 +1,7 @@
 ﻿using Android.App;
-using Android.Graphics.Drawables;
 using Android.Graphics;
+using Android.Graphics.Drawables;
+using MaterialColorUtilities.ColorAppearance;
 using MaterialColorUtilities.Utils;
 using System.Runtime.Versioning;
 
@@ -8,7 +9,7 @@ namespace MaterialColorUtilities.Maui;
 
 public partial class DynamicColorService
 {
-    private int prevWallpaperId = -1;
+    private int prevSeedSource = -1;
     private readonly WallpaperManager wallpaperManager = WallpaperManager.GetInstance(Platform.AppContext);
 
     partial void PlatformInitialize()
@@ -19,36 +20,75 @@ public partial class DynamicColorService
             if (OperatingSystem.IsAndroidVersionAtLeast(27))
             {
                 if (OperatingSystem.IsAndroidVersionAtLeast(31))
-                    SetFromAndroid12AccentColor();
+                    SetFromAndroid12AccentColors();
                 else
-                    SetFromAndroid8PrimaryWallpaperColor();
-
-                wallpaperManager.ColorsChanged += (sender, args) =>
                 {
-                    if (args.Which == (int)WallpaperManagerFlags.Lock) return;
+                    SetFromAndroid8PrimaryWallpaperColor();
+                    wallpaperManager.ColorsChanged += (sender, args) =>
+                    {
+                        if (args.Which == (int)WallpaperManagerFlags.Lock) return;
 
-                    // version checker complains without this
-                    if (!OperatingSystem.IsAndroidVersionAtLeast(27)) return;
+#pragma warning disable CA1416
+                        MainThread.BeginInvokeOnMainThread(
+                            SetFromAndroid8PrimaryWallpaperColor);
+#pragma warning restore CA1416
+                    };
+                }
 
-                    MainThread.BeginInvokeOnMainThread(
-                        OperatingSystem.IsAndroidVersionAtLeast(31)
-                        ? SetFromAndroid12AccentColor
-                        : SetFromAndroid8PrimaryWallpaperColor);
-                };
             }
             else
             {
-                SetFromQuantizedWallpaperColors();
+                TrySetFromQuantizedWallpaperColors();
             }
         }
         catch { }
     }
 
     [SupportedOSPlatform("android31.0")]
-    private void SetFromAndroid12AccentColor()
+    public void SetFromAndroid12AccentColors()
     {
-        int color = Platform.AppContext.Resources.GetColor(Android.Resource.Color.SystemAccent1500, null);
-        SetSeed(color);
+        // We have access to the basic tones like 0, 10, 20 etc. of every tonal palette,
+        // but if a different tone is required, we need access to the seed color.
+        // Android doesn't seem to expose the seed color, so we have to get creative to get it.
+
+        // We will use the tone of the primary color with the highest chroma as the seed,
+        // because it should have the same hue, and chroma will be close enough.
+        int[] primaryIds =
+        {
+            Android.Resource.Color.SystemAccent1500,
+            Android.Resource.Color.SystemAccent110,
+            Android.Resource.Color.SystemAccent150,
+            Android.Resource.Color.SystemAccent1100,
+            Android.Resource.Color.SystemAccent1200,
+            Android.Resource.Color.SystemAccent1300,
+            Android.Resource.Color.SystemAccent1400,
+            Android.Resource.Color.SystemAccent1600,
+            Android.Resource.Color.SystemAccent1700,
+            Android.Resource.Color.SystemAccent1800,
+            Android.Resource.Color.SystemAccent1900,
+        };
+        double maxChroma = -1;
+        int closestColor = 0;
+        foreach (int id in primaryIds)
+        {
+            int color = Platform.AppContext.Resources.GetColor(id, null);
+
+            if (id == Android.Resource.Color.SystemAccent1500)
+            {
+                // If Primary50 didn't change, return
+                if (color == prevSeedSource) return;
+                prevSeedSource = color;
+            }
+
+            Hct hct = Hct.FromInt(color);
+            if (hct.Chroma > maxChroma)
+            {
+                maxChroma = hct.Chroma;
+                closestColor = color;
+            }
+        }
+
+        SetSeed(closestColor);
     }
 
     [SupportedOSPlatform("android27.0")]
@@ -58,7 +98,7 @@ public partial class DynamicColorService
         SetSeed(color);
     }
 
-    private async void SetFromQuantizedWallpaperColors()
+    private async void TrySetFromQuantizedWallpaperColors()
     {
         List<int> colors = await Task.Run(async () =>
         {
@@ -78,8 +118,8 @@ public partial class DynamicColorService
         if (OperatingSystem.IsAndroidVersionAtLeast(24))
         {
             int wallpaperId = wallpaperManager.GetWallpaperId(WallpaperManagerFlags.System);
-            if (prevWallpaperId == wallpaperId) return null;
-            prevWallpaperId = wallpaperId;
+            if (prevSeedSource == wallpaperId) return null;
+            prevSeedSource = wallpaperId;
         }
 
         // Need permission to read wallpaper
