@@ -1,4 +1,6 @@
-﻿[*.cs]
+﻿root = true
+
+[*.cs]
 
 # IDE0160: Convert to block scoped namespace
 csharp_style_namespace_declarations = file_scoped:silent
@@ -83,3 +85,6 @@ dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
 dotnet_style_prefer_compound_assignment = true:suggestion
 dotnet_style_prefer_simplified_interpolation = true:suggestion
 dotnet_style_namespace_match_folder = true:suggestion
+
+[*]
+charset = utf-8-bom

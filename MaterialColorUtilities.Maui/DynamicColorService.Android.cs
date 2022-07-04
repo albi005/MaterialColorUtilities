@@ -17,29 +17,23 @@ public partial class DynamicColorService
         if (wallpaperManager == null) return;
         try
         {
-            if (OperatingSystem.IsAndroidVersionAtLeast(27))
+            if (OperatingSystem.IsAndroidVersionAtLeast(31))
+                SetFromAndroid12AccentColors();
+            else if (OperatingSystem.IsAndroidVersionAtLeast(27))
             {
-                if (OperatingSystem.IsAndroidVersionAtLeast(31))
-                    SetFromAndroid12AccentColors();
-                else
+                SetFromAndroid8PrimaryWallpaperColor();
+                wallpaperManager.ColorsChanged += (sender, args) =>
                 {
-                    SetFromAndroid8PrimaryWallpaperColor();
-                    wallpaperManager.ColorsChanged += (sender, args) =>
-                    {
-                        if (args.Which == (int)WallpaperManagerFlags.Lock) return;
+                    if (args.Which == (int)WallpaperManagerFlags.Lock) return;
 
 #pragma warning disable CA1416
-                        MainThread.BeginInvokeOnMainThread(
-                            SetFromAndroid8PrimaryWallpaperColor);
+                    MainThread.BeginInvokeOnMainThread(
+                        SetFromAndroid8PrimaryWallpaperColor);
 #pragma warning restore CA1416
-                    };
-                }
-
+                };
             }
             else
-            {
-                TrySetFromQuantizedWallpaperColors();
-            }
+                _ = TrySetFromQuantizedWallpaperColors();
         }
         catch { }
     }
@@ -92,13 +86,18 @@ public partial class DynamicColorService
     }
 
     [SupportedOSPlatform("android27.0")]
-    private void SetFromAndroid8PrimaryWallpaperColor()
+    public void SetFromAndroid8PrimaryWallpaperColor()
     {
         int color = wallpaperManager.GetWallpaperColors((int)WallpaperManagerFlags.System).PrimaryColor.ToArgb();
         SetSeed(color);
     }
 
-    private async void TrySetFromQuantizedWallpaperColors()
+    /// <summary>
+    /// Tries to set colors by using Material Color Utilities to get colors from the system wallpaper.
+    /// </summary>
+    /// <returns><see langword="true"/> if the operation completed successfully, <see langword="false"/> otherwise.</returns>
+    /// <remarks>Requires <see cref="Permissions.StorageRead"/></remarks>
+    public async Task<bool> TrySetFromQuantizedWallpaperColors()
     {
         List<int> colors = await Task.Run(async () =>
         {
@@ -106,9 +105,11 @@ public partial class DynamicColorService
             if (pixels == null) return null;
             return ImageUtils.ColorsFromImage(pixels);
         });
-        if (colors == null) return;
+        if (colors == null) return false;
 
         SetSeed(colors.First());
+
+        return true;
     }
 
     private async Task<int[]> GetWallpaperPixels()
@@ -128,10 +129,33 @@ public partial class DynamicColorService
 
         Drawable drawable = wallpaperManager.Drawable;
         if (drawable is not BitmapDrawable bitmapDrawable) return null;
-        Bitmap bitmap = Bitmap.CreateScaledBitmap(bitmapDrawable.Bitmap, 112, 112, false);
+        Bitmap bitmap = bitmapDrawable.Bitmap;
+        if (bitmap.Height * bitmap.Width > 112 * 112)
+        {
+            Android.Util.Size optimalSize = CalculateOptimalSize(bitmap.Width, bitmap.Height);
+            bitmap = Bitmap.CreateScaledBitmap(bitmap, optimalSize.Width, optimalSize.Height, false);
+        }
         int[] pixels = new int[bitmap.ByteCount / 4];
         bitmap.GetPixels(pixels, 0, bitmap.Width, 0, 0, bitmap.Width, bitmap.Height);
 
         return pixels;
+    }
+
+    // From https://cs.android.com/android/platform/superproject/+/384d0423f9e93790e76399a5291731f6cfea40e8:frameworks/base/core/java/android/app/WallpaperColors.java
+    private static Android.Util.Size CalculateOptimalSize(int width, int height)
+    {
+        int requestedArea = width * height;
+        double scale = 1;
+        if (requestedArea > 112 * 112)
+            scale = Math.Sqrt(112 * 112 / (double)requestedArea);
+        int newWidth = (int)(width * scale);
+        int newHeight = (int)(height * scale);
+
+        if (newWidth == 0)
+            newWidth = 1;
+        if (newHeight == 0)
+            newHeight = 1;
+
+        return new Android.Util.Size(newWidth, newHeight);
     }
 }

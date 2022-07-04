@@ -11,6 +11,7 @@ public partial class ThemeViewModel : ObservableObject
     [ObservableProperty] private double _c;
     [ObservableProperty] private double _t;
     [ObservableProperty] private Color _seed;
+    public Color OnSeed => _t < 49.6 ? Colors.White : Colors.Black;
 
     public ThemeViewModel(DynamicColorService themeService)
     {
@@ -26,6 +27,7 @@ public partial class ThemeViewModel : ObservableObject
     partial void OnHChanged(double value) => SetSeed();
     partial void OnCChanged(double value) => SetSeed();
     partial void OnTChanged(double value) => SetSeed();
+    partial void OnSeedChanged(Color value) => OnPropertyChanged(nameof(OnSeed));
 
     void SetSeed()
     {
