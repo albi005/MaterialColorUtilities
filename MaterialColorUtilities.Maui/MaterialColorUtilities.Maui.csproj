@@ -15,7 +15,30 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+
+		<Version>0.1.0</Version>
+		<Description>Wraps MaterialColorUtilities to make it super simple to add beautiful Material You dynamic theming to your .NET MAUI app.</Description>
+		<PackageProjectUrl>https://github.com/albi005/MaterialColorUtilities</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/albi005/MaterialColorUtilities</RepositoryUrl>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<Authors>albi05</Authors>
+		
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<Copyright>Copyright 2021-2022 Google LLC and project contributors</Copyright>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
+
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
 	<!--Configure multi-targeting (https://docs.microsoft.com/en-us/dotnet/maui/platform-integration/configure-multi-targeting#combine-filename-and-folder-multi-targeting)-->
 	<ItemGroup Condition="$(TargetFramework.StartsWith('net6.0-android')) != true">
