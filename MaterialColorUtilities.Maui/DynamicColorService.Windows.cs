@@ -5,19 +5,21 @@ namespace MaterialColorUtilities.Maui;
 
 public partial class DynamicColorService
 {
-    private readonly UISettings uiSettings = new();
+    private readonly UISettings _uiSettings = new();
 
     partial void PlatformInitialize()
     {
+        if (!_options.UseDynamicColor) return;
+
         SetSeed(GetAccentColor());
-        uiSettings.ColorValuesChanged += (_, _)
+        _uiSettings.ColorValuesChanged += (_, _)
             => MainThread.BeginInvokeOnMainThread(()
             => SetSeed(GetAccentColor()));
     }
 
     private int GetAccentColor()
     {
-        Windows.UI.Color color = uiSettings.GetColorValue(UIColorType.Accent);
+        Windows.UI.Color color = _uiSettings.GetColorValue(UIColorType.Accent);
         return ColorUtils.ArgbFromRgb(color.R, color.G, color.B);
     }
 }

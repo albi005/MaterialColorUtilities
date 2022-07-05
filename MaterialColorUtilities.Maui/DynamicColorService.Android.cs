@@ -3,33 +3,45 @@ using Android.Graphics;
 using Android.Graphics.Drawables;
 using MaterialColorUtilities.ColorAppearance;
 using MaterialColorUtilities.Utils;
+using Microsoft.Maui.LifecycleEvents;
 using System.Runtime.Versioning;
 
 namespace MaterialColorUtilities.Maui;
 
 public partial class DynamicColorService
 {
-    private int prevSeedSource = -1;
-    private readonly WallpaperManager wallpaperManager = WallpaperManager.GetInstance(Platform.AppContext);
+    private int _prevSeedSource = -1;
+    private readonly WallpaperManager _wallpaperManager = WallpaperManager.GetInstance(Platform.AppContext);
 
     partial void PlatformInitialize()
     {
-        if (wallpaperManager == null) return;
+        if (!_options.UseDynamicColor) return;
+        if (_wallpaperManager == null) return;
         try
         {
             if (OperatingSystem.IsAndroidVersionAtLeast(31))
+            {
                 SetFromAndroid12AccentColors();
+                _lifecycleEventService.AddAndroid(android
+                    => android.OnResume(_
+                    => MainThread.BeginInvokeOnMainThread(
+#pragma warning disable CA1416
+                        SetFromAndroid12AccentColors
+#pragma warning restore CA1416
+                )));
+            }
             else if (OperatingSystem.IsAndroidVersionAtLeast(27))
             {
                 SetFromAndroid8PrimaryWallpaperColor();
-                wallpaperManager.ColorsChanged += (sender, args) =>
+                _wallpaperManager.ColorsChanged += (sender, args) =>
                 {
                     if (args.Which == (int)WallpaperManagerFlags.Lock) return;
 
-#pragma warning disable CA1416
                     MainThread.BeginInvokeOnMainThread(
-                        SetFromAndroid8PrimaryWallpaperColor);
+#pragma warning disable CA1416
+                        SetFromAndroid8PrimaryWallpaperColor
 #pragma warning restore CA1416
+                    );
                 };
             }
             else
@@ -70,8 +82,8 @@ public partial class DynamicColorService
             if (id == Android.Resource.Color.SystemAccent1500)
             {
                 // If Primary50 didn't change, return
-                if (color == prevSeedSource) return;
-                prevSeedSource = color;
+                if (color == _prevSeedSource) return;
+                _prevSeedSource = color;
             }
 
             Hct hct = Hct.FromInt(color);
@@ -88,7 +100,7 @@ public partial class DynamicColorService
     [SupportedOSPlatform("android27.0")]
     public void SetFromAndroid8PrimaryWallpaperColor()
     {
-        int color = wallpaperManager.GetWallpaperColors((int)WallpaperManagerFlags.System).PrimaryColor.ToArgb();
+        int color = _wallpaperManager.GetWallpaperColors((int)WallpaperManagerFlags.System).PrimaryColor.ToArgb();
         SetSeed(color);
     }
 
@@ -114,20 +126,20 @@ public partial class DynamicColorService
 
     private async Task<int[]> GetWallpaperPixels()
     {
-        if (wallpaperManager == null) return null;
+        if (_wallpaperManager == null) return null;
 
         if (OperatingSystem.IsAndroidVersionAtLeast(24))
         {
-            int wallpaperId = wallpaperManager.GetWallpaperId(WallpaperManagerFlags.System);
-            if (prevSeedSource == wallpaperId) return null;
-            prevSeedSource = wallpaperId;
+            int wallpaperId = _wallpaperManager.GetWallpaperId(WallpaperManagerFlags.System);
+            if (_prevSeedSource == wallpaperId) return null;
+            _prevSeedSource = wallpaperId;
         }
 
         // Need permission to read wallpaper
         if ((await Permissions.CheckStatusAsync<Permissions.StorageRead>()) != PermissionStatus.Granted)
             return null;
 
-        Drawable drawable = wallpaperManager.Drawable;
+        Drawable drawable = _wallpaperManager.Drawable;
         if (drawable is not BitmapDrawable bitmapDrawable) return null;
         Bitmap bitmap = bitmapDrawable.Bitmap;
         if (bitmap.Height * bitmap.Width > 112 * 112)

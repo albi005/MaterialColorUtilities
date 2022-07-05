@@ -1,16 +1,31 @@
 ﻿using MaterialColorUtilities.Palettes;
 using MaterialColorUtilities.Schemes;
 using Microsoft.Extensions.Options;
+using Microsoft.Maui.LifecycleEvents;
 
 namespace MaterialColorUtilities.Maui;
 
-public partial class DynamicColorService : IMauiInitializeService
+public partial class DynamicColorService
 {
-    private DynamicColorOptions _options;
-    private readonly WeakEventManager _weakEventManager = new();
+    private readonly DynamicColorOptions _options;
+    private readonly Application _application;
+    private readonly ResourceDictionary _appResources;
+    private readonly LifecycleEventService _lifecycleEventService;
     private int _seed;
     private bool _initialized;
-    private ResourceDictionary _appResources;
+    private readonly WeakEventManager _weakEventManager = new();
+
+    public DynamicColorService(
+        IOptions<DynamicColorOptions> options,
+        IApplication application,
+        ILifecycleEventService lifecycleEventService)
+    {
+        _options = options.Value;
+        _seed = _options.FallbackSeed;
+        _application = (Application)application;
+        _appResources = _application.Resources;
+        _lifecycleEventService = (LifecycleEventService)lifecycleEventService;
+    }
 
     public int Seed => _seed;
     public CorePalette CorePalette { get; protected set; }
@@ -33,14 +48,8 @@ public partial class DynamicColorService : IMauiInitializeService
         remove => _weakEventManager.RemoveEventHandler(value);
     }
 
-    public void Initialize(IServiceProvider services)
+    public virtual void Initialize()
     {
-        _options = services.GetRequiredService<IOptions<DynamicColorOptions>>().Value;
-        _seed = _options.FallbackSeed;
-
-        Application application = services.GetRequiredService<IApplication>() as Application;
-        _appResources = application.Resources;
-
         PlatformInitialize();
 
         Apply();
