@@ -7,7 +7,7 @@ namespace MaterialColorUtilities.Maui;
 
 // NSColor.controlAccentColor is not available because .NET MAUI uses Mac Catalyst,
 // so we have to rely on a workaround to get the accent color and subscribe to its changes.
-partial class DynamicColorService
+partial class DynamicColorService<TCorePalette, TSchemeInt, TSchemeMaui, TLightSchemeMapper, TDarkSchemeMapper>
 {
     private readonly UIButton _dummy = new();
 

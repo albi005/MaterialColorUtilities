@@ -1,10 +1,11 @@
 ﻿namespace MaterialColorUtilities.Maui;
 
-internal class InitializeService : IMauiInitializeService
+internal class InitializeService<TDynamicColorService> : IMauiInitializeService
+    where TDynamicColorService : IDynamicColorService
 {
-    private readonly DynamicColorService _dynamicColorService;
+    private readonly TDynamicColorService _dynamicColorService;
 
-    public InitializeService(DynamicColorService dynamicColorService)
+    public InitializeService(TDynamicColorService dynamicColorService)
     {
         _dynamicColorService = dynamicColorService;
     }

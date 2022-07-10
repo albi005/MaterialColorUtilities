@@ -8,7 +8,7 @@ using System.Runtime.Versioning;
 
 namespace MaterialColorUtilities.Maui;
 
-public partial class DynamicColorService
+public partial class DynamicColorService<TCorePalette, TSchemeInt, TSchemeMaui, TLightSchemeMapper, TDarkSchemeMapper>
 {
     private int _prevSeedSource = -1;
     private readonly WallpaperManager _wallpaperManager = WallpaperManager.GetInstance(Platform.AppContext);

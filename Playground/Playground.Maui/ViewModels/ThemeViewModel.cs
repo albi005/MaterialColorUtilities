@@ -1,21 +1,20 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using MaterialColorUtilities.ColorAppearance;
-using MaterialColorUtilities.Maui;
 
 namespace Playground.Maui.ViewModels;
 
 public partial class ThemeViewModel : ObservableObject
 {
-    private readonly DynamicColorService _colorService;
+    private readonly CustomDynamicColorService _colorService;
     [ObservableProperty] private double _h;
     [ObservableProperty] private double _c;
     [ObservableProperty] private double _t;
     [ObservableProperty] private Color _seed;
     public Color OnSeed => _t < 49.6 ? Colors.White : Colors.Black;
 
-    public ThemeViewModel(DynamicColorService themeService)
+    public ThemeViewModel(CustomDynamicColorService colorService)
     {
-        _colorService = themeService;
+        _colorService = colorService;
         _colorService.SeedChanged += (sender, _) =>
         {
             if (sender == this) return;

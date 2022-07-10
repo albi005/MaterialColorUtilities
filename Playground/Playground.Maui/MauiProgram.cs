@@ -9,7 +9,7 @@ public static class MauiProgram
     {
         MauiAppBuilder builder = MauiApp
             .CreateBuilder()
-            .UseMaterialDynamicColors()
+            .UseMaterialDynamicColors<CustomDynamicColorService>()
             .UseMauiApp<App>();
 
         builder.Services.AddTransient<ThemeViewModel>();

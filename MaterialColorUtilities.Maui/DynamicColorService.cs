@@ -5,7 +5,22 @@ using Microsoft.Maui.LifecycleEvents;
 
 namespace MaterialColorUtilities.Maui;
 
-public partial class DynamicColorService
+public sealed class DynamicColorService : DynamicColorService<CorePalette, Scheme<int>, Scheme<Color>, LightSchemeMapper, DarkSchemeMapper>
+{
+    public DynamicColorService(
+        IOptions<DynamicColorOptions> options,
+        IApplication application,
+        ILifecycleEventService lifecycleEventService
+    ) : base(options, application, lifecycleEventService) { }
+}
+
+public partial class DynamicColorService<TCorePalette, TSchemeInt, TSchemeMaui, TLightSchemeMapper, TDarkSchemeMapper>
+    : IDynamicColorService
+    where TCorePalette : CorePalette
+    where TSchemeInt : Scheme<int>, new()
+    where TSchemeMaui : Scheme<Color>, new()
+    where TLightSchemeMapper : ISchemeMapper<TCorePalette, TSchemeInt>, new()
+    where TDarkSchemeMapper : ISchemeMapper<TCorePalette, TSchemeInt>, new()
 {
     private readonly DynamicColorOptions _options;
     private readonly Application _application;
@@ -28,9 +43,9 @@ public partial class DynamicColorService
     }
 
     public int Seed => _seed;
-    public CorePalette CorePalette { get; protected set; }
-    public Scheme<int> SchemeInt { get; protected set; }
-    public Scheme<Color> SchemeMaui { get; protected set; }
+    public TCorePalette CorePalette { get; protected set; }
+    public TSchemeInt SchemeInt { get; protected set; }
+    public TSchemeMaui SchemeMaui { get; protected set; }
 
     public void SetSeed(int value, object sender = null)
     {
@@ -58,20 +73,27 @@ public partial class DynamicColorService
 
     partial void PlatformInitialize();
 
-    private void Apply()
+    protected virtual void Apply()
     {
         bool isDark = AppInfo.RequestedTheme == AppTheme.Dark;
 
-        CorePalette = new(Seed);
+        CorePalette = (TCorePalette)Activator.CreateInstance(typeof(TCorePalette), Seed, false);
 
-        ISchemeMapper<CorePalette, Scheme<int>> mapper = isDark
-            ? new DarkSchemeMapper()
-            : new LightSchemeMapper();
+        ISchemeMapper<TCorePalette, TSchemeInt> mapper = isDark
+            ? new TDarkSchemeMapper()
+            : new TLightSchemeMapper();
 
         SchemeInt = mapper.Map(CorePalette);
-        SchemeMaui = SchemeInt.ConvertTo(Color.FromInt);
 
-        foreach (var property in SchemeMaui.GetType().GetProperties())
+        // We have to use reflection to access the generated method with the correct return type.
+        SchemeMaui = (TSchemeMaui)typeof(TSchemeInt)
+            .GetMethods()
+            .Where(m => m.Name == nameof(Scheme<int>.ConvertTo))
+            .ToList()[0]
+            .MakeGenericMethod(typeof(Color))
+            .Invoke(SchemeInt, new[] { Color.FromInt });
+
+        foreach (var property in typeof(TSchemeMaui).GetProperties())
         {
             string key = property.Name;
             Color value = (Color)property.GetValue(SchemeMaui);
@@ -79,4 +101,9 @@ public partial class DynamicColorService
             _appResources[key + "Brush"] = new SolidColorBrush(value);
         }
     }
+}
+
+public interface IDynamicColorService
+{
+    void Initialize();
 }

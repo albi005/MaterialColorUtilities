@@ -3,7 +3,7 @@ using Windows.UI.ViewManagement;
 
 namespace MaterialColorUtilities.Maui;
 
-public partial class DynamicColorService
+public partial class DynamicColorService<TCorePalette, TSchemeInt, TSchemeMaui, TLightSchemeMapper, TDarkSchemeMapper>
 {
     private readonly UISettings _uiSettings = new();
 
