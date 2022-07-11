@@ -2,6 +2,7 @@
 using MaterialColorUtilities.Schemes;
 using Microsoft.Extensions.Options;
 using Microsoft.Maui.LifecycleEvents;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MaterialColorUtilities.Maui;
 
@@ -14,7 +15,15 @@ public sealed class DynamicColorService : DynamicColorService<CorePalette, Schem
     ) : base(options, application, lifecycleEventService) { }
 }
 
-public partial class DynamicColorService<TCorePalette, TSchemeInt, TSchemeMaui, TLightSchemeMapper, TDarkSchemeMapper>
+public partial class DynamicColorService<
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
+    TCorePalette,
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)]
+    TSchemeInt,
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)]
+    TSchemeMaui,
+    TLightSchemeMapper,
+    TDarkSchemeMapper>
     : IDynamicColorService
     where TCorePalette : CorePalette
     where TSchemeInt : Scheme<int>, new()
@@ -26,9 +35,13 @@ public partial class DynamicColorService<TCorePalette, TSchemeInt, TSchemeMaui, 
     private readonly Application _application;
     private readonly ResourceDictionary _appResources;
     private readonly LifecycleEventService _lifecycleEventService;
-    private int _seed;
     private bool _initialized;
+    private int _seed;
+    private int _prevSeed;
+    private bool _prevIsDark;
     private readonly WeakEventManager _weakEventManager = new();
+    private readonly TLightSchemeMapper _lightSchemeMapper = new();
+    private readonly TDarkSchemeMapper _darkSchemeMapper = new();
 
     public DynamicColorService(
         IOptions<DynamicColorOptions> options,
@@ -67,6 +80,8 @@ public partial class DynamicColorService<TCorePalette, TSchemeInt, TSchemeMaui, 
     {
         PlatformInitialize();
 
+        _application.RequestedThemeChanged += (_, _) => Apply();
+
         Apply();
         _initialized = true;
     }
@@ -75,13 +90,18 @@ public partial class DynamicColorService<TCorePalette, TSchemeInt, TSchemeMaui, 
 
     protected virtual void Apply()
     {
+        if (Seed != _prevSeed)
+            CorePalette = CreateCorePalette(Seed);
+
         bool isDark = AppInfo.RequestedTheme == AppTheme.Dark;
 
-        CorePalette = (TCorePalette)Activator.CreateInstance(typeof(TCorePalette), Seed, false);
+        if (Seed == _prevSeed && isDark == _prevIsDark) return;
+        _prevSeed = Seed;
+        _prevIsDark = isDark;
 
         ISchemeMapper<TCorePalette, TSchemeInt> mapper = isDark
-            ? new TDarkSchemeMapper()
-            : new TLightSchemeMapper();
+            ? _darkSchemeMapper
+            : _lightSchemeMapper;
 
         SchemeInt = mapper.Map(CorePalette);
 
@@ -100,6 +120,17 @@ public partial class DynamicColorService<TCorePalette, TSchemeInt, TSchemeMaui, 
             _appResources[key] = value;
             _appResources[key + "Brush"] = new SolidColorBrush(value);
         }
+    }
+
+    /// <summary>Constructs a <typeparamref name="TCorePalette"/>.</summary>
+    /// <remarks>
+    /// C# doesn't support contructor with parameters as a generic constraint,
+    /// so reflection is required to access the constructor. <see href="https://github.com/dotnet/csharplang/discussions/769">Discussion here.</see>
+    /// If you replace CorePalette, make sure it has a constructor with the following parameters: <c>int seed, bool isContent</c>
+    /// </remarks>
+    private static TCorePalette CreateCorePalette(int seed)
+    {
+        return (TCorePalette)Activator.CreateInstance(typeof(TCorePalette), seed, false);
     }
 }
 
