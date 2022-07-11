@@ -37,7 +37,6 @@ public partial class DynamicColorService<
     private readonly LifecycleEventService _lifecycleEventService;
     private int _seed;
     private int _prevSeed;
-    private bool _prevIsDark;
     private readonly WeakEventManager _weakEventManager = new();
     private readonly TLightSchemeMapper _lightSchemeMapper = new();
     private readonly TDarkSchemeMapper _darkSchemeMapper = new();
@@ -54,6 +53,8 @@ public partial class DynamicColorService<
         _lifecycleEventService = (LifecycleEventService)lifecycleEventService;
     }
 
+    // Use Application.UserAppTheme to set
+    public bool IsDark { get; private set; }
     public int Seed => _seed;
     public TCorePalette CorePalette { get; protected set; }
     public TSchemeInt SchemeInt { get; protected set; }
@@ -95,9 +96,9 @@ public partial class DynamicColorService<
 
         bool isDark = _application.RequestedTheme == AppTheme.Dark;
 
-        if (Seed == _prevSeed && isDark == _prevIsDark) return;
+        if (Seed == _prevSeed && isDark == IsDark) return;
         _prevSeed = Seed;
-        _prevIsDark = isDark;
+        IsDark = isDark;
 
         ISchemeMapper<TCorePalette, TSchemeInt> mapper = isDark
             ? _darkSchemeMapper
