@@ -15,34 +15,26 @@ partial class DynamicColorService<TCorePalette, TSchemeInt, TSchemeMaui, TLightS
     {
         SetFromAccentColor();
 
-        try
-        {
-            // based on https://gist.github.com/JunyuKuang/3ecc7c9374c0ba67438c9a6d06612e36
-            NSNotificationCenter.DefaultCenter.AddObserver(
-                (NSString)"NSSystemColorsDidChangeNotification",
-                _ => MainThread.BeginInvokeOnMainThread(SetFromAccentColor),
-                null);
-        }
-        catch { }
+        // based on https://gist.github.com/JunyuKuang/3ecc7c9374c0ba67438c9a6d06612e36
+        NSNotificationCenter.DefaultCenter.AddObserver(
+            (NSString)"NSSystemColorsDidChangeNotification",
+            _ => MainThread.BeginInvokeOnMainThread(SetFromAccentColor),
+            null);
     }
 
     // https://twitter.com/steipete/status/1186262035543273472
     private void SetFromAccentColor()
     {
-        try
-        {
-            UIColor accentColor = _dummy.TintColor;
-            accentColor.GetRGBA(
-                out NFloat r,
-                out NFloat g,
-                out NFloat b,
-                out NFloat _);
-            int argb = ColorUtils.ArgbFromRgb(
-                (int)(r * 255),
-                (int)(g * 255),
-                (int)(b * 255));
-            SetSeed(argb);
-        }
-        catch { }
+        UIColor accentColor = _dummy.TintColor;
+        accentColor.GetRGBA(
+            out NFloat r,
+            out NFloat g,
+            out NFloat b,
+            out NFloat _);
+        int argb = ColorUtils.ArgbFromRgb(
+            (int)(r * 255),
+            (int)(g * 255),
+            (int)(b * 255));
+        SetSeed(argb);
     }
 }

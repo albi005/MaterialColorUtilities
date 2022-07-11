@@ -9,8 +9,6 @@ public partial class DynamicColorService<TCorePalette, TSchemeInt, TSchemeMaui, 
 
     partial void PlatformInitialize()
     {
-        if (!_options.UseDynamicColor) return;
-
         SetSeed(GetAccentColor());
         _uiSettings.ColorValuesChanged += (_, _)
             => MainThread.BeginInvokeOnMainThread(()

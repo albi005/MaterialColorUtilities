@@ -15,39 +15,34 @@ public partial class DynamicColorService<TCorePalette, TSchemeInt, TSchemeMaui, 
 
     partial void PlatformInitialize()
     {
-        if (!_options.UseDynamicColor) return;
         if (_wallpaperManager == null) return;
-        try
+        if (OperatingSystem.IsAndroidVersionAtLeast(31))
         {
-            if (OperatingSystem.IsAndroidVersionAtLeast(31))
-            {
-                SetFromAndroid12AccentColors();
-                _lifecycleEventService.AddAndroid(android
-                    => android.OnResume(_
-                    => MainThread.BeginInvokeOnMainThread(
+            SetFromAndroid12AccentColors();
+            _lifecycleEventService.AddAndroid(android
+                => android.OnResume(_
+                => MainThread.BeginInvokeOnMainThread(
 #pragma warning disable CA1416
-                        SetFromAndroid12AccentColors
+                    SetFromAndroid12AccentColors
 #pragma warning restore CA1416
-                )));
-            }
-            else if (OperatingSystem.IsAndroidVersionAtLeast(27))
-            {
-                SetFromAndroid8PrimaryWallpaperColor();
-                _wallpaperManager.ColorsChanged += (sender, args) =>
-                {
-                    if (args.Which == (int)WallpaperManagerFlags.Lock) return;
-
-                    MainThread.BeginInvokeOnMainThread(
-#pragma warning disable CA1416
-                        SetFromAndroid8PrimaryWallpaperColor
-#pragma warning restore CA1416
-                    );
-                };
-            }
-            else
-                _ = TrySetFromQuantizedWallpaperColors();
+            )));
         }
-        catch { }
+        else if (OperatingSystem.IsAndroidVersionAtLeast(27))
+        {
+            SetFromAndroid8PrimaryWallpaperColor();
+            _wallpaperManager.ColorsChanged += (sender, args) =>
+            {
+                if (args.Which == (int)WallpaperManagerFlags.Lock) return;
+
+                MainThread.BeginInvokeOnMainThread(
+#pragma warning disable CA1416
+                    SetFromAndroid8PrimaryWallpaperColor
+#pragma warning restore CA1416
+                );
+            };
+        }
+        else
+            _ = TrySetFromQuantizedWallpaperColors();
     }
 
     [SupportedOSPlatform("android31.0")]
@@ -58,7 +53,7 @@ public partial class DynamicColorService<TCorePalette, TSchemeInt, TSchemeMaui, 
         // Android doesn't seem to expose the seed color, so we have to get creative to get it.
 
         // We will use the tone of the primary color with the highest chroma as the seed,
-        // because it should have the same hue, and chroma will be close enough.
+        // because it has the same hue as the actual seed and its chroma will be close enough.
         int[] primaryIds =
         {
             Android.Resource.Color.SystemAccent1500,

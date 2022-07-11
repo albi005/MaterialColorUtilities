@@ -35,7 +35,6 @@ public partial class DynamicColorService<
     private readonly Application _application;
     private readonly ResourceDictionary _appResources;
     private readonly LifecycleEventService _lifecycleEventService;
-    private bool _initialized;
     private int _seed;
     private int _prevSeed;
     private bool _prevIsDark;
@@ -62,10 +61,8 @@ public partial class DynamicColorService<
 
     public void SetSeed(int value, object sender = null)
     {
+        if (_seed == value) return;
         _seed = value;
-
-        if (!_initialized) return;
-
         _weakEventManager.HandleEvent(sender, value, nameof(SeedChanged));
         Apply();
     }
@@ -78,12 +75,15 @@ public partial class DynamicColorService<
 
     public virtual void Initialize()
     {
-        PlatformInitialize();
+        if (_options.UseDynamicColor)
+        {
+            try { PlatformInitialize(); }
+            catch { }
+        }
 
         _application.RequestedThemeChanged += (_, _) => Apply();
 
         Apply();
-        _initialized = true;
     }
 
     partial void PlatformInitialize();
@@ -93,7 +93,7 @@ public partial class DynamicColorService<
         if (Seed != _prevSeed)
             CorePalette = CreateCorePalette(Seed);
 
-        bool isDark = AppInfo.RequestedTheme == AppTheme.Dark;
+        bool isDark = _application.RequestedTheme == AppTheme.Dark;
 
         if (Seed == _prevSeed && isDark == _prevIsDark) return;
         _prevSeed = Seed;
