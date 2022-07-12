@@ -4,13 +4,19 @@
 *C# implementation of Google's [Material Color Utilities](https://github.com/material-foundation/material-color-utilities)*
 
 Includes all of the algorithms you might need for adding Material You colors to your .NET app:
-- [.NET MAUI](#net-maui): add beautiful Material You dynamic theming to your .NET MAUI app in just a single line of code
-- [HCT](#hct): a new color space designed for perfect contrasts, properties: *Hue*, *Chroma* and *Tone*
+- [.NET MAUI](#net-maui): add beautiful Material You dynamic theming to your .NET MAUI app in just a *single line of code*
+- [HCT](#hct): a new color space designed by Google for perfect contrasts, properties: *Hue*, *Chroma* and *Tone*
 - [Palettes](#palettes): a [`TonalPalette`](#tonal-palette) allows easy access to the tones of a color, a [`CorePalette`](#core-palette) contains the 6 key tonal palettes: *Primary*, *Secondary*, *Tertiary*, *Neutral*, *NeutralVariant* and *Error*
 - [Scheme](#scheme): map the colors in a Core Palette to roles, like `Primary`, `TertiaryContainer` or `OnError`
 - [Quantize](#quantize): reduce the number of unique colors in an image to just 128
 - [Score](#score): order those colors based on suitability for theming
 - [Blend](#blend): shift a color towards the theme hue
+- [Extension](#extension-1): add custom colors, override mappings
+
+Other stuff:
+- [More info](#more-info)
+- [Useful links](#useful-links)
+- [Contributing](#contributing)
 
 ## Install
 
@@ -19,7 +25,7 @@ Get the packages from Nuget:
 | Package | Description | Link |
 |---|---|---|
 | `MaterialColorUtilites` | Contains all of the color algorithms and helpers | [![NuGet](https://img.shields.io/nuget/v/MaterialColorUtilities.svg)](https://www.nuget.org/packages/MaterialColorUtilities) |
-| `MaterialColorUtilites.Maui` | Adds dynamic colors to your .NET MAUI app | [![NuGet](https://img.shields.io/nuget/v/MaterialColorUtilities.Maui.svg)](https://www.nuget.org/packages/MaterialColorUtilities) |
+| `MaterialColorUtilites.Maui` | Adds dynamic colors to your .NET MAUI app | [![NuGet](https://img.shields.io/nuget/v/MaterialColorUtilities.Maui.svg)](https://www.nuget.org/packages/MaterialColorUtilities.Maui) |
 
 ## .NET MAUI
 Adding beautiful Material You dynamic colors to your app is super simple, just follow these instructions. The library will handle everything else. 
@@ -54,7 +60,7 @@ public static class MauiProgram
     }
 }
 ```
-3. (optional) Add placeholders to your `App.xaml` for XAML color suggestions
+3. (optional) Add placeholders to your `App.xaml` for suggestions when writing XAML
 ```diff
 <?xml version = "1.0" encoding = "UTF-8" ?>
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -131,7 +137,7 @@ public static class MauiProgram
 ```
 
 ### Options
-Specify a fallback seed as an argument to the extension method or use a lambda for more options:
+Specify a fallback seed color as an argument to the extension method or use a lambda for more options:
 ```csharp
 .UseMaterialDynamicColors(options =>
 {
@@ -154,7 +160,7 @@ button.SetDynamicResource(Button.BackgroundColorProperty, MaterialColorUtilities
 
 - You can also resolve `DynamicColorService` from the MAUI dependency injection container:
 ```csharp
-using MaterialColorUtilites,
+using MaterialColorUtilites.Maui;
 
 public class MyService
 {
@@ -166,6 +172,19 @@ public class MyService
 
 ```
 > For samples check out the [Playground.Maui](https://github.com/albi005/MaterialColorUtilities/tree/main/Playground/Playground.Maui) project.
+
+### Extension
+Using [custom components](#extension-1) (like CorePalette, schemes and mappers) is supported. Just subclass `DynamicColorService` and supply your own types as generic arguments. 
+```csharp
+public class MyDynamicColorService : DynamicColorService<MyCorePalette, MyScheme<int>, MyScheme<Color>, MyLightSchemeMapper, MyDarkSchemeMapper>
+{
+    // You can also override Initialize() and Apply() for custom logic
+}
+```
+Then use it using the generic extension method:
+```csharp
+.UseMaterialDynamicColors<MyDynamicColorService>()
+```
 
 ## HCT
 Google's new color space designed for meeting contrast standards easy. Properties:
@@ -208,7 +227,7 @@ public TonalPalette Error { get; set; }
 > Check out the [source code](https://github.com/albi005/MaterialColorUtilities/blob/main/MaterialColorUtilities/Palettes/CorePalette.cs#L45) if you want to know how they get constructed.
 
 ## [Scheme](https://github.com/albi005/MaterialColorUtilities/tree/main/MaterialColorUtilities/Schemes)
-`Scheme`s store the Material Design 3 color role values.
+`Scheme`s store the Material Design 3 [color role](https://m3.material.io/styles/color/the-color-system/color-roles) values.
 ![](https://lh3.googleusercontent.com/nQHmWgLpXxjfV9nC_xIabgJDagi5V3aBB9qbFRA_EHEkEeTaq3uh-rYwoXnkRqL1eHCobVjb8lmQgdistb_XNcCfVdsQqUC-h0hvje4j6Qk=s0)
 ```csharp
 public class Scheme<TColor>
@@ -243,6 +262,8 @@ Scheme<int> scheme = mapper.Map(corePalette);
 Scheme<Color> schemeMaui = scheme.Convert(Color.FromInt);
 Scheme<string> schemeString = scheme.Convert(x => "#" + x.ToString("X")[2..]);
 ```
+
+> For [custom colors](https://m3.material.io/styles/color/the-color-system/custom-colors), roles or mapping check out [Extension](#extension-1).
 
 ## [Quantize](https://github.com/albi005/MaterialColorUtilities/tree/main/MaterialColorUtilities/Quantize)
 Reduce the number of unique colors in an image. Multiple algorithms are available and they are used together.
@@ -295,7 +316,7 @@ Scheme<string> lightSchemeString = lightScheme.ConvertTo(x => "#" + x.ToString("
 > The same code can be found in the [Playground.Console](https://github.com/albi005/MaterialColorUtilities/tree/main/Playground/Playground.Console) project.
 
 ## Extension
-### Adding your [custom colors](https://m3.material.io/styles/color/the-color-system/custom-colors)
+### Adding [custom colors](https://m3.material.io/styles/color/the-color-system/custom-colors)
 
 1. Define a custom key color if you need by subclassing `CorePalette`:
 
@@ -315,12 +336,6 @@ public class MyCorePalette : CorePalette
 
 2. Subclass `Scheme<TColor>`
 
-> A source generator will generate new converter methods automatically.
-> 
-> Make sure to mark the class `partial` and don't nest it inside another class.
-> 
-> If you get warning `CS8032: An instance of analyzer MaterialColorUtilities.Schemes.SchemeConverterGenerator cannot be created...` your IDE/compiler doesn't have Rosyln 4.0, so the source generator won't work. Make sure you are using Visual Studio 2022, MSBuild 17 or .NET 6.
-
 ```csharp
 public partial class MyScheme<TColor> : Scheme<TColor>
 {
@@ -330,6 +345,12 @@ public partial class MyScheme<TColor> : Scheme<TColor>
     public TColor OnOrangeContainer { get; set; }
 }
 ```
+
+> A source generator will generate new converter methods automatically.
+> 
+> Make sure to mark the class `partial` and don't nest it inside another class.
+> 
+> If you get warning `CS8032: An instance of analyzer MaterialColorUtilities.Schemes.SchemeConverterGenerator cannot be created...` your IDE/compiler doesn't have Rosyln 4.0, so the source generator won't work. Make sure you are using Visual Studio 2022, MSBuild 17 or .NET 6.
 
 3. Create mappers
 
@@ -377,5 +398,12 @@ MyScheme<string> myDarkScheme = new MyDarkSchemeMapper()
 ## More info
 For more info and samples check out the source code and the playground projects. If you have questions use the [Discussions](https://github.com/albi005/MaterialColorUtilities/discussions) tab.
 
+## Useful links:
+
+- [Blazor sample](https://albi005.github.io/MaterialColorUtilities/) (Playground.Wasm project) on the web
+  - Useful for comparing color spaces and checking HCT color values
+- [Material Theme Builder](https://material-foundation.github.io/material-theme-builder/#/custom)
+  - For creating nice themes
+
 ## Contributing
-If you have found a bug or want a new feature, go ahead and open an [issue](https://github.com/albi005/MaterialColorUtilities/issues).
+If you have found a bug or need a new feature, go ahead and open an [issue](https://github.com/albi005/MaterialColorUtilities/issues).
