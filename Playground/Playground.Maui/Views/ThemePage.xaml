@@ -1,18 +1,50 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:viewModels="clr-namespace:Playground.Maui.ViewModels"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Playground.Maui.ThemePage"
              Title="Theme"
              x:DataType="viewModels:ThemeViewModel">
-    <StackLayout Padding="16" Spacing="8">
-        <Label Text="Hue" />
-        <Slider Value="{Binding H}" Maximum="360" />
-        <Label Text="Chroma" />
-        <Slider Value="{Binding C}" Maximum="100" />
-        <Label Text="Tone" />
-        <Slider Value="{Binding T}" Maximum="100" />
-        <Label Text="Seed color" Margin="0,16,0,0" />
-        <BoxView BackgroundColor="{Binding Seed}" HeightRequest="100" />
-    </StackLayout>
+    <ScrollView>
+        <StackLayout Padding="16" Spacing="8">
+            <Label Text="Hue" />
+            <Slider Value="{Binding H}" Maximum="360" />
+            <Label Text="Chroma" />
+            <Slider Value="{Binding C}" Maximum="100" />
+            <Label Text="Tone" />
+            <Slider Value="{Binding T}" Maximum="100" />
+
+            <Grid HeightRequest="300" ColumnDefinitions="*,*" RowDefinitions="32,32,32,32,32,32">
+                <Grid.Resources>
+                    <ResourceDictionary>
+                        <Style TargetType="Label">
+                            <Setter Property="FontSize" Value="20" />
+                        </Style>
+                    </ResourceDictionary>
+                </Grid.Resources>
+                <BoxView Color="{Binding Seed}" Grid.ColumnSpan="2" />
+                <BoxView Color="{DynamicResource Primary}" Grid.Row="1" />
+                <BoxView Color="{DynamicResource PrimaryContainer}" Grid.Row="1" Grid.Column="1" />
+                <BoxView Color="{DynamicResource Secondary}" Grid.Row="2" />
+                <BoxView Color="{DynamicResource SecondaryContainer}" Grid.Row="2" Grid.Column="1" />
+                <BoxView Color="{DynamicResource Tertiary}" Grid.Row="3" />
+                <BoxView Color="{DynamicResource TertiaryContainer}" Grid.Row="3" Grid.Column="1" />
+                <BoxView Color="{DynamicResource Error}" Grid.Row="4" />
+                <BoxView Color="{DynamicResource ErrorContainer}" Grid.Row="4" Grid.Column="1" />
+                <BoxView Color="{DynamicResource Background}" Grid.Row="5" />
+                <BoxView Color="{DynamicResource SurfaceVariant}" Grid.Row="5" Grid.Column="1" />
+                <Label Text="Seed" TextColor="{Binding OnSeed}" />
+                <Label Text="Primary" TextColor="{DynamicResource OnPrimary}" Grid.Row="1" />
+                <Label Text="PrimaryContainer" TextColor="{DynamicResource OnPrimaryContainer}" Grid.Row="1" Grid.Column="1" />
+                <Label Text="Secondary" TextColor="{DynamicResource OnSecondary}" Grid.Row="2" />
+                <Label Text="SecondaryContainer" TextColor="{DynamicResource OnSecondaryContainer}" Grid.Row="2" Grid.Column="1" />
+                <Label Text="Tertiary" TextColor="{DynamicResource OnTertiary}" Grid.Row="3" />
+                <Label Text="TertiaryContainer" TextColor="{DynamicResource OnTertiaryContainer}" Grid.Row="3" Grid.Column="1" />
+                <Label Text="Error" TextColor="{DynamicResource OnError}" Grid.Row="4" />
+                <Label Text="ErrorContainer" TextColor="{DynamicResource OnErrorContainer}" Grid.Row="4" Grid.Column="1" />
+                <Label Text="Background" TextColor="{DynamicResource OnBackground}" Grid.Row="5" />
+                <Label Text="SurfaceVariant" TextColor="{DynamicResource OnSurfaceVariant}" Grid.Row="5" Grid.Column="1" />
+            </Grid>
+        </StackLayout>
+    </ScrollView>
 </ContentPage>

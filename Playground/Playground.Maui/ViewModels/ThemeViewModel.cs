@@ -1,21 +1,21 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using MaterialColorUtilities.ColorAppearance;
-using Playground.Maui.Services;
 
 namespace Playground.Maui.ViewModels;
 
 public partial class ThemeViewModel : ObservableObject
 {
-    private readonly ThemeService _themeService;
+    private readonly CustomDynamicColorService _colorService;
     [ObservableProperty] private double _h;
     [ObservableProperty] private double _c;
     [ObservableProperty] private double _t;
     [ObservableProperty] private Color _seed;
+    public Color OnSeed => _t < 49.6 ? Colors.White : Colors.Black;
 
-    public ThemeViewModel(ThemeService themeService)
+    public ThemeViewModel(CustomDynamicColorService colorService)
     {
-        _themeService = themeService;
-        _themeService.SeedChanged += (sender, _) =>
+        _colorService = colorService;
+        _colorService.SeedChanged += (sender, _) =>
         {
             if (sender == this) return;
             MainThread.BeginInvokeOnMainThread(SetFromSeed);
@@ -26,18 +26,19 @@ public partial class ThemeViewModel : ObservableObject
     partial void OnHChanged(double value) => SetSeed();
     partial void OnCChanged(double value) => SetSeed();
     partial void OnTChanged(double value) => SetSeed();
+    partial void OnSeedChanged(Color value) => OnPropertyChanged(nameof(OnSeed));
 
     void SetSeed()
     {
         Hct hct = Hct.From(H, C, T);
         Seed = Color.FromInt(hct.ToInt());
-        _themeService.SetSeed(hct.ToInt(), this);
+        _colorService.SetSeed(hct.ToInt(), this);
     }
 
     void SetFromSeed()
     {
-        Seed = Color.FromInt(_themeService.Seed);
-        Hct hct = Hct.FromInt(_themeService.Seed);
+        Seed = Color.FromInt(_colorService.Seed);
+        Hct hct = Hct.FromInt(_colorService.Seed);
         _h = hct.Hue;
         _c = hct.Chroma;
         _t = hct.Tone;
