@@ -95,11 +95,11 @@ public static class MauiProgram
 +       <Color x:Key="InverseSurface" />
 +       <Color x:Key="InverseOnSurface" />
 +       <Color x:Key="InversePrimary" />
-+       <Color x:Key="Elevation1" />
-+       <Color x:Key="Elevation2" />
-+       <Color x:Key="Elevation3" />
-+       <Color x:Key="Elevation4" />
-+       <Color x:Key="Elevation5" />
++       <Color x:Key="Surface1" />
++       <Color x:Key="Surface2" />
++       <Color x:Key="Surface3" />
++       <Color x:Key="Surface4" />
++       <Color x:Key="Surface5" />
 +       <SolidColorBrush x:Key="PrimaryBrush" />
 +       <SolidColorBrush x:Key="PrimaryContainerBrush" />
 +       <SolidColorBrush x:Key="SecondaryBrush" />
@@ -127,11 +127,11 @@ public static class MauiProgram
 +       <SolidColorBrush x:Key="InverseSurfaceBrush" />
 +       <SolidColorBrush x:Key="InverseOnSurfaceBrush" />
 +       <SolidColorBrush x:Key="InversePrimaryBrush" />
-+       <SolidColorBrush x:Key="Elevation1Brush" />
-+       <SolidColorBrush x:Key="Elevation2Brush" />
-+       <SolidColorBrush x:Key="Elevation3Brush" />
-+       <SolidColorBrush x:Key="Elevation4Brush" />
-+       <SolidColorBrush x:Key="Elevation5Brush" />
++       <SolidColorBrush x:Key="Surface1Brush" />
++       <SolidColorBrush x:Key="Surface2Brush" />
++       <SolidColorBrush x:Key="Surface3Brush" />
++       <SolidColorBrush x:Key="Surface4Brush" />
++       <SolidColorBrush x:Key="Surface5Brush" />
     </Application.Resources>
 </Application>
 ```

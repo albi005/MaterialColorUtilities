@@ -1,4 +1,5 @@
 ﻿using MaterialColorUtilities.Palettes;
+using MaterialColorUtilities.Utils;
 
 namespace MaterialColorUtilities.Schemes
 {
@@ -44,6 +45,11 @@ namespace MaterialColorUtilities.Schemes
             scheme.InverseSurface = corePalette.Neutral[90];
             scheme.InverseOnSurface = corePalette.Neutral[20];
             scheme.InversePrimary = corePalette.Primary[40];
+            scheme.Surface1 = scheme.Surface.Add(scheme.Primary, .05);
+            scheme.Surface2 = scheme.Surface.Add(scheme.Primary, .08);
+            scheme.Surface3 = scheme.Surface.Add(scheme.Primary, .11);
+            scheme.Surface4 = scheme.Surface.Add(scheme.Primary, .12);
+            scheme.Surface5 = scheme.Surface.Add(scheme.Primary, .14);
         }
     }
 }

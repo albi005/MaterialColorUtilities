@@ -68,10 +68,10 @@ public class ThemeService
         palette.Secondary = scheme.Secondary;
         palette.Tertiary = scheme.Tertiary;
         palette.Background = scheme.Background;
-        palette.AppbarBackground = scheme.Elevation2;
+        palette.AppbarBackground = scheme.Surface2;
         palette.AppbarText = scheme.OnBackground;
-        palette.DrawerBackground = scheme.Elevation1;
-        palette.Surface = scheme.Elevation1;
+        palette.DrawerBackground = scheme.Surface1;
+        palette.Surface = scheme.Surface1;
         return palette;
     }
 }

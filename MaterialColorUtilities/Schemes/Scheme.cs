@@ -48,6 +48,11 @@ public class Scheme<TColor>
     public TColor InverseSurface { get; set; }
     public TColor InverseOnSurface { get; set; }
     public TColor InversePrimary { get; set; }
+    public TColor Surface1 { get; set; }
+    public TColor Surface2 { get; set; }
+    public TColor Surface3 { get; set; }
+    public TColor Surface4 { get; set; }
+    public TColor Surface5 { get; set; }
 
     /// <summary>
     /// Converts the Scheme into a new one with a different color type.
@@ -109,6 +114,11 @@ public class Scheme<TColor>
         result.InverseSurface = convert(InverseSurface);
         result.InverseOnSurface = convert(InverseOnSurface);
         result.InversePrimary = convert(InversePrimary);
+        result.Surface1 = convert(Surface1);
+        result.Surface2 = convert(Surface2);
+        result.Surface3 = convert(Surface3);
+        result.Surface4 = convert(Surface4);
+        result.Surface5 = convert(Surface5);
         return result;
     }
 }

@@ -49,6 +49,12 @@ public static class ColorUtils
         return (255 << 24) | ((red & 255) << 16) | ((green & 255) << 8) | (blue & 255);
     }
 
+    /// <summary>Converts a color from ARGB components to ARGB format.</summary>
+    public static int ArgbFromComponents(int alpha, int red, int green, int blue)
+    {
+        return ((alpha & 255) << 24) | ((red & 255) << 16) | ((green & 255) << 8) | (blue & 255);
+    }
+
     /// <summary>Converts a color from linear RGB components to ARGB format.</summary>
     public static int ArgbFromLinrgb(double[] linrgb)
     {
@@ -274,5 +280,57 @@ public static class ColorUtils
         {
             return (116 * ft - 16) / kappa;
         }
+    }
+
+    public static int Add(this int background, int foreground, double foregroundAlpha)
+    {
+        int a = (int)(foregroundAlpha * 255);
+        foreground &= (a << 24) | 0x00FFFFFF;
+        return Add(background, foreground);
+    }
+
+    public static int Add(this int background, int foreground)
+    {
+        DeconstructArgb(background,
+            out float bgA,
+            out float bgR,
+            out float bgG,
+            out float bgB);
+        DeconstructArgb(foreground,
+            out float fgA,
+            out float fgR,
+            out float fgG,
+            out float fgB);
+
+        float a = fgA + (bgA * (1 - fgA));
+
+        float r = CompositeComponent(fgR, bgR, fgA, bgA, a);
+        float g = CompositeComponent(fgG, bgG, fgA, bgA, a);
+        float b = CompositeComponent(fgB, bgB, fgA, bgA, a);
+
+        return ArgbFromComponents(
+            (int)(a * 255),
+            (int)(r * 255),
+            (int)(g * 255),
+            (int)(b * 255));
+    }
+
+    public static float CompositeComponent(float fgC, float bgC, float fgA, float bgA, float a)
+    {
+        if (a == 0) return 0;
+        return ((fgC * fgA) + (bgC * bgA * (1 - fgA))) / a;
+    }
+
+    public static void DeconstructArgb(
+        int argb,
+        out float a,
+        out float r,
+        out float g,
+        out float b)
+    {
+        a = AlphaFromArgb(argb) / 255f;
+        r = RedFromArgb(argb) / 255f;
+        g = GreenFromArgb(argb) / 255f;
+        b = BlueFromArgb(argb) / 255f;
     }
 }
