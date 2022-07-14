@@ -45,11 +45,11 @@ namespace MaterialColorUtilities.Schemes
             scheme.InverseSurface = corePalette.Neutral[20];
             scheme.InverseOnSurface = corePalette.Neutral[95];
             scheme.InversePrimary = corePalette.Primary[80];
-            scheme.Elevation1 = scheme.Background.Add(scheme.Primary, .05);
-            scheme.Elevation2 = scheme.Background.Add(scheme.Primary, .08);
-            scheme.Elevation3 = scheme.Background.Add(scheme.Primary, .11);
-            scheme.Elevation4 = scheme.Background.Add(scheme.Primary, .12);
-            scheme.Elevation5 = scheme.Background.Add(scheme.Primary, .14);
+            scheme.Surface1 = scheme.Surface.Add(scheme.Primary, .05);
+            scheme.Surface2 = scheme.Surface.Add(scheme.Primary, .08);
+            scheme.Surface3 = scheme.Surface.Add(scheme.Primary, .11);
+            scheme.Surface4 = scheme.Surface.Add(scheme.Primary, .12);
+            scheme.Surface5 = scheme.Surface.Add(scheme.Primary, .14);
         }
     }
 }
