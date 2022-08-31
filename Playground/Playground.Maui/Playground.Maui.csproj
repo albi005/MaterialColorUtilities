@@ -59,16 +59,7 @@
 		<ProjectReference Include="..\..\MaterialColorUtilities\MaterialColorUtilities.csproj" />
 		<ProjectReference Include="..\Playground.Shared\Playground.Shared.csproj" />
 	</ItemGroup>
-
-	<ItemGroup>
-		<MauiXaml Update="Views\GraphsPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Views\ThemePage.xaml">
-			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-	</ItemGroup>
-
+	
 	<!--Configure multi-targeting (https://docs.microsoft.com/en-us/dotnet/maui/platform-integration/configure-multi-targeting#combine-filename-and-folder-multi-targeting)-->
 	<ItemGroup Condition="$(TargetFramework.StartsWith('net6.0-android')) != true">
 		<Compile Remove="**\**\*.Android.cs" />
