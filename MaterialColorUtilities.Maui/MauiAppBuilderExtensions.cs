@@ -1,4 +1,6 @@
-﻿namespace MaterialColorUtilities.Maui;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace MaterialColorUtilities.Maui;
 
 public static class MauiAppBuilderExtensions
 {
@@ -13,15 +15,26 @@ public static class MauiAppBuilderExtensions
         Action<DynamicColorOptions> configureOptions)
         => builder.UseMaterialDynamicColors<DynamicColorService>(configureOptions);
 
-    public static MauiAppBuilder UseMaterialDynamicColors<TDynamicColorService>(this MauiAppBuilder builder)
+    public static MauiAppBuilder UseMaterialDynamicColors<
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
+            TDynamicColorService>
+        (this MauiAppBuilder builder)
         where TDynamicColorService : class, IDynamicColorService
         => builder.UseMaterialDynamicColors<TDynamicColorService>(_ => { });
 
-    public static MauiAppBuilder UseMaterialDynamicColors<TDynamicColorService>(this MauiAppBuilder builder, uint fallbackSeed)
+    public static MauiAppBuilder UseMaterialDynamicColors<
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
+        TDynamicColorService>
+    (
+        this MauiAppBuilder builder, uint fallbackSeed
+    )
         where TDynamicColorService : class, IDynamicColorService
         => builder.UseMaterialDynamicColors<TDynamicColorService>(opt => opt.FallbackSeed = (int)fallbackSeed);
 
-    public static MauiAppBuilder UseMaterialDynamicColors<TDynamicColorService>(
+    public static MauiAppBuilder UseMaterialDynamicColors<
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
+        TDynamicColorService>
+    (
         this MauiAppBuilder builder,
         Action<DynamicColorOptions> configureOptions
     )
