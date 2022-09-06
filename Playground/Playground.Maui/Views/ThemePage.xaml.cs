@@ -7,10 +7,14 @@ namespace Playground.Maui;
 
 public partial class ThemePage : ContentPage
 {
-    public ThemePage(ThemeViewModel themeViewModel)
+    private readonly CustomDynamicColorService _colorService;
+    
+    public ThemePage(ThemeViewModel themeViewModel, CustomDynamicColorService colorService)
     {
+        _colorService = colorService;
         BindingContext = themeViewModel;
         InitializeComponent();
+        AddPermissionButtonIfNeeded();
     }
 
     private void PrimaryButton_Clicked(object sender, EventArgs e)
@@ -55,5 +59,24 @@ public partial class ThemePage : ContentPage
             .Select(x => x.ToString())
             .ToList();
 #endif
+    }
+
+    private async void AddPermissionButtonIfNeeded()
+    {
+        if (OperatingSystem.IsAndroidVersionAtLeast(24) &&
+            !OperatingSystem.IsAndroidVersionAtLeast(27) &&
+            await Permissions.CheckStatusAsync<Permissions.StorageRead>() != PermissionStatus.Granted)
+        {
+            Button button = new()
+            {
+                Text = "Request storage permission"
+            };
+            button.Clicked += async (_, _) =>
+            {
+                if (await Permissions.RequestAsync<Permissions.StorageRead>() == PermissionStatus.Granted)
+                    stackLayout.Remove(button);
+            };
+            stackLayout.Add(button);
+        }
     }
 }

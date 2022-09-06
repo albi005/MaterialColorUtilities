@@ -6,7 +6,7 @@
              Title="Theme"
              x:DataType="viewModels:ThemeViewModel">
     <ScrollView>
-        <StackLayout Padding="16" Spacing="8">
+        <StackLayout Padding="16" Spacing="8" x:Name="stackLayout">
             <Label Text="Hue" />
             <Slider Value="{Binding H}" Maximum="360" />
             <Label Text="Chroma" />
@@ -14,7 +14,7 @@
             <Label Text="Tone" />
             <Slider Value="{Binding T}" Maximum="100" />
 
-            <Grid HeightRequest="300" ColumnDefinitions="*,*" RowDefinitions="32,32,32,32,32,32">
+            <Grid ColumnDefinitions="*,*" RowDefinitions="32,32,32,32,32,32">
                 <Grid.Resources>
                     <ResourceDictionary>
                         <Style TargetType="Label">
@@ -45,6 +45,14 @@
                 <Label Text="Background" TextColor="{DynamicResource OnBackground}" Grid.Row="5" />
                 <Label Text="SurfaceVariant" TextColor="{DynamicResource OnSurfaceVariant}" Grid.Row="5" Grid.Column="1" />
             </Grid>
+            
+            <Label Text="Theme" />
+            <Picker ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding UserAppTheme}" />
+            <Label Text="Enable theming" />
+            <Switch IsToggled="{Binding EnableTheming}"/>
+            <Label Text="Enable dynamic color" />
+            <Switch IsToggled="{Binding EnableDynamicColor}"/>
+            <Button Text="Forget seed" Command="{Binding ForgetSeedCommand}"></Button>
         </StackLayout>
     </ScrollView>
 </ContentPage>
