@@ -53,7 +53,7 @@ public partial class ThemeViewModel : ObservableObject
     partial void OnTChanged(double value) => SetSeed();
     partial void OnSeedChanged(Color value) => OnPropertyChanged(nameof(OnSeed));
     
-    partial void OnEnableThemingChanged(bool value) => _colorService.IsEnabled = value;
+    partial void OnEnableThemingChanged(bool value) => _colorService.EnableTheming = value;
     partial void OnEnableDynamicColorChanged(bool value) => _colorService.EnableDynamicColor = value;
 
     [ICommand]

@@ -47,7 +47,7 @@ public class DynamicColorService<
     private readonly TLightSchemeMapper _lightSchemeMapper = new();
     private readonly TDarkSchemeMapper _darkSchemeMapper = new();
 
-    private bool _isEnabled;
+    private bool _enableTheming;
     private bool _enableDynamicColor;
     private int _seed;
     private int? _prevSeed;
@@ -60,7 +60,7 @@ public class DynamicColorService<
         IPreferences preferences)
     {
         _rememberIsDark = options.Value.RememberIsDark;
-        _isEnabled = options.Value.EnableTheming;
+        _enableTheming = options.Value.EnableTheming;
         _enableDynamicColor = options.Value.EnableDynamicColor;
         _fallbackSeed = options.Value.FallbackSeed;
         
@@ -70,13 +70,13 @@ public class DynamicColorService<
         _appResources = _application.Resources;
     }
 
-    public bool IsEnabled
+    public bool EnableTheming
     {
-        get => _isEnabled;
+        get => _enableTheming;
         set
         {
-            if (value == _isEnabled) return;
-            _isEnabled = value;
+            if (value == _enableTheming) return;
+            _enableTheming = value;
             
             OnOptionsChanged();
         }
@@ -156,9 +156,9 @@ public class DynamicColorService<
             if (_rememberIsDark)
             {
                 if (_application.UserAppTheme == AppTheme.Unspecified)
-                    Preferences.Remove(IsDarkKey);
+                    _preferences.Remove(IsDarkKey);
                 else
-                    Preferences.Set(IsDarkKey, _application.UserAppTheme == AppTheme.Dark);
+                    _preferences.Set(IsDarkKey, _application.UserAppTheme == AppTheme.Dark);
             }
             Update();
         };
@@ -169,14 +169,14 @@ public class DynamicColorService<
     private void OnOptionsChanged()
     {
         _accentColorService.OnAccentColorChanged -= Update;
-        if (_isEnabled && _enableDynamicColor)
+        if (_enableTheming && _enableDynamicColor)
             _accentColorService.OnAccentColorChanged += Update;
         Update();
     }
     
     private void Update()
     {
-        if (!IsEnabled) return;
+        if (!EnableTheming) return;
 
         if (_enableDynamicColor && _accentColorService.AccentColor != null)
             _seed = (int)_accentColorService.AccentColor;
@@ -208,8 +208,12 @@ public class DynamicColorService<
                 .MakeGenericMethod(typeof(Color))
                 .Invoke(SchemeInt, new object[] { (Func<int, Color>)Color.FromInt });
         }
-        
+
+#if PLATFORM
         MainThread.BeginInvokeOnMainThread(Apply);
+#else
+        Apply();
+#endif
     }
     
     protected virtual void Apply()
