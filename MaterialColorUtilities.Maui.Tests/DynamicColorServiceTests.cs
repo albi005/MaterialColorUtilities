@@ -10,7 +10,7 @@ public class DynamicColorServiceTests
     private readonly IPreferences _preferences = new MockPreferences();
     
     [TestMethod]
-    public void EnableTheming_False()
+    public void DisableTheming()
     {
         IOptions<DynamicColorOptions> options = CreateOptions(opt =>
         {
@@ -28,7 +28,7 @@ public class DynamicColorServiceTests
     }
 
     [TestMethod]
-    public void EnableDynamicColor_False()
+    public void DisableDynamicColor()
     {
         IOptions<DynamicColorOptions> options = CreateOptions(opt =>
         {
@@ -45,6 +45,45 @@ public class DynamicColorServiceTests
         Assert.AreEqual(unchecked((int)0xff005AC1), dynamicColorService.SchemeInt.Primary);
         Assert.AreEqual(dynamicColorService.SchemeInt.Primary, dynamicColorService.SchemeMaui.Primary.ToInt());
         Assert.IsNotNull(_application.Resources[Schemes.Keys.Primary]);
+    }
+
+    [TestMethod]
+    public void EnableDynamicColor_AccentColorNull()
+    {
+        IOptions<DynamicColorOptions> options = CreateOptions();
+
+        DynamicColorService dynamicColorService = new(options, _accentColorService, _application, _preferences);
+        
+        dynamicColorService.Initialize(null);
+        
+        Assert.IsTrue(dynamicColorService.EnableTheming);
+        Assert.IsTrue(dynamicColorService.EnableDynamicColor);
+        Assert.AreEqual(unchecked((int)0xff4285F4), dynamicColorService.Seed);
+        Assert.AreEqual(unchecked((int)0xff005AC1), dynamicColorService.SchemeInt.Primary);
+        Assert.AreEqual(dynamicColorService.SchemeInt.Primary, dynamicColorService.SchemeMaui.Primary.ToInt());
+        Assert.IsNotNull(_application.Resources[Schemes.Keys.Primary]);
+    }
+
+    [TestMethod]
+    public void EnableDynamicColor_AccentColorAvailable()
+    {
+        IOptions<DynamicColorOptions> options = CreateOptions();
+
+        IAccentColorService accentColorService = new MockAccentColorService(unchecked((int)0xFFc07d52));
+        DynamicColorService dynamicColorService = new(options, accentColorService, _application, _preferences);
+        
+        dynamicColorService.Initialize(null);
+        
+        Assert.AreEqual(unchecked((int)0xFFc07d52), dynamicColorService.Seed);
+        Assert.AreEqual(unchecked((int)0xFF96490A), dynamicColorService.SchemeInt.Primary);
+        Assert.AreEqual(dynamicColorService.SchemeInt.Primary, dynamicColorService.SchemeMaui.Primary.ToInt());
+        Assert.IsNotNull(_application.Resources[Schemes.Keys.Primary]);
+    }
+
+    private static IOptions<DynamicColorOptions> CreateOptions()
+    {
+        DynamicColorOptions options = new();
+        return Options.Create(options);
     }
 
     private static IOptions<DynamicColorOptions> CreateOptions(Action<DynamicColorOptions> configure)
