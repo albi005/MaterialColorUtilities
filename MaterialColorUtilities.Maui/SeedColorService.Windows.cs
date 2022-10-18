@@ -3,16 +3,16 @@ using MaterialColorUtilities.Utils;
 
 namespace MaterialColorUtilities.Maui;
 
-public class AccentColorService : IAccentColorService
+public class SeedColorService : ISeedColorService
 {
     private readonly UISettings _uiSettings = new();
 
-    public AccentColorService()
+    public SeedColorService()
     {
-        _uiSettings.ColorValuesChanged += (_, _) => OnAccentColorChanged?.Invoke();
+        _uiSettings.ColorValuesChanged += (_, _) => OnSeedColorChanged?.Invoke();
     }
     
-    public int? AccentColor
+    public int? SeedColor
     {
         get
         {
@@ -21,5 +21,5 @@ public class AccentColorService : IAccentColorService
         }
     }
 
-    public event Action OnAccentColorChanged;
+    public event Action OnSeedColorChanged;
 }

@@ -18,7 +18,7 @@ public sealed class DynamicColorOptions
     public bool EnableTheming { get; set; } = true;
     
     /// <summary>
-    /// Will be used if a dynamic accent color is not available or dynamic theming is disabled.
+    /// Will be used if a dynamic seed color is not available or dynamic theming is disabled.
     /// </summary>
     public int FallbackSeed { get; set; } = unchecked((int)0xff4285F4); // Google Blue
 

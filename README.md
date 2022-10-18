@@ -22,20 +22,21 @@ Other stuff:
 
 Get the packages from Nuget:
 
-| Package | Description | Link |
-|---|---|---|
-| `MaterialColorUtilites` | Contains all of the color algorithms and helpers | [![NuGet](https://img.shields.io/nuget/v/MaterialColorUtilities.svg)](https://www.nuget.org/packages/MaterialColorUtilities) |
-| `MaterialColorUtilites.Maui` | Adds dynamic colors to your .NET MAUI app | [![NuGet](https://img.shields.io/nuget/v/MaterialColorUtilities.Maui.svg)](https://www.nuget.org/packages/MaterialColorUtilities.Maui) |
+| Package                      | Description                                      | Link                                                                                                                                   |
+|------------------------------|--------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
+| `MaterialColorUtilites`      | Contains all of the color algorithms and helpers | [![NuGet](https://img.shields.io/nuget/v/MaterialColorUtilities.svg)](https://www.nuget.org/packages/MaterialColorUtilities)           |
+| `MaterialColorUtilites.Maui` | Adds dynamic colors to your .NET MAUI app        | [![NuGet](https://img.shields.io/nuget/v/MaterialColorUtilities.Maui.svg)](https://www.nuget.org/packages/MaterialColorUtilities.Maui) |
 
 ## .NET MAUI
 Adding beautiful Material You dynamic colors to your app is super simple, just follow these instructions. The library will handle everything else. 
 
 ### Implementation
-Light/dark mode handling works on every platform, but accent color is different on every platform:
-- Android 12+: use system colors
-- Android 8.1+: use WallpaperColors.Primary as seed color
-- Android <8.1: if `StorageRead` permission is granted, extract a color from the wallpaper, otherwise use the default seed
-- iOS: no accent color, so use default seed
+Light/dark mode handling works everywhere, but the accent color is different on all of the platforms:
+- Android ≥12.0 (API 31): use system colors
+- Android ≥8.1 (API 27): use [WallpaperColors](https://developer.android.com/reference/android/app/WallpaperColors).Primary as seed color
+- Android ≥7.0 (API 24): if the `StorageRead` permission has been granted, extract a color from the wallpaper, otherwise use fallback seed
+- Android ≥5.0 (API 21): use fallback seed
+- iOS: no accent color, use fallback seed
 - Mac: use accent color
 - Windows: use accent color
 
@@ -137,7 +138,7 @@ public static class MauiProgram
 ```
 
 ### Options
-Specify a fallback seed color as an argument to the extension method or use a lambda for more options:
+You can specify the fallback seed as an argument to the extension method or use a lambda for more options:
 ```csharp
 .UseMaterialDynamicColors(options =>
 {

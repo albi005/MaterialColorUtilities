@@ -16,7 +16,7 @@ public class CustomDynamicColorService : DynamicColorService<CorePalette, AppSch
 {
     private readonly WeakEventManager _weakEventManager = new();
     
-    public CustomDynamicColorService(IOptions<DynamicColorOptions> options, IAccentColorService accentColorService, IApplication application, IPreferences preferences) : base(options, accentColorService, application, preferences)
+    public CustomDynamicColorService(IOptions<DynamicColorOptions> options, ISeedColorService seedColorService, IApplication application, IPreferences preferences) : base(options, seedColorService, application, preferences)
     {
     }
     

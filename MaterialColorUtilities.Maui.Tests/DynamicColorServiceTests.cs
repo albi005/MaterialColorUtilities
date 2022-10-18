@@ -5,7 +5,7 @@ namespace MaterialColorUtilities.Maui.Tests;
 [TestClass]
 public class DynamicColorServiceTests
 {
-    private readonly IAccentColorService _accentColorService = new MockAccentColorService();
+    private readonly ISeedColorService _seedColorService = new MockSeedColorService();
     private readonly Application _application = new();
     private readonly IPreferences _preferences = new MockPreferences();
     
@@ -17,7 +17,7 @@ public class DynamicColorServiceTests
             opt.EnableTheming = false;
         });
 
-        DynamicColorService dynamicColorService = new(options, _accentColorService, _application, _preferences);
+        DynamicColorService dynamicColorService = new(options, _seedColorService, _application, _preferences);
         
         dynamicColorService.Initialize(null);
         
@@ -35,7 +35,7 @@ public class DynamicColorServiceTests
             opt.EnableDynamicColor = false;
         });
 
-        DynamicColorService dynamicColorService = new(options, _accentColorService, _application, _preferences);
+        DynamicColorService dynamicColorService = new(options, _seedColorService, _application, _preferences);
         
         dynamicColorService.Initialize(null);
         
@@ -48,11 +48,11 @@ public class DynamicColorServiceTests
     }
 
     [TestMethod]
-    public void EnableDynamicColor_AccentColorNull()
+    public void EnableDynamicColor_SeedColorNull()
     {
         IOptions<DynamicColorOptions> options = CreateOptions();
 
-        DynamicColorService dynamicColorService = new(options, _accentColorService, _application, _preferences);
+        DynamicColorService dynamicColorService = new(options, _seedColorService, _application, _preferences);
         
         dynamicColorService.Initialize(null);
         
@@ -65,12 +65,12 @@ public class DynamicColorServiceTests
     }
 
     [TestMethod]
-    public void EnableDynamicColor_AccentColorAvailable()
+    public void EnableDynamicColor_SeedColorAvailable()
     {
         IOptions<DynamicColorOptions> options = CreateOptions();
 
-        IAccentColorService accentColorService = new MockAccentColorService(unchecked((int)0xFFc07d52));
-        DynamicColorService dynamicColorService = new(options, accentColorService, _application, _preferences);
+        ISeedColorService seedColorService = new MockSeedColorService(unchecked((int)0xFFc07d52));
+        DynamicColorService dynamicColorService = new(options, seedColorService, _application, _preferences);
         
         dynamicColorService.Initialize(null);
         

@@ -43,7 +43,7 @@ public static class MauiAppBuilderExtensions
     {
         builder.Services.Configure(configureOptions);
         builder.Services.TryAddSingleton(_ => Preferences.Default);
-        builder.Services.AddSingleton<IAccentColorService, AccentColorService>();
+        builder.Services.AddSingleton<ISeedColorService, SeedColorService>();
         builder.Services.AddSingleton<TDynamicColorService>();
         builder.Services.AddSingleton<IMauiInitializeService>(s => s.GetRequiredService<TDynamicColorService>());
         return builder;

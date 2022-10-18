@@ -5,20 +5,20 @@ using UIKit;
 
 namespace MaterialColorUtilities.Maui;
 
-public class AccentColorService : IAccentColorService
+public class SeedColorService : ISeedColorService
 {
     private readonly UIButton _dummyButton = new();
 
-    public AccentColorService()
+    public SeedColorService()
     {
         // based on https://gist.github.com/JunyuKuang/3ecc7c9374c0ba67438c9a6d06612e36
         NSNotificationCenter.DefaultCenter.AddObserver(
             (NSString)"NSSystemColorsDidChangeNotification",
-            _ => OnAccentColorChanged?.Invoke(),
+            _ => OnSeedColorChanged?.Invoke(),
             null);
     }
     
-    public int? AccentColor
+    public int? SeedColor
     {
         get
         {
@@ -36,5 +36,5 @@ public class AccentColorService : IAccentColorService
         }
     }
 
-    public event Action OnAccentColorChanged;
+    public event Action OnSeedColorChanged;
 }

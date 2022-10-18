@@ -11,9 +11,9 @@ using Size = Android.Util.Size;
 
 namespace MaterialColorUtilities.Maui;
 
-public class AccentColorService : IAccentColorService
+public class SeedColorService : ISeedColorService
 {
-    private const string AccentColorCacheKey = "MaterialColorUtilities.Maui.AccentColorCache";
+    private const string SeedColorCacheKey = "MaterialColorUtilities.Maui.SeedClorCache";
     private const string WallpaperIdKey = "MaterialColorUtilities.Maui.WallpaperId";
 
     private readonly LifecycleEventService _lifecycleEventService;
@@ -22,9 +22,9 @@ public class AccentColorService : IAccentColorService
 
     private bool _hasInitialized;
     private int? _wallpaperId;
-    private int? _accentColorCache;
+    private int? _SeedColorCache;
 
-    public AccentColorService(ILifecycleEventService lifecycleEventService, IPreferences preferences)
+    public SeedColorService(ILifecycleEventService lifecycleEventService, IPreferences preferences)
     {
         _lifecycleEventService = (LifecycleEventService)lifecycleEventService;
         _preferences = preferences;
@@ -37,14 +37,14 @@ public class AccentColorService : IAccentColorService
 
         if (OperatingSystem.IsAndroidVersionAtLeast(27))
         {
-            _lifecycleEventService.AddAndroid(a => a.OnResume(_ => OnAccentColorChanged?.Invoke()));
+            _lifecycleEventService.AddAndroid(a => a.OnResume(_ => OnSeedColorChanged?.Invoke()));
         }
         else if (OperatingSystem.IsAndroidVersionAtLeast(24))
         {
-            if (_preferences.ContainsKey(AccentColorCacheKey))
+            if (_preferences.ContainsKey(SeedColorCacheKey))
             {
                 _wallpaperId = _preferences.Get(WallpaperIdKey, 0);
-                _accentColorCache = _preferences.Get(AccentColorCacheKey, 0);
+                _SeedColorCache = _preferences.Get(SeedColorCacheKey, 0);
             }
 
             _lifecycleEventService.AddAndroid(a =>
@@ -65,28 +65,28 @@ public class AccentColorService : IAccentColorService
         }
     }
 
-    public int? AccentColor => Environment.OSVersion.Version.Major switch
+    public int? SeedColor => Environment.OSVersion.Version.Major switch
     {
 #pragma warning disable CA1416
         >= 31 => GuessAndroid12Seed(),
         >= 27 => GetAndroid8PrimaryWallpaperColor(),
 #pragma warning restore CA1416
-        >= 24 => _accentColorCache,
+        >= 24 => _SeedColorCache,
         _ => null
     };
 
-    private event Action OnAccentColorChanged;
+    private event Action OnSeedColorChanged;
 
-    event Action IAccentColorService.OnAccentColorChanged
+    event Action ISeedColorService.OnSeedColorChanged
     {
         add
         {
             EnsureInitialized();
-            OnAccentColorChanged += value;
+            OnSeedColorChanged += value;
             if (OperatingSystem.IsAndroidVersionAtLeast(24) && !OperatingSystem.IsAndroidVersionAtLeast(27))
                 CheckWallpaper();
         }
-        remove => OnAccentColorChanged -= value;
+        remove => OnSeedColorChanged -= value;
     }
 
     [SupportedOSPlatform("android31.0")]
@@ -121,7 +121,7 @@ public class AccentColorService : IAccentColorService
             if (id == Android.Resource.Color.SystemAccent1500)
             {
                 // If Primary50 didn't change, return
-                if (color == _wallpaperId) return _accentColorCache;
+                if (color == _wallpaperId) return _SeedColorCache;
                 _wallpaperId = color;
             }
 
@@ -133,7 +133,7 @@ public class AccentColorService : IAccentColorService
             }
         }
 
-        _accentColorCache = closestColor;
+        _SeedColorCache = closestColor;
         return closestColor;
     }
 
@@ -149,7 +149,7 @@ public class AccentColorService : IAccentColorService
     [SupportedOSPlatform("android24.0")]
     private async void CheckWallpaper()
     {
-        if (OnAccentColorChanged == null) return;
+        if (OnSeedColorChanged == null) return;
 
         // Need permission to read wallpaper
         if (await Permissions.CheckStatusAsync<Permissions.StorageRead>() != PermissionStatus.Granted)
@@ -160,15 +160,15 @@ public class AccentColorService : IAccentColorService
 
         _wallpaperId = wallpaperId;
 
-        _accentColorCache = await Task.Run(QuantizeWallpaper);
+        _SeedColorCache = await Task.Run(QuantizeWallpaper);
 
         _preferences.Set(WallpaperIdKey, wallpaperId);
 
-        if (_accentColorCache == null)
-            _preferences.Remove(AccentColorCacheKey);
+        if (_SeedColorCache == null)
+            _preferences.Remove(SeedColorCacheKey);
         else
-            _preferences.Set(AccentColorCacheKey, (int)_accentColorCache);
-        OnAccentColorChanged?.Invoke();
+            _preferences.Set(SeedColorCacheKey, (int)_SeedColorCache);
+        OnSeedColorChanged?.Invoke();
     }
 
     /// <summary>
