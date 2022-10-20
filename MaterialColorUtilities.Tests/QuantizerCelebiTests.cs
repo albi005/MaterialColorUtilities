@@ -24,10 +24,10 @@ namespace MaterialColorUtilities.Tests
     [TestClass]
     public class QuantizerCelebiTests
     {
-        const int Red = unchecked((int)0xFFFF0000);
-        const int Green = unchecked((int)0xFF00FF00);
-        const int Blue = unchecked((int)0xFF0000FF);
-        const int MaxColors = 256;
+        const uint Red = 0xFFFF0000;
+        const uint Green = 0xFF00FF00;
+        const uint Blue = 0xFF0000FF;
+        const uint MaxColors = 256;
         
         [TestMethod]
         [DataRow(new[] { Red }, new[] { Red }, DisplayName = "1R")]
@@ -42,10 +42,10 @@ namespace MaterialColorUtilities.Tests
         [DataRow(new[] { Red, Red, Green, Green, Green },
                  new[] { Green, Red},
                  DisplayName = "2R 3G")]
-        public void Quantize(int[] pixels, int[] expected)
+        public void Quantize(uint[] pixels, uint[] expected)
         {
-            Dictionary<int, int> result = QuantizerCelebi.Quantize(pixels, MaxColors);
-            int[] colors = result.Keys.ToArray();
+            Dictionary<uint, uint> result = QuantizerCelebi.Quantize(pixels, MaxColors);
+            uint[] colors = result.Keys.ToArray();
             Assert.AreEqual(expected.Length, colors.Length);
             Assert.That.AreSequenceEqual(expected, colors);
         }

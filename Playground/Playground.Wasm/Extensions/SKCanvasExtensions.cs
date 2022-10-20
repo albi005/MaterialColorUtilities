@@ -40,9 +40,9 @@ public static class SKPaintSurfaceEventArgsExtensions
         double maxY,
         string labelX,
         string labelY,
-        Scheme<int> scheme)
+        Scheme<uint> scheme)
     {
-        stroke.Color = left.Color = center.Color = right.Color = new((uint)scheme.Outline);
+        stroke.Color = left.Color = center.Color = right.Color = new(scheme.Outline);
 
         var canvas = args.Surface.Canvas;
         float width = args.Info.Width;

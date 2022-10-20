@@ -18,7 +18,7 @@ public class SeedColorService : ISeedColorService
             null);
     }
     
-    public int? SeedColor
+    public uint? SeedColor
     {
         get
         {
@@ -30,9 +30,9 @@ public class SeedColorService : ISeedColorService
                 out NFloat b,
                 out NFloat _);
             return ColorUtils.ArgbFromRgb(
-                (int)(r * 255),
-                (int)(g * 255),
-                (int)(b * 255));
+                (uint)(r * 255),
+                (uint)(g * 255),
+                (uint)(b * 255));
         }
     }
 

@@ -28,7 +28,7 @@ public static class ImageUtils
     /// The extracted colors in descending order by score.
     /// At least one color will be returned.
     /// </returns>
-    public static List<int> ColorsFromImage(int[] pixels)
+    public static List<uint> ColorsFromImage(uint[] pixels)
     {
         var result = QuantizerCelebi.Quantize(pixels, 128);
         var ranked = Scorer.Score(result);

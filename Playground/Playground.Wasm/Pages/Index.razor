@@ -101,28 +101,28 @@
 </MudContainer>
 
 @code {
-    private int Hsl(double x, double y)
+    private uint Hsl(double x, double y)
     {
         MudColor mudColor = new(x, 1, y, 1);
         return ColorUtils.ArgbFromRgb(mudColor.R, mudColor.G, mudColor.B);
     }
 
-    private (double, double) HslInverse(int color)
+    private (double, double) HslInverse(uint color)
     {
         MudColor mudColor = new(ColorUtils.RedFromArgb(color), ColorUtils.GreenFromArgb(color), ColorUtils.BlueFromArgb(color), 255);
         return (mudColor.H, mudColor.L);
     }
 
-    private int Okhsl(double x, double y)
+    private uint Okhsl(double x, double y)
     {
         var (r,g,b) = OkColor.OkHslToSrgb((x, 1, y));
         return ColorUtils.ArgbFromRgb(
-            (int)(r * 255),
-            (int)(g * 255),
-            (int)(b * 255));
+            (uint)(r * 255),
+            (uint)(g * 255),
+            (uint)(b * 255));
     }
 
-    private (double, double) OkhslInverse(int color)
+    private (double, double) OkhslInverse(uint color)
     {
         var okhsl = OkColor.SrgbToOkHsl((
             ColorUtils.RedFromArgb(color) / 255.0,

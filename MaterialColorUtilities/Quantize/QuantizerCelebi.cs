@@ -40,14 +40,14 @@ public static class QuantizerCelebi
     /// A dictionary with keys of colors in ARGB format, and values of number of pixels in the
     /// original image that correspond to the color in the quantized image.
     /// </returns>
-    public static Dictionary<int, int> Quantize(int[] pixels, int maxColors)
+    public static Dictionary<uint, uint> Quantize(uint[] pixels, uint maxColors)
     {
         QuantizerResult wuResult = new QuantizerWu().Quantize(pixels, maxColors);
 
-        ICollection<int> wuClustersAsObjects = wuResult.ColorToCount.Keys;
-        int index = 0;
-        int[] wuClusters = new int[wuClustersAsObjects.Count];
-        foreach (int argb in wuClustersAsObjects)
+        ICollection<uint> wuClustersAsObjects = wuResult.ColorToCount.Keys;
+        uint index = 0;
+        uint[] wuClusters = new uint[wuClustersAsObjects.Count];
+        foreach (uint argb in wuClustersAsObjects)
         {
             wuClusters[index++] = argb;
         }

@@ -36,7 +36,7 @@ public static class Scorer
     private const double WEIGHT_CHROMA_ABOVE = 0.3;
     private const double WEIGHT_CHROMA_BELOW = 0.1;
 
-    public const int Default = unchecked((int)0xff4285F4); // Google Blue
+    public const uint Default = 0xff4285F4; // Google Blue
 
     /// <summary>
     /// Given a map with keys of colors and values of how often the color appears, rank the colors
@@ -52,7 +52,7 @@ public static class Scorer
     /// all the input colors were not suitable for a theme, a default fallback color will be provided,
     /// Google Blue.
     /// </returns>
-    public static List<int> Score(Dictionary<int, int> colorsToPopulation)
+    public static List<uint> Score(Dictionary<uint, uint> colorsToPopulation)
     {
         // Determine the total count of all colors.
         double populationSum = 0;
@@ -64,34 +64,34 @@ public static class Scorer
         // Turn the count of each color into a proportion by dividing by the total
         // count. Also, fill a cache of CAM16 colors representing each color, and
         // record the proportion of colors for each CAM16 hue.
-        Dictionary<int, Cam16> colorsToCam = new();
+        Dictionary<uint, Cam16> colorsToCam = new();
         double[] hueProportions = new double[361];
         foreach (var entry in colorsToPopulation)
         {
-            int color = entry.Key;
+            uint color = entry.Key;
             double population = entry.Value;
             double proportion = population / populationSum;
 
             Cam16 cam = Cam16.FromInt(color);
             colorsToCam[color] = cam;
 
-            int hue = (int)Math.Round(cam.Hue);
+            uint hue = (uint)Math.Round(cam.Hue);
             hueProportions[hue] += proportion;
         }
 
         // Determine the proportion of the colors around each color, by summing the
         // proportions around each color's hue.
-        Dictionary<int, double> colorsToExcitedProportion = new();
+        Dictionary<uint, double> colorsToExcitedProportion = new();
         foreach (var entry in colorsToCam)
         {
-            int color = entry.Key;
+            uint color = entry.Key;
             Cam16 cam = entry.Value;
             int hue = (int)Math.Round(cam.Hue);
 
             double excitedProportion = 0;
             for (int j = hue - 15; j < (hue + 15); j++)
             {
-                int neighborHue = MathUtils.SanitizeDegreesInt(j);
+                uint neighborHue = MathUtils.SanitizeDegreesInt(j);
                 excitedProportion += hueProportions[neighborHue];
             }
 
@@ -99,10 +99,10 @@ public static class Scorer
         }
 
         // Score the colors by their proportion, as well as how chromatic they are.
-        Dictionary<int, double> colorsToScore = new();
+        Dictionary<uint, double> colorsToScore = new();
         foreach (var entry in colorsToCam)
         {
-            int color = entry.Key;
+            uint color = entry.Key;
             Cam16 cam = entry.Value;
 
             double proportion = colorsToExcitedProportion[color];
@@ -118,25 +118,25 @@ public static class Scorer
 
         // Remove colors that are unsuitable, ex. very dark or unchromatic colors.
         // Also, remove colors that are very similar in hue.
-        List<int> filteredColors = Filter(colorsToExcitedProportion, colorsToCam);
-        Dictionary<int, double> filteredColorsToScore = new();
-        foreach (int color in filteredColors)
+        List<uint> filteredColors = Filter(colorsToExcitedProportion, colorsToCam);
+        Dictionary<uint, double> filteredColorsToScore = new();
+        foreach (uint color in filteredColors)
         {
             filteredColorsToScore[color] = colorsToScore[color];
         }
 
         // Ensure the list of colors returned is sorted such that the first in the
         // list is the most suitable, and the last is the least suitable.
-        List<KeyValuePair<int, double>> entryList = new(filteredColorsToScore);
+        List<KeyValuePair<uint, double>> entryList = new(filteredColorsToScore);
         entryList.Sort((a, b) => b.Value.CompareTo(a.Value));
-        List<int> colorsByScoreDescending = new();
+        List<uint> colorsByScoreDescending = new();
         foreach (var entry in entryList)
         {
-            int color = entry.Key;
+            uint color = entry.Key;
             Cam16 cam = colorsToCam[color];
             bool duplicateHue = false;
 
-            foreach (int alreadyChosenColor in colorsByScoreDescending)
+            foreach (uint alreadyChosenColor in colorsByScoreDescending)
             {
                 Cam16 alreadyChosenCam = colorsToCam[alreadyChosenColor];
                 if (MathUtils.DifferenceDegrees(cam.Hue, alreadyChosenCam.Hue) < 15)
@@ -161,13 +161,13 @@ public static class Scorer
         return colorsByScoreDescending;
     }
 
-    private static List<int> Filter(
-        Dictionary<int, double> colorsToExcitedProportion, Dictionary<int, Cam16> colorsToCam)
+    private static List<uint> Filter(
+        Dictionary<uint, double> colorsToExcitedProportion, Dictionary<uint, Cam16> colorsToCam)
     {
-        List<int> filtered = new();
+        List<uint> filtered = new();
         foreach (var entry in colorsToCam)
         {
-            int color = entry.Key;
+            uint color = entry.Key;
             Cam16 cam = entry.Value;
             double proportion = colorsToExcitedProportion[color];
 

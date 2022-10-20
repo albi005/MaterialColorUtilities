@@ -9,7 +9,7 @@ namespace MaterialColorUtilities.Schemes
     /// <typeparam name="TScheme">The type of the Scheme.</typeparam>
     public interface ISchemeMapper<TCorePalette, TScheme>
         where TCorePalette : CorePalette
-        where TScheme : Scheme<int>, new()
+        where TScheme : Scheme<uint>, new()
     {
         /// <summary>
         /// Maps from a <typeparamref name="TCorePalette"/> to a <typeparamref name="TScheme"/>.

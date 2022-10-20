@@ -44,71 +44,71 @@ public static class ColorUtils
     public static double[] WhitePointD65 { get; } = { 95.047, 100, 108.883 };
 
     /// <summary>Converts a color from RGB components to ARGB format.</summary>
-    public static int ArgbFromRgb(int red, int green, int blue)
+    public static uint ArgbFromRgb(uint red, uint green, uint blue)
     {
-        return (255 << 24) | ((red & 255) << 16) | ((green & 255) << 8) | (blue & 255);
+        return (255u << 24) | ((red & 255) << 16) | ((green & 255) << 8) | (blue & 255);
     }
 
     /// <summary>Converts a color from ARGB components to ARGB format.</summary>
-    public static int ArgbFromComponents(int alpha, int red, int green, int blue)
+    public static uint ArgbFromComponents(uint alpha, uint red, uint green, uint blue)
     {
         return ((alpha & 255) << 24) | ((red & 255) << 16) | ((green & 255) << 8) | (blue & 255);
     }
 
     /// <summary>Converts a color from linear RGB components to ARGB format.</summary>
-    public static int ArgbFromLinrgb(double[] linrgb)
+    public static uint ArgbFromLinrgb(double[] linrgb)
     {
-        int r = Delinearized(linrgb[0]);
-        int g = Delinearized(linrgb[1]);
-        int b = Delinearized(linrgb[2]);
+        uint r = Delinearized(linrgb[0]);
+        uint g = Delinearized(linrgb[1]);
+        uint b = Delinearized(linrgb[2]);
         return ArgbFromRgb(r, g, b);
     }
 
     /// <summary>Returns the alpha component of a color in ARGB format.</summary>
-    public static int AlphaFromArgb(int argb)
+    public static uint AlphaFromArgb(uint argb)
     {
         return (argb >> 24) & 255;
     }
 
     /// <summary>Returns the red component of a color in ARGB format.</summary>
-    public static int RedFromArgb(int argb)
+    public static uint RedFromArgb(uint argb)
     {
         return (argb >> 16) & 255;
     }
 
     /// <summary>Returns the green component of a color in ARGB format.</summary>
-    public static int GreenFromArgb(int argb)
+    public static uint GreenFromArgb(uint argb)
     {
         return (argb >> 8) & 255;
     }
 
     /// <summary>Returns the blue component of a color in ARGB format.</summary>
-    public static int BlueFromArgb(int argb)
+    public static uint BlueFromArgb(uint argb)
     {
         return argb & 255;
     }
 
     /// <summary>Returns whether a color in ARGB format is opaque.</summary>
-    public static bool IsOpaque(int argb)
+    public static bool IsOpaque(uint argb)
     {
         return AlphaFromArgb(argb) >= 255;
     }
 
     /// <summary>Converts a color from XYZ to ARGB.</summary> 
-    public static int ArgbFromXyz(double x, double y, double z)
+    public static uint ArgbFromXyz(double x, double y, double z)
     {
         double[][] matrix = XyzToSrgb;
         double linearR = matrix[0][0] * x + matrix[0][1] * y + matrix[0][2] * z;
         double linearG = matrix[1][0] * x + matrix[1][1] * y + matrix[1][2] * z;
         double linearB = matrix[2][0] * x + matrix[2][1] * y + matrix[2][2] * z;
-        int r = Delinearized(linearR);
-        int g = Delinearized(linearG);
-        int b = Delinearized(linearB);
+        uint r = Delinearized(linearR);
+        uint g = Delinearized(linearG);
+        uint b = Delinearized(linearB);
         return ArgbFromRgb(r, g, b);
     }
 
     /// <summary>Converts a color from ARGB to XYZ.</summary>
-    public static double[] XyzFromArgb(int argb)
+    public static double[] XyzFromArgb(uint argb)
     {
         double r = Linearized(RedFromArgb(argb));
         double g = Linearized(GreenFromArgb(argb));
@@ -117,7 +117,7 @@ public static class ColorUtils
     }
 
     /// <summary>Converts a color represented in Lab color space into an ARGB integer.</summary>
-    public static int ArgbFromLab(double l, double a, double b)
+    public static uint ArgbFromLab(double l, double a, double b)
     {
         double[] whitePoint = WhitePointD65;
         double fy = (l + 16.0) / 116.0;
@@ -133,7 +133,7 @@ public static class ColorUtils
     }
 
     /// <summary>Converts a color from ARGB representation to L*a*b* representation.</summary>
-    public static double[] LabFromArgb(int argb)
+    public static double[] LabFromArgb(uint argb)
     {
         double linearR = Linearized(RedFromArgb(argb));
         double linearG = Linearized(GreenFromArgb(argb));
@@ -158,7 +158,7 @@ public static class ColorUtils
     /// <summary>Converts an L* value to an ARGB representation.</summary>
     /// <param name="l">L* in L*a*b*</param>
     /// <returns>ARGB representation of grayscale color with lightness matching L*</returns>
-    public static int ArgbFromLstar(double lstar)
+    public static uint ArgbFromLstar(double lstar)
     {
         double fy = (lstar + 16.0) / 116.0;
         double fz = fy;
@@ -177,7 +177,7 @@ public static class ColorUtils
     /// <summary>Computes the L* value of a color in ARGB representation.</summary>
     /// <param name="argb">ARGB representation of a color</param>
     /// <returns>L*, from L*a*b*, coordinate of the color</returns>
-    public static double LStarFromArgb(int argb)
+    public static double LStarFromArgb(uint argb)
     {
         double y = XyzFromArgb(argb)[1] / 100.0;
         double e = 216.0 / 24389.0;
@@ -220,7 +220,7 @@ public static class ColorUtils
     /// </summary>
     /// <param name="rgbComponent">0 ≤ rgb_component ≤ 255, represents R/G/B channel</param>
     /// <returns>0.0 ≤ output ≤ 100.0, color channel converted to linear RGB space</returns>
-    public static double Linearized(int rgbComponent)
+    public static double Linearized(uint rgbComponent)
     {
         double normalized = rgbComponent / 255.0;
         if (normalized <= 0.040449936)
@@ -238,7 +238,7 @@ public static class ColorUtils
     /// </summary>
     /// <param name="rgbComponent">0.0 ≤ rgb_component ≤ 100.0, represents linear R/G/B channel</param>
     /// <returns>0 ≤ output ≤ 255, color channel converted to regular RGB space</returns>
-    public static int Delinearized(double rgbComponent)
+    public static uint Delinearized(double rgbComponent)
     {
         double normalized = rgbComponent / 100.0;
         double delinearized;
@@ -250,13 +250,13 @@ public static class ColorUtils
         {
             delinearized = 1.055 * Math.Pow(normalized, 1.0 / 2.4) - 0.055;
         }
-        return MathUtils.ClampInt(0, 255, (int)Math.Round(delinearized * 255.0));
+        return (uint)MathUtils.ClampInt(0, 255, (int)Math.Round(delinearized * 255.0));
     }
 
     public static double LabF(double t)
     {
-        double e = 216.0 / 24389.0;
-        double kappa = 24389.0 / 27.0;
+        const double e = 216.0 / 24389.0;
+        const double kappa = 24389.0 / 27.0;
         if (t > e)
         {
             return Math.Pow(t, 1.0 / 3.0);
@@ -282,14 +282,14 @@ public static class ColorUtils
         }
     }
 
-    public static int Add(this int background, int foreground, double foregroundAlpha)
+    public static uint Add(this uint background, uint foreground, double foregroundAlpha)
     {
-        int a = (int)(foregroundAlpha * 255);
+        uint a = (uint)(foregroundAlpha * 255);
         foreground &= (a << 24) | 0x00FFFFFF;
         return Add(background, foreground);
     }
 
-    public static int Add(this int background, int foreground)
+    public static uint Add(this uint background, uint foreground)
     {
         DeconstructArgb(background,
             out float bgA,
@@ -309,10 +309,10 @@ public static class ColorUtils
         float b = CompositeComponent(fgB, bgB, fgA, bgA, a);
 
         return ArgbFromComponents(
-            (int)(a * 255),
-            (int)(r * 255),
-            (int)(g * 255),
-            (int)(b * 255));
+            (uint)(a * 255),
+            (uint)(r * 255),
+            (uint)(g * 255),
+            (uint)(b * 255));
     }
 
     public static float CompositeComponent(float fgC, float bgC, float fgA, float bgA, float a)
@@ -322,7 +322,7 @@ public static class ColorUtils
     }
 
     public static void DeconstructArgb(
-        int argb,
+        uint argb,
         out float a,
         out float r,
         out float g,

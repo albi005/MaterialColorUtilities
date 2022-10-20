@@ -10,7 +10,7 @@ namespace Playground.Wasm.Services;
 
 public class ThemeService
 {
-    private int _seed = Scorer.Default;
+    private uint _seed = Scorer.Default;
     private bool _isDark;
     private readonly LightAppSchemeMapper _lightMapper = new();
     private readonly DarkAppSchemeMapper _darkMapper = new();
@@ -27,8 +27,8 @@ public class ThemeService
             ThemeChanged?.Invoke();
         }
     }
-    public int Seed => _seed;
-    public AppScheme<int> Scheme { get; set; }
+    public uint Seed => _seed;
+    public AppScheme<uint> Scheme { get; set; }
     public MudTheme MudTheme { get; } = new()
     {
         ZIndex = new()
@@ -37,10 +37,10 @@ public class ThemeService
         }
     };
 
-    public event EventHandler<int> SeedChanged;
+    public event EventHandler<uint> SeedChanged;
     public event Action ThemeChanged;
 
-    public void SetSeed(int value, object sender)
+    public void SetSeed(uint value, object sender)
     {
         _seed = value;
         SeedChanged?.Invoke(sender, value);
@@ -50,7 +50,7 @@ public class ThemeService
     private void Apply()
     {
         CorePalette corePalette = new(Seed);
-        ISchemeMapper<CorePalette, AppScheme<int>> mapper = IsDark
+        ISchemeMapper<CorePalette, AppScheme<uint>> mapper = IsDark
             ? _darkMapper
             : _lightMapper;
         Scheme = mapper.Map(corePalette);

@@ -142,7 +142,7 @@ You can specify the fallback seed as an argument to the extension method or use 
 ```csharp
 .UseMaterialDynamicColors(options =>
 {
-    options.FallbackSeed = unchecked((int)0xFFB000B5);
+    options.FallbackSeed = 0xFFB000B5;
     options.UseDynamicColor = false;
 })
 ```
@@ -248,7 +248,7 @@ public class Scheme<TColor>
 
 This library uses "mappers" to turn `ColorPalette`s into `Scheme`s.
 ```csharp
-int seed = unchecked((int)0xFF5D5FDB);
+int seed = 0xFF5D5FDB;
 
 // Construct a CorePalette
 CorePalette corePalette = CorePalette.Of(seed);
@@ -329,7 +329,7 @@ public class MyCorePalette : CorePalette
     public MyCorePalette(int seed) : base(seed)
     {
         // You can harmonize a color to make it closer to the seed color
-        int harmonizedOrange = Blender.Harmonize(unchecked(0xFFA500), seed);
+        int harmonizedOrange = Blender.Harmonize(0xFFA500, seed);
         Orange = TonalPalette.FromInt(harmonizedOrange);
     }
 }

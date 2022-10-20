@@ -22,13 +22,13 @@ namespace MaterialColorUtilities.Quantize;
 /// </summary>
 public class QuantizerMap : IQuantizer
 {
-    public Dictionary<int, int> ColorToCount { get; } = new();
+    public Dictionary<uint, uint> ColorToCount { get; } = new();
 
-    public QuantizerResult Quantize(int[] pixels, int colorCount)
+    public QuantizerResult Quantize(uint[] pixels, uint colorCount)
     {
-        foreach (int pixel in pixels)
+        foreach (uint pixel in pixels)
         {
-            int alpha = ColorUtils.AlphaFromArgb(pixel);
+            uint alpha = ColorUtils.AlphaFromArgb(pixel);
             if (alpha < 255)
                 continue;
             if (ColorToCount.ContainsKey(pixel))

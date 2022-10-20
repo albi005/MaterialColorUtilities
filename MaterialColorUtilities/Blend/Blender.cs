@@ -33,7 +33,7 @@ public static class Blender
     /// The design color with a hue shifted towards the system's color, a slightly
     /// warmer/cooler variant of the design color's hue.
     /// </returns>
-    public static int Harmonize(int designColor, int sourceColor)
+    public static uint Harmonize(uint designColor, uint sourceColor)
     {
         Hct fromHct = Hct.FromInt(designColor);
         Hct toHct = Hct.FromInt(sourceColor);
@@ -54,9 +54,9 @@ public static class Blender
     /// <param name="to">ARGB representation of color</param>
     /// <param name="amount">How much blending to perform; Between 0.0 and 1.0</param>
     /// <returns><paramref name="from"/>, with a hue blended towards <paramref name="to"/>. Chroma and tone are constant.</returns>
-    public static int HctHue(int from, int to, double amount)
+    public static uint HctHue(uint from, uint to, double amount)
     {
-        int ucs = Cam16Ucs(from, to, amount);
+        uint ucs = Cam16Ucs(from, to, amount);
         Cam16 ucsCam = Cam16.FromInt(ucs);
         Cam16 fromCam = Cam16.FromInt(from);
         return Hct.From(ucsCam.Hue, fromCam.Chroma, ColorUtils.LStarFromArgb(from)).ToInt();
@@ -69,7 +69,7 @@ public static class Blender
     /// <param name="to">ARGB representation of color</param>
     /// <param name="amount">How much blending to perform; between 0.0 and 1.0</param>
     /// <returns><paramref name="from"/>, blended towards <paramref name="to"/>. Hue, chroma, and tone will change.</returns>
-    public static int Cam16Ucs(int from, int to, double amount)
+    public static uint Cam16Ucs(uint from, uint to, double amount)
     {
         Cam16 fromCam = Cam16.FromInt(from);
         Cam16 toCam = Cam16.FromInt(to);

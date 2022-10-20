@@ -46,9 +46,9 @@ namespace MaterialColorUtilities.Tests
             return Enumerable.Range(0, caseCount).Select(index => start + stepSize * index);
         }
 
-        private static IEnumerable<int> RgbRange => Enumerable.Range(0, 256 / 8).Select(x => x * 8);
+        private static IEnumerable<uint> RgbRange => Enumerable.Range(0, 256 / 8).Select(x => (uint)x * 8);
 
-        private static IEnumerable<int> FullRgbRange => Enumerable.Range(0, 256);
+        private static IEnumerable<uint> FullRgbRange => Enumerable.Range(0, 256).Select(x => (uint)x);
 
         [TestMethod]
         public void RangeIntegrity()
@@ -99,15 +99,15 @@ namespace MaterialColorUtilities.Tests
         [TestMethod]
         public void RgbToXyzToRgb()
         {
-            foreach (int r in RgbRange)
+            foreach (uint r in RgbRange)
             {
-                foreach (int g in RgbRange)
+                foreach (uint g in RgbRange)
                 {
-                    foreach (int b in RgbRange)
+                    foreach (uint b in RgbRange)
                     {
-                        int argb = ColorUtils.ArgbFromRgb(r, g, b);
+                        uint argb = ColorUtils.ArgbFromRgb(r, g, b);
                         double[] xyz = ColorUtils.XyzFromArgb(argb);
-                        int converted = ColorUtils.ArgbFromXyz(xyz[0], xyz[1], xyz[2]);
+                        uint converted = ColorUtils.ArgbFromXyz(xyz[0], xyz[1], xyz[2]);
                         Assert.That.IsCloseTo(ColorUtils.RedFromArgb(converted), r, 1.5);
                         Assert.That.IsCloseTo(ColorUtils.GreenFromArgb(converted), g, 1.5);
                         Assert.That.IsCloseTo(ColorUtils.BlueFromArgb(converted), b, 1.5);
@@ -119,15 +119,15 @@ namespace MaterialColorUtilities.Tests
         [TestMethod]
         public void RgbToLabToRgb()
         {
-            foreach (int r in RgbRange)
+            foreach (uint r in RgbRange)
             {
-                foreach (int g in RgbRange)
+                foreach (uint g in RgbRange)
                 {
-                    foreach (int b in RgbRange)
+                    foreach (uint b in RgbRange)
                     {
-                        int argb = ColorUtils.ArgbFromRgb(r, g, b);
+                        uint argb = ColorUtils.ArgbFromRgb(r, g, b);
                         double[] lab = ColorUtils.LabFromArgb(argb);
-                        int converted = ColorUtils.ArgbFromLab(lab[0], lab[1], lab[2]);
+                        uint converted = ColorUtils.ArgbFromLab(lab[0], lab[1], lab[2]);
                         Assert.That.IsCloseTo(ColorUtils.RedFromArgb(converted), r, 1.5);
                         Assert.That.IsCloseTo(ColorUtils.GreenFromArgb(converted), g, 1.5);
                         Assert.That.IsCloseTo(ColorUtils.BlueFromArgb(converted), b, 1.5);
@@ -139,11 +139,11 @@ namespace MaterialColorUtilities.Tests
         [TestMethod]
         public void RgbToLStarToRgb()
         {
-            foreach (int component in FullRgbRange)
+            foreach (uint component in FullRgbRange)
             {
-                int argb = ColorUtils.ArgbFromRgb(component, component, component);
+                uint argb = ColorUtils.ArgbFromRgb(component, component, component);
                 double lStar = ColorUtils.LStarFromArgb(argb);
-                int converted = ColorUtils.ArgbFromLstar(lStar);
+                uint converted = ColorUtils.ArgbFromLstar(lStar);
                 Assert.AreEqual(converted, argb);
             }
         }
@@ -151,9 +151,9 @@ namespace MaterialColorUtilities.Tests
         [TestMethod]
         public void LinearizeDelinearize()
         {
-            foreach (int rgbComponent in FullRgbRange)
+            foreach (uint rgbComponent in FullRgbRange)
             {
-                int converted = ColorUtils.Delinearized(ColorUtils.Linearized(rgbComponent));
+                uint converted = ColorUtils.Delinearized(ColorUtils.Linearized(rgbComponent));
                 Assert.AreEqual(converted, rgbComponent);
             }
         }

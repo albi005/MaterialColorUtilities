@@ -33,16 +33,16 @@ public class CorePalette
 
     /// <summary>Create key tones from a color.</summary>
     /// <param name="argb">ARGB representation of a color.</param>
-    public static CorePalette Of(int argb) => new(argb);
+    public static CorePalette Of(uint argb) => new(argb);
 
     /// <summary>Create content key tones from a color.</summary>
     /// <param name="argb">ARGB representation of a color.</param>
-    public static CorePalette ContentOf(int argb) => new(argb, true);
+    public static CorePalette ContentOf(uint argb) => new(argb, true);
 
     /// <summary>Create key tones from a color.</summary>
     /// <param name="argb">ARGB representation of a color.</param>
     /// <param name="isContent"></param>
-    public CorePalette(int argb, bool isContent = false)
+    public CorePalette(uint argb, bool isContent = false)
     {
         Hct hct = Hct.FromInt(argb);
         double hue = hct.Hue;

@@ -41,25 +41,25 @@ public class QuantizerWu : IQuantizer
     private const int INDEX_COUNT = 33; // ((1 << INDEX_BITS) + 1)
     private const int TOTAL_SIZE = 35937; // INDEX_COUNT * INDEX_COUNT * INDEX_COUNT
 
-    public QuantizerResult Quantize(int[] pixels, int colorCount)
+    public QuantizerResult Quantize(uint[] pixels, uint colorCount)
     {
         QuantizerResult mapResult = new QuantizerMap().Quantize(pixels, colorCount);
         ConstructHistogram(mapResult.ColorToCount);
         CreateMoments();
-        CreateBoxesResult createBoxesResult = CreateBoxes(colorCount);
-        List<int> colors = CreateResult(createBoxesResult.ResultCount);
-        Dictionary<int, int> resultMap = new();
-        foreach (int color in colors)
+        CreateBoxesResult createBoxesResult = CreateBoxes((int)colorCount);
+        List<uint> colors = CreateResult(createBoxesResult.ResultCount);
+        Dictionary<uint, uint> resultMap = new();
+        foreach (uint color in colors)
         {
             resultMap[color] = 0;
         }
-        return new QuantizerResult(resultMap);
+        return new(resultMap);
     }
 
     static int GetIndex(int r, int g, int b)
         => (r << (INDEX_BITS * 2)) + (r << (INDEX_BITS + 1)) + r + (g << INDEX_BITS) + g + b;
 
-    void ConstructHistogram(Dictionary<int, int> pixels)
+    void ConstructHistogram(Dictionary<uint, uint> pixels)
     {
         weights = new int[TOTAL_SIZE];
         momentsR = new int[TOTAL_SIZE];
@@ -69,11 +69,11 @@ public class QuantizerWu : IQuantizer
 
         foreach (var pair in pixels)
         {
-            int pixel = pair.Key;
-            int count = pair.Value;
-            int red = ColorUtils.RedFromArgb(pixel);
-            int green = ColorUtils.GreenFromArgb(pixel);
-            int blue = ColorUtils.BlueFromArgb(pixel);
+            uint pixel = pair.Key;
+            int count = (int)pair.Value;
+            int red = (int)ColorUtils.RedFromArgb(pixel);
+            int green = (int)ColorUtils.GreenFromArgb(pixel);
+            int blue = (int)ColorUtils.BlueFromArgb(pixel);
             int bitsToRemove = 8 - INDEX_BITS;
             int iR = (red >> bitsToRemove) + 1;
             int iG = (green >> bitsToRemove) + 1;
@@ -179,9 +179,9 @@ public class QuantizerWu : IQuantizer
         return new CreateBoxesResult(maxColorCount, generatedColorCount);
     }
 
-    List<int> CreateResult(int colorCount)
+    List<uint> CreateResult(int colorCount)
     {
-        List<int> colors = new();
+        List<uint> colors = new();
         for (int i = 0; i < colorCount; ++i)
         {
             Box cube = cubes[i];
@@ -192,7 +192,7 @@ public class QuantizerWu : IQuantizer
                 int g = Volume(cube, momentsG) / weight;
                 int b = Volume(cube, momentsB) / weight;
                 int color = (255 << 24) | ((r & 0x0ff) << 16) | ((g & 0x0ff) << 8) | (b & 0x0ff);
-                colors.Add(color);
+                colors.Add((uint)color);
             }
         }
         return colors;

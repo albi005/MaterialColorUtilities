@@ -14,14 +14,14 @@ namespace Playground.Wasm.Shared
             OnSeedChanged(null, ThemeService.Seed);
         }
 
-        private void OnSeedChanged(object sender, int e)
+        private void OnSeedChanged(object sender, uint e)
         {
             if (sender == this) return;
             SetFromSeed(e);
             StateHasChanged();
         }
 
-        protected abstract void SetFromSeed(int seed);
+        protected abstract void SetFromSeed(uint seed);
 
         public void Dispose()
         {
