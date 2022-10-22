@@ -20,7 +20,7 @@ public sealed class DynamicColorOptions
     /// <summary>
     /// Will be used if a dynamic seed color is not available or dynamic theming is disabled.
     /// </summary>
-    public int FallbackSeed { get; set; } = unchecked((int)0xff4285F4); // Google Blue
+    public uint FallbackSeed { get; set; } = 0xff4285F4; // Google Blue
 
     /// <summary>
     /// Whether to use wallpaper/accent color based dynamic theming. Defaults to true.

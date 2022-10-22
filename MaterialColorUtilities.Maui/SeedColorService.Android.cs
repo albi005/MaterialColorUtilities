@@ -22,7 +22,7 @@ public class SeedColorService : ISeedColorService
 
     private bool _hasInitialized;
     private int? _wallpaperId;
-    private int? _SeedColorCache;
+    private uint? _SeedColorCache;
 
     public SeedColorService(ILifecycleEventService lifecycleEventService, IPreferences preferences)
     {
@@ -44,7 +44,7 @@ public class SeedColorService : ISeedColorService
             if (_preferences.ContainsKey(SeedColorCacheKey))
             {
                 _wallpaperId = _preferences.Get(WallpaperIdKey, 0);
-                _SeedColorCache = _preferences.Get(SeedColorCacheKey, 0);
+                _SeedColorCache = _preferences.Get(SeedColorCacheKey, 0U);
             }
 
             _lifecycleEventService.AddAndroid(a =>
@@ -65,7 +65,7 @@ public class SeedColorService : ISeedColorService
         }
     }
 
-    public int? SeedColor => Environment.OSVersion.Version.Major switch
+    public uint? SeedColor => Environment.OSVersion.Version.Major switch
     {
 #pragma warning disable CA1416
         >= 31 => GuessAndroid12Seed(),
@@ -90,7 +90,7 @@ public class SeedColorService : ISeedColorService
     }
 
     [SupportedOSPlatform("android31.0")]
-    private int? GuessAndroid12Seed()
+    private uint? GuessAndroid12Seed()
     {
         // We have access to the basic tones like 0, 10, 20 etc. of every tonal palette,
         // but if a different tone is required, we need access to the seed color.
@@ -113,7 +113,7 @@ public class SeedColorService : ISeedColorService
             Android.Resource.Color.SystemAccent1900,
         };
         double maxChroma = -1;
-        int closestColor = 0;
+        uint closestColor = 0;
         foreach (int id in primaryIds)
         {
             int color = Platform.AppContext.Resources!.GetColor(id, null);
@@ -125,11 +125,11 @@ public class SeedColorService : ISeedColorService
                 _wallpaperId = color;
             }
 
-            Hct hct = Hct.FromInt(color);
+            Hct hct = Hct.FromInt((uint)color);
             if (hct.Chroma > maxChroma)
             {
                 maxChroma = hct.Chroma;
-                closestColor = color;
+                closestColor = (uint)color;
             }
         }
 
@@ -138,10 +138,10 @@ public class SeedColorService : ISeedColorService
     }
 
     [SupportedOSPlatform("android27.0")]
-    private int? GetAndroid8PrimaryWallpaperColor()
+    private uint? GetAndroid8PrimaryWallpaperColor()
     {
         WallpaperColors colors = _wallpaperManager.GetWallpaperColors((int)WallpaperManagerFlags.System);
-        return colors?.PrimaryColor.ToArgb();
+        return (uint?)colors?.PrimaryColor.ToArgb();
     }
 
     // GetWallpaperId is only available from API 24, and without it we would have to quantize
@@ -175,14 +175,14 @@ public class SeedColorService : ISeedColorService
     /// Compute a seed color using the algorithms included in MaterialColorUtilities
     /// </summary>
     /// <remarks>Requires permission <see cref="Permissions.StorageRead"/></remarks>
-    private int? QuantizeWallpaper()
+    private uint? QuantizeWallpaper()
     {
-        int[] pixels = GetWallpaperPixels();
+        uint[] pixels = GetWallpaperPixels();
         if (pixels == null) return null;
         return ImageUtils.ColorsFromImage(pixels)[0];
     }
 
-    private int[] GetWallpaperPixels()
+    private uint[] GetWallpaperPixels()
     {
         Drawable drawable = _wallpaperManager.Drawable;
         if (drawable is not BitmapDrawable bitmapDrawable || bitmapDrawable.Bitmap == null) return null;
@@ -196,7 +196,7 @@ public class SeedColorService : ISeedColorService
         int[] pixels = new int[bitmap!.ByteCount / 4];
         bitmap.GetPixels(pixels, 0, bitmap.Width, 0, 0, bitmap.Width, bitmap.Height);
 
-        return pixels;
+        return (uint[])(object)pixels;
     }
 
     // From https://cs.android.com/android/platform/superproject/+/384d0423f9e93790e76399a5291731f6cfea40e8:frameworks/base/core/java/android/app/WallpaperColors.java

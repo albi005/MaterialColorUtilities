@@ -20,9 +20,9 @@ namespace MaterialColorUtilities.Quantize;
 /// </summary>
 public class QuantizerResult
 {
-    public Dictionary<int, int> ColorToCount { get; }
+    public Dictionary<uint, uint> ColorToCount { get; }
 
-    public QuantizerResult(Dictionary<int, int> colorToCount)
+    public QuantizerResult(Dictionary<uint, uint> colorToCount)
     {
         ColorToCount = colorToCount;
     }

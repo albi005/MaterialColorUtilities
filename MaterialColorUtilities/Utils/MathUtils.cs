@@ -59,14 +59,14 @@ public static class MathUtils
 
     /// <summary>Sanitizes a degree measure as an integer.</summary>
     /// <returns>A degree measure between 0 (inclusive) and 360 (exclusive).</returns>
-    public static int SanitizeDegreesInt(int degrees)
+    public static uint SanitizeDegreesInt(int degrees)
     {
         degrees %= 360;
         if (degrees < 0)
         {
             degrees += 360;
         }
-        return degrees;
+        return (uint)degrees;
     }
 
     /// <summary>Sanitizes a degree measure as a floating-point number.</summary>

@@ -13,10 +13,10 @@ using System.Reflection;
 string imageResourceId = "Playground.Console.Resources.wallpaper.webp";
 using Stream resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(imageResourceId);
 SKBitmap bitmap = SKBitmap.Decode(resourceStream).Resize(new SKImageInfo(112, 112), SKFilterQuality.Medium);
-int[] pixels = bitmap.Pixels.Select(p => (int)(uint)p).ToArray();
+uint[] pixels = Array.ConvertAll(bitmap.Pixels, p => (uint)p);
 
 // This is where the magic happens
-int seedColor = ImageUtils.ColorsFromImage(pixels).First();
+uint seedColor = ImageUtils.ColorsFromImage(pixels).First();
 
 Console.WriteLine($"Seed: {StringUtils.HexFromArgb(seedColor)}");
 
@@ -25,11 +25,11 @@ CorePalette corePalette = new(seedColor);
 
 // Map the core palette to color schemes
 // A Scheme contains the named colors, like Primary or OnTertiaryContainer
-Scheme<int> lightScheme = new LightSchemeMapper().Map(corePalette);
-Scheme<int> darkScheme = new DarkSchemeMapper().Map(corePalette);
+Scheme<uint> lightScheme = new LightSchemeMapper().Map(corePalette);
+Scheme<uint> darkScheme = new DarkSchemeMapper().Map(corePalette);
 
 // Easily convert between Schemes with different color types
-Scheme<Color> lightSchemeColor = lightScheme.ConvertTo(Color.FromArgb);
+Scheme<Color> lightSchemeColor = lightScheme.ConvertTo(x => Color.FromArgb((int)x));
 
 Scheme<string> lightSchemeString = lightScheme.ConvertTo(x => "#" + x.ToString("X")[2..]);
 ConsoleHelper.PrintProperties("Light scheme", lightSchemeString);
@@ -53,10 +53,10 @@ public class MyCorePalette : CorePalette
 {
     public TonalPalette Orange { get; set; }
     
-    public MyCorePalette(int seed) : base(seed)
+    public MyCorePalette(uint seed) : base(seed)
     {
         // You can harmonize a color to make it closer to the seed color
-        int harmonizedOrange = Blender.Harmonize(unchecked(0xFFA500), seed);
+        uint harmonizedOrange = Blender.Harmonize(0xFFA500, seed);
         Orange = TonalPalette.FromInt(harmonizedOrange);
     }
 }
@@ -73,9 +73,9 @@ public partial class MyScheme<TColor> : Scheme<TColor>
 }
 
 // 3. Create mappers
-public class MyLightSchemeMapper : LightSchemeMapper<MyCorePalette, MyScheme<int>>
+public class MyLightSchemeMapper : LightSchemeMapper<MyCorePalette, MyScheme<uint>>
 {
-    protected override void MapCore(MyCorePalette palette, MyScheme<int> scheme)
+    protected override void MapCore(MyCorePalette palette, MyScheme<uint> scheme)
     {
         base.MapCore(palette, scheme);
         scheme.Orange = palette.Orange[40];
@@ -88,9 +88,9 @@ public class MyLightSchemeMapper : LightSchemeMapper<MyCorePalette, MyScheme<int
     }
 }
 
-public class MyDarkSchemeMapper : DarkSchemeMapper<MyCorePalette, MyScheme<int>>
+public class MyDarkSchemeMapper : DarkSchemeMapper<MyCorePalette, MyScheme<uint>>
 {
-    protected override void MapCore(MyCorePalette palette, MyScheme<int> scheme)
+    protected override void MapCore(MyCorePalette palette, MyScheme<uint> scheme)
     {
         base.MapCore(palette, scheme);
         scheme.Orange = palette.Orange[80];

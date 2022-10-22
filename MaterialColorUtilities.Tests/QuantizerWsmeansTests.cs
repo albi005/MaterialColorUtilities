@@ -25,11 +25,11 @@ namespace MaterialColorUtilities.Tests
     [TestClass]
     public class QuantizerWsmeansTests
     {
-        const int Red = unchecked((int)0xFFFF0000);
-        const int Green = unchecked((int)0xFF00FF00);
-        const int Blue = unchecked((int)0xFF0000FF);
-        const int Random = unchecked((int)0xff426088);
-        const int MaxColors = 256;
+        const uint Red = 0xFFFF0000;
+        const uint Green = 0xFF00FF00;
+        const uint Blue = 0xFF0000FF;
+        const uint Random = 0xff426088;
+        const uint MaxColors = 256;
 
         [TestMethod]
         [DataRow(new[] { Random }, new[] { Random }, DisplayName = "1Rando")]
@@ -37,10 +37,10 @@ namespace MaterialColorUtilities.Tests
         [DataRow(new[] { Green }, new[] { Green }, DisplayName = "1G")]
         [DataRow(new[] { Blue }, new[] { Blue }, DisplayName = "1B")]
         [DataRow(new[] { Blue, Blue, Blue, Blue, Blue }, new[] { Blue }, DisplayName = "5B")]
-        public void Quantize(int[] pixels, int[] expected)
+        public void Quantize(uint[] pixels, uint[] expected)
         {
-            Dictionary<int, int> result = QuantizerWsmeans.Quantize(pixels, Array.Empty<int>(), MaxColors);
-            int[] colors = result.Keys.ToArray();
+            Dictionary<uint, uint> result = QuantizerWsmeans.Quantize(pixels, Array.Empty<uint>(), MaxColors);
+            uint[] colors = result.Keys.ToArray();
             Assert.AreEqual(expected.Length, colors.Length);
             Assert.That.AreSequenceEqual(expected, colors);
         }

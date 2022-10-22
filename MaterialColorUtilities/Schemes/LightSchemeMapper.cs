@@ -4,7 +4,7 @@ using MaterialColorUtilities.Utils;
 namespace MaterialColorUtilities.Schemes
 {
     /// <inheritdoc/>
-    public class LightSchemeMapper : LightSchemeMapper<CorePalette, Scheme<int>>
+    public class LightSchemeMapper : LightSchemeMapper<CorePalette, Scheme<uint>>
     {
     }
 
@@ -14,7 +14,7 @@ namespace MaterialColorUtilities.Schemes
     /// </summary>
     public class LightSchemeMapper<TCorePalette, TScheme> : BaseSchemeMapper<TCorePalette, TScheme>
         where TCorePalette : CorePalette
-        where TScheme : Scheme<int>, new()
+        where TScheme : Scheme<uint>, new()
     {
         protected override void MapCore(TCorePalette corePalette, TScheme scheme)
         {

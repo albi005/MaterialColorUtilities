@@ -44,9 +44,9 @@
 </MudHidden>
 
 @code {
-    protected override void SetFromSeed(int seed) { }
+    protected override void SetFromSeed(uint seed) { }
 
-    string ToStyle(int color)
+    string ToStyle(uint color)
     {
         double tone = ColorUtils.LStarFromArgb(color);
         string textColor = tone > 50

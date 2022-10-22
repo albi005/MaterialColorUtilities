@@ -4,11 +4,11 @@ public class MockSeedColorService : ISeedColorService
 {
     public MockSeedColorService() { }
     
-    public MockSeedColorService(int? seedColor)
+    public MockSeedColorService(uint? seedColor)
     {
         SeedColor = seedColor;
     }
 
-    public int? SeedColor { get; }
+    public uint? SeedColor { get; }
     public event Action? OnSeedColorChanged { add { } remove { } }
 }

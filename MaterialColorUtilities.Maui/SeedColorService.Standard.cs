@@ -2,6 +2,6 @@
 
 public class SeedColorService : ISeedColorService
 {
-    public int? SeedColor => null;
+    public uint? SeedColor => null;
     public event Action OnSeedColorChanged{ add { } remove { } }
 }

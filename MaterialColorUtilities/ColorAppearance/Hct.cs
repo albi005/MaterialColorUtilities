@@ -27,7 +27,7 @@ public class Hct
     private double hue;
     private double chroma;
     private double tone;
-    private int argb;
+    private uint argb;
 
     /// <summary>
     /// Create an HCT color from hue, chroma, and tone.
@@ -41,7 +41,7 @@ public class Hct
     /// <returns>HCT representation of a color in default viewing conditions.</returns>
     public static Hct From(double hue, double chroma, double tone)
     {
-        int argb = CamSolver.SolveToInt(hue, chroma, tone);
+        uint argb = CamSolver.SolveToInt(hue, chroma, tone);
         return new(argb);
     }
 
@@ -50,9 +50,9 @@ public class Hct
     /// </summary>
     /// <param name="argb">ARGB representation of a color</param>
     /// <returns>HCT representation of a color in default viewing conditions</returns>
-    public static Hct FromInt(int argb) => new(argb);
+    public static Hct FromInt(uint argb) => new(argb);
 
-    private Hct(int argb)
+    private Hct(uint argb)
     {
         SetInternalState(argb);
     }
@@ -105,9 +105,9 @@ public class Hct
         set => SetInternalState(CamSolver.SolveToInt(hue, chroma, value));
     }
 
-    public int ToInt() => argb;
+    public uint ToInt() => argb;
 
-    private void SetInternalState(int argb)
+    private void SetInternalState(uint argb)
     {
         this.argb = argb;
         Cam16 cam = Cam16.FromInt(argb);

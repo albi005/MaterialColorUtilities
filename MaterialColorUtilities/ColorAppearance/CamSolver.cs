@@ -549,7 +549,7 @@ public static class CamSolver
     /// <param name="chroma">The desired chroma.</param>
     /// <param name="y">The desired Y.</param>
     /// <returns>The desired color as a hexadecimal integer, if found; 0 otherwise.</returns>
-    static int FindResultByJ(double hueRadians, double chroma, double y)
+    static uint FindResultByJ(double hueRadians, double chroma, double y)
     {
         // Initial estimate of j.
         double j = Math.Sqrt(y) * 11.0;
@@ -625,7 +625,7 @@ public static class CamSolver
     /// chroma, and L* to the desired values, if possible; otherwise, the hue and L* will be
     /// sufficiently close, and chroma will be maximized.
     /// </returns>
-    public static int SolveToInt(double hueDegrees, double chroma, double lstar)
+    public static uint SolveToInt(double hueDegrees, double chroma, double lstar)
     {
         if (chroma < 0.0001 || lstar < 0.0001 || lstar > 99.9999)
         {
@@ -634,7 +634,7 @@ public static class CamSolver
         hueDegrees = MathUtils.SanitizeDegreesDouble(hueDegrees);
         double hueRadians = MathUtils.ToRadians(hueDegrees);
         double y = ColorUtils.YFromLstar(lstar);
-        int exactAnswer = FindResultByJ(hueRadians, chroma, y);
+        uint exactAnswer = FindResultByJ(hueRadians, chroma, y);
         if (exactAnswer != 0)
         {
             return exactAnswer;

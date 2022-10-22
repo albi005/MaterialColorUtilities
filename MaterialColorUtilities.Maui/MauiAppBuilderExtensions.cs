@@ -9,7 +9,7 @@ public static class MauiAppBuilderExtensions
         => builder.UseMaterialDynamicColors(_ => { });
 
     public static MauiAppBuilder UseMaterialDynamicColors(this MauiAppBuilder builder, uint fallbackSeed)
-        => builder.UseMaterialDynamicColors(opt => opt.FallbackSeed = (int)fallbackSeed);
+        => builder.UseMaterialDynamicColors(opt => opt.FallbackSeed = fallbackSeed);
 
     public static MauiAppBuilder UseMaterialDynamicColors(
         this MauiAppBuilder builder,
@@ -30,7 +30,7 @@ public static class MauiAppBuilderExtensions
         this MauiAppBuilder builder, uint fallbackSeed
     )
         where TDynamicColorService : class, IMauiInitializeService
-        => builder.UseMaterialDynamicColors<TDynamicColorService>(opt => opt.FallbackSeed = (int)fallbackSeed);
+        => builder.UseMaterialDynamicColors<TDynamicColorService>(opt => opt.FallbackSeed = fallbackSeed);
 
     public static MauiAppBuilder UseMaterialDynamicColors<
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]

@@ -62,13 +62,13 @@ public partial class ThemeViewModel : ObservableObject
     void SetSeed()
     {
         Hct hct = Hct.From(H, C, T);
-        Seed = Color.FromInt(hct.ToInt());
+        Seed = Color.FromUint(hct.ToInt());
         _colorService.Seed = hct.ToInt();
     }
 
     void SetFromSeed()
     {
-        Seed = Color.FromInt(_colorService.Seed);
+        Seed = Color.FromUint(_colorService.Seed);
         Hct hct = Hct.FromInt(_colorService.Seed);
         _h = hct.Hue;
         _c = hct.Chroma;

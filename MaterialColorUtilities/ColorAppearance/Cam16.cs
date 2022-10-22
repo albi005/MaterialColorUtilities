@@ -142,19 +142,19 @@ public class Cam16
     /// Create a CAM16 color from a color, assuming the color was viewed in default viewing conditions.
     /// </summary>
     /// <param name="argb">ARGB representation of a color.</param>
-    public static Cam16 FromInt(int argb) => FromIntInViewingConditions(argb, ViewingConditions.Default);
+    public static Cam16 FromInt(uint argb) => FromIntInViewingConditions(argb, ViewingConditions.Default);
 
     /// <summary>
     /// Create a CAM16 color from a color in defined viewing conditions.
     /// </summary>
     /// <param name="argb">ARGB representation of a color.</param>
     /// <param name="viewingConditions">Information about the environment where the color was observed.</param>
-    public static Cam16 FromIntInViewingConditions(int argb, ViewingConditions viewingConditions)
+    public static Cam16 FromIntInViewingConditions(uint argb, ViewingConditions viewingConditions)
     {
         // Transform ARGB int to XYZ
-        int red = (argb & 0x00ff0000) >> 16;
-        int green = (argb & 0x0000ff00) >> 8;
-        int blue = (argb & 0x000000ff);
+        uint red = (argb & 0x00ff0000) >> 16;
+        uint green = (argb & 0x0000ff00) >> 8;
+        uint blue = (argb & 0x000000ff);
         double redL = ColorUtils.Linearized(red);
         double greenL = ColorUtils.Linearized(green);
         double blueL = ColorUtils.Linearized(blue);
@@ -303,14 +303,14 @@ public class Cam16
     /// which are near-identical to the default viewing conditions for sRGB.
     /// </summary>
     /// <returns></returns>
-    public int ToInt() => Viewed(ViewingConditions.Default);
+    public uint ToInt() => Viewed(ViewingConditions.Default);
 
     /// <summary>
     /// ARGB representation of the color, in defined viewing conditions.
     /// </summary>
     /// <param name="viewingConditions">Information about the environment where the color will be viewed.</param>
     /// <returns>ARGB representation of color</returns>
-    public int Viewed(ViewingConditions viewingConditions)
+    public uint Viewed(ViewingConditions viewingConditions)
     {
         double alpha =
             (Chroma == 0.0 || J == 0.0)

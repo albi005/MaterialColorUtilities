@@ -26,7 +26,7 @@ public class PointProviderLab : IPointProvider
     /// <summary>
     /// Convert a color represented in ARGB to a 3-element array of L*a*b* coordinates of the color.
     /// </summary>
-    public double[] FromInt(int argb)
+    public double[] FromInt(uint argb)
     {
         double[] lab = ColorUtils.LabFromArgb(argb);
         return new double[] { lab[0], lab[1], lab[2] };
@@ -35,7 +35,7 @@ public class PointProviderLab : IPointProvider
     /// <summary>
     /// Convert a 3-element array to a color represented in ARGB.
     /// </summary>
-    public int ToInt(double[] lab)
+    public uint ToInt(double[] lab)
     {
         return ColorUtils.ArgbFromLab(lab[0], lab[1], lab[2]);
     }

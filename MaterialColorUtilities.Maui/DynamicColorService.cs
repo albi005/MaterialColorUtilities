@@ -11,7 +11,7 @@ namespace MaterialColorUtilities.Maui;
 // Fallback seed
 // Custom seed
 // Dynamic seed
-public class DynamicColorService : DynamicColorService<CorePalette, Scheme<int>, Scheme<Color>, LightSchemeMapper, DarkSchemeMapper>
+public class DynamicColorService : DynamicColorService<CorePalette, Scheme<uint>, Scheme<Color>, LightSchemeMapper, DarkSchemeMapper>
 {
     public DynamicColorService(IOptions<DynamicColorOptions> options, ISeedColorService seedColorService, IApplication application, IPreferences preferences) : base(options, seedColorService, application, preferences)
     {
@@ -29,7 +29,7 @@ public class DynamicColorService<
     TDarkSchemeMapper>
     : IMauiInitializeService
     where TCorePalette : CorePalette
-    where TSchemeInt : Scheme<int>, new()
+    where TSchemeInt : Scheme<uint>, new()
     where TSchemeMaui : Scheme<Color>, new()
     where TLightSchemeMapper : ISchemeMapper<TCorePalette, TSchemeInt>, new()
     where TDarkSchemeMapper : ISchemeMapper<TCorePalette, TSchemeInt>, new()
@@ -42,15 +42,15 @@ public class DynamicColorService<
     private readonly ResourceDictionary _appResources;
     private readonly IPreferences _preferences;
     private readonly bool _rememberIsDark;
-    private readonly int _fallbackSeed;
+    private readonly uint _fallbackSeed;
     
     private readonly TLightSchemeMapper _lightSchemeMapper = new();
     private readonly TDarkSchemeMapper _darkSchemeMapper = new();
 
     private bool _enableTheming;
     private bool _enableDynamicColor;
-    private int _seed;
-    private int? _prevSeed;
+    private uint _seed;
+    private uint? _prevSeed;
     private bool? _prevIsDark;
 
     public DynamicColorService(
@@ -93,7 +93,7 @@ public class DynamicColorService<
             if (!value)
             {
                 _seed = _preferences.ContainsKey(SeedKey)
-                    ? _preferences.Get(SeedKey, 0)
+                    ? (uint)_preferences.Get(SeedKey, 0)
                     : _fallbackSeed;
             }
 
@@ -112,14 +112,14 @@ public class DynamicColorService<
     /// <summary>
     /// A color in ARGB format, that is used as seed when creating the color scheme.
     /// </summary>
-    public int Seed
+    public uint Seed
     {
         get => _seed;
         set
         {
             if (value == _seed) return;
             _seed = value;
-            _preferences.Set(SeedKey, value);
+            _preferences.Set(SeedKey, (int)value);
             Update();
         }
     }
@@ -149,7 +149,7 @@ public class DynamicColorService<
         _seed = _fallbackSeed;
         
         if (_preferences.ContainsKey(SeedKey))
-            _seed = _preferences.Get(SeedKey, 0);
+            _seed = (uint)_preferences.Get(SeedKey, 0);
         
         _application.RequestedThemeChanged += (_, _) =>
         {
@@ -179,7 +179,7 @@ public class DynamicColorService<
         if (!EnableTheming) return;
 
         if (_enableDynamicColor && _seedColorService.SeedColor != null)
-            _seed = (int)_seedColorService.SeedColor;
+            _seed = (uint)_seedColorService.SeedColor;
         
         if (Seed != _prevSeed)
             CorePalette = CreateCorePalette(Seed);
@@ -196,7 +196,7 @@ public class DynamicColorService<
 
         if (typeof(TSchemeMaui) == typeof(Scheme<Color>))
         {
-            SchemeMaui = (TSchemeMaui)SchemeInt.ConvertTo(Color.FromInt);
+            SchemeMaui = (TSchemeMaui)SchemeInt.ConvertTo(Color.FromUint);
         }
         else
         {
@@ -206,7 +206,7 @@ public class DynamicColorService<
                 .Where(m => m.Name == nameof(Scheme<int>.ConvertTo))
                 .ToList()[0]
                 .MakeGenericMethod(typeof(Color))
-                .Invoke(SchemeInt, new object[] { (Func<int, Color>)Color.FromInt });
+                .Invoke(SchemeInt, new object[] { (Func<uint, Color>)Color.FromUint });
         }
 
 #if PLATFORM
@@ -234,7 +234,7 @@ public class DynamicColorService<
     /// If you replace CorePalette, make sure it has a constructor with the following parameters: <c>int seed, bool isContent</c>
     /// </remarks>
     // TODO: Replace with using empty constructor and method call
-    private static TCorePalette CreateCorePalette(int seed)
+    private static TCorePalette CreateCorePalette(uint seed)
     {
         return (TCorePalette)Activator.CreateInstance(typeof(TCorePalette), seed, false);
     }

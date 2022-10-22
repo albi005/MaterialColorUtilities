@@ -21,10 +21,10 @@ namespace MaterialColorUtilities.Tests
     [TestClass]
     public class BlenderTests
     {
-        const int Red = unchecked((int)0xffff0000);
-        const int Blue = unchecked((int)0xff0000ff);
-        const int Green = unchecked((int)0xff00ff00);
-        const int Yellow = unchecked((int)0xffffff00);
+        const uint Red = 0xffff0000;
+        const uint Blue = 0xff0000ff;
+        const uint Green = 0xff00ff00;
+        const uint Yellow = 0xffffff00;
         
         [TestMethod]
         [DataRow(Red, Blue, 0xffFB0057)]
@@ -39,10 +39,10 @@ namespace MaterialColorUtilities.Tests
         [DataRow(Yellow, Blue, 0xffEBFFBA)]
         [DataRow(Yellow, Green, 0xffEBFFBA)]
         [DataRow(Yellow, Red, 0xffFFF6E3)]
-        public void Harmonize(int designColor, int sourceColor, uint result)
+        public void Harmonize(uint designColor, uint sourceColor, uint result)
         {
-            int answer = Blender.Harmonize(designColor, sourceColor);
-            Assert.AreEqual((int)result, answer);
+            uint answer = Blender.Harmonize(designColor, sourceColor);
+            Assert.AreEqual(result, answer);
         }
     }
 }

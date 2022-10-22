@@ -26,8 +26,8 @@ public partial class ColorPlot : SeedColorSelector
     /// </summary>
     [Parameter] public int Resolution { get; set; } = 400;
 
-    [Parameter] public Func<double, double, int> Func { get; set; }
-    [Parameter] public Func<int, (double, double)> FuncInverse { get; set; }
+    [Parameter] public Func<double, double, uint> Func { get; set; }
+    [Parameter] public Func<uint, (double, double)> FuncInverse { get; set; }
     [Parameter] public double MinX { get; set; } = 0;
     [Parameter] public double MinY { get; set; } = 0;
     [Parameter] public double MaxX { get; set; } = 100;
@@ -42,8 +42,8 @@ public partial class ColorPlot : SeedColorSelector
         {
             for (int y = 0; y < bitmap.Height; y++)
             {
-                int color = GetColor(x, y);
-                bitmap.SetPixel(x, bitmap.Height - 1 - y, (uint)color);
+                uint color = GetColor(x, y);
+                bitmap.SetPixel(x, bitmap.Height - 1 - y, color);
             }
         }
         bitmap = bitmap.Resize(new SKImageInfo(400, 200), SKFilterQuality.None);
@@ -68,12 +68,12 @@ public partial class ColorPlot : SeedColorSelector
             return;
         seedX = args.OffsetX - 20;
         seedY = bitmap.Height - (args.OffsetY - 20);
-        int color = GetColor(seedX, seedY);
+        uint color = GetColor(seedX, seedY);
         themeService.SetSeed(color, this);
         view?.Invalidate();
     }
 
-    protected override void SetFromSeed(int seed)
+    protected override void SetFromSeed(uint seed)
     {
         if (FuncInverse == null) return;
         var xy = FuncInverse(seed);
@@ -84,7 +84,7 @@ public partial class ColorPlot : SeedColorSelector
         view?.Invalidate();
     }
 
-    private int GetColor(double x, double y)
+    private uint GetColor(double x, double y)
         => Func(
             x / bitmap.Width * (MaxX - MinX) + MinX,
             y / bitmap.Height * (MaxY - MinY) + MinY

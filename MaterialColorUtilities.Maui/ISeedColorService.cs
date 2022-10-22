@@ -2,6 +2,6 @@
 
 public interface ISeedColorService
 {
-    int? SeedColor { get; }
+    uint? SeedColor { get; }
     event Action OnSeedColorChanged;
 }

@@ -7,17 +7,17 @@ public partial class AppScheme<TColor> : Scheme<TColor>
 {
 }
 
-public class DarkAppSchemeMapper : DarkSchemeMapper<CorePalette, AppScheme<int>>
+public class DarkAppSchemeMapper : DarkSchemeMapper<CorePalette, AppScheme<uint>>
 {
-    protected override void MapCore(CorePalette corePalette, AppScheme<int> scheme)
+    protected override void MapCore(CorePalette corePalette, AppScheme<uint> scheme)
     {
         base.MapCore(corePalette, scheme);
     }
 }
 
-public class LightAppSchemeMapper : LightSchemeMapper<CorePalette, AppScheme<int>>
+public class LightAppSchemeMapper : LightSchemeMapper<CorePalette, AppScheme<uint>>
 {
-    protected override void MapCore(CorePalette corePalette, AppScheme<int> scheme)
+    protected override void MapCore(CorePalette corePalette, AppScheme<uint> scheme)
     {
         base.MapCore(corePalette, scheme);
     }

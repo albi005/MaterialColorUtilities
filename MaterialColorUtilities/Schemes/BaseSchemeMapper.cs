@@ -7,7 +7,7 @@ namespace MaterialColorUtilities.Schemes
     /// </summary>
     public abstract class BaseSchemeMapper<TCorePalette, TScheme> : ISchemeMapper<TCorePalette, TScheme>
         where TCorePalette : CorePalette
-        where TScheme : Scheme<int>, new()
+        where TScheme : Scheme<uint>, new()
     {
         public TScheme Map(TCorePalette corePalette) => Map(corePalette, new());
 

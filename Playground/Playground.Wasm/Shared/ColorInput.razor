@@ -21,7 +21,7 @@
         {
             if (_color == value) return;
             _color = value;
-            int color = ColorUtils.ArgbFromRgb(
+            uint color = ColorUtils.ArgbFromRgb(
                 value.R,
                 value.G,
                 value.B
@@ -30,7 +30,7 @@
         }
     }
 
-    protected override void SetFromSeed(int seed)
+    protected override void SetFromSeed(uint seed)
     {
         _color = StringUtils.HexFromArgb(seed);
     }

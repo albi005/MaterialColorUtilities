@@ -41,9 +41,9 @@ public class DynamicColorServiceTests
         
         Assert.IsTrue(dynamicColorService.EnableTheming);
         Assert.IsFalse(dynamicColorService.EnableDynamicColor);
-        Assert.AreEqual(unchecked((int)0xff4285F4), dynamicColorService.Seed);
-        Assert.AreEqual(unchecked((int)0xff005AC1), dynamicColorService.SchemeInt.Primary);
-        Assert.AreEqual(dynamicColorService.SchemeInt.Primary, dynamicColorService.SchemeMaui.Primary.ToInt());
+        Assert.AreEqual(0xff4285F4, dynamicColorService.Seed);
+        Assert.AreEqual(0xff005AC1, dynamicColorService.SchemeInt.Primary);
+        Assert.AreEqual(dynamicColorService.SchemeInt.Primary, dynamicColorService.SchemeMaui.Primary.ToUint());
         Assert.IsNotNull(_application.Resources[Schemes.Keys.Primary]);
     }
 
@@ -58,9 +58,9 @@ public class DynamicColorServiceTests
         
         Assert.IsTrue(dynamicColorService.EnableTheming);
         Assert.IsTrue(dynamicColorService.EnableDynamicColor);
-        Assert.AreEqual(unchecked((int)0xff4285F4), dynamicColorService.Seed);
-        Assert.AreEqual(unchecked((int)0xff005AC1), dynamicColorService.SchemeInt.Primary);
-        Assert.AreEqual(dynamicColorService.SchemeInt.Primary, dynamicColorService.SchemeMaui.Primary.ToInt());
+        Assert.AreEqual(0xff4285F4, dynamicColorService.Seed);
+        Assert.AreEqual(0xff005AC1, dynamicColorService.SchemeInt.Primary);
+        Assert.AreEqual(dynamicColorService.SchemeInt.Primary, dynamicColorService.SchemeMaui.Primary.ToUint());
         Assert.IsNotNull(_application.Resources[Schemes.Keys.Primary]);
     }
 
@@ -69,14 +69,14 @@ public class DynamicColorServiceTests
     {
         IOptions<DynamicColorOptions> options = CreateOptions();
 
-        ISeedColorService seedColorService = new MockSeedColorService(unchecked((int)0xFFc07d52));
+        ISeedColorService seedColorService = new MockSeedColorService(0xFFc07d52);
         DynamicColorService dynamicColorService = new(options, seedColorService, _application, _preferences);
         
         dynamicColorService.Initialize(null);
         
-        Assert.AreEqual(unchecked((int)0xFFc07d52), dynamicColorService.Seed);
-        Assert.AreEqual(unchecked((int)0xFF96490A), dynamicColorService.SchemeInt.Primary);
-        Assert.AreEqual(dynamicColorService.SchemeInt.Primary, dynamicColorService.SchemeMaui.Primary.ToInt());
+        Assert.AreEqual(0xFFc07d52, dynamicColorService.Seed);
+        Assert.AreEqual(0xFF96490A, dynamicColorService.SchemeInt.Primary);
+        Assert.AreEqual(dynamicColorService.SchemeInt.Primary, dynamicColorService.SchemeMaui.Primary.ToUint());
         Assert.IsNotNull(_application.Resources[Schemes.Keys.Primary]);
     }
 

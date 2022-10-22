@@ -12,7 +12,7 @@ public class SeedColorService : ISeedColorService
         _uiSettings.ColorValuesChanged += (_, _) => OnSeedColorChanged?.Invoke();
     }
     
-    public int? SeedColor
+    public uint? SeedColor
     {
         get
         {

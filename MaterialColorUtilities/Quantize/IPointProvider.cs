@@ -20,7 +20,7 @@ namespace MaterialColorUtilities.Quantize;
 /// </summary>
 public interface IPointProvider
 {
-    public double[] FromInt(int argb);
-    public int ToInt(double[] point);
+    public double[] FromInt(uint argb);
+    public uint ToInt(double[] point);
     public double Distance(double[] a, double[] b);
 }

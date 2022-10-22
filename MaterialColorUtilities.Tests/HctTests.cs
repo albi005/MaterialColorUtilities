@@ -26,18 +26,18 @@ namespace MaterialColorUtilities.Tests
     [TestClass]
     public class HctTests
     {
-        const int Black = unchecked((int)0xff000000);
-        const int White = unchecked((int)0xffffffff);
-        const int Red = unchecked((int)0xffff0000);
-        const int Green = unchecked((int)0xff00ff00);
-        const int Blue = unchecked((int)0xff0000ff);
-        const int Midgray = unchecked((int)0xff777777);
+        const uint Black = 0xff000000;
+        const uint White = 0xffffffff;
+        const uint Red = 0xffff0000;
+        const uint Green = 0xff00ff00;
+        const uint Blue = 0xff0000ff;
+        const uint Midgray = 0xff777777;
 
         [TestMethod]
         public void Conversions_AreReflexive()
         {
             Cam16 cam = Cam16.FromInt(Red);
-            int color = cam.Viewed(ViewingConditions.Default);
+            uint color = cam.Viewed(ViewingConditions.Default);
             Assert.AreEqual(color, Red);
         }
 
@@ -125,10 +125,10 @@ namespace MaterialColorUtilities.Tests
         [DataRow(Blue)]
         [DataRow(White)]
         [DataRow(Midgray)]
-        public void RgbToCamToRgb(int colorToTest)
+        public void RgbToCamToRgb(uint colorToTest)
         {
             Cam16 cam = Cam16.FromInt(colorToTest);
-            int color = Hct.From(cam.Hue, cam.Chroma, ColorUtils.LStarFromArgb(colorToTest))
+            uint color = Hct.From(cam.Hue, cam.Chroma, ColorUtils.LStarFromArgb(colorToTest))
                 .ToInt();
             Assert.AreEqual(colorToTest, color);
         }
@@ -181,10 +181,10 @@ namespace MaterialColorUtilities.Tests
         [TestMethod]
         public void Hct_PreservesOriginalColor()
         {
-            for (int argb = unchecked((int)0xFF000000); argb <= unchecked((int)0xFFFFFFFF); argb += 6969)
+            for (uint argb = 0xFF000000; argb < 0xFFFFFFFF - 6969; argb += 6969)
             {
                 Hct hct = Hct.FromInt(argb);
-                int reconstructedArgb = Hct.From(hct.Hue, hct.Chroma, hct.Tone).ToInt();
+                uint reconstructedArgb = Hct.From(hct.Hue, hct.Chroma, hct.Tone).ToInt();
                 Assert.AreEqual(argb, reconstructedArgb);
             }
         }
@@ -192,13 +192,13 @@ namespace MaterialColorUtilities.Tests
         [TestMethod]
         public void Hct_ReturnsSufficientlyCloseColor()
         {
-            for (var hue = 15; hue < 360; hue += 30)
+            for (int hue = 15; hue < 360; hue += 30)
             {
-                for (var chroma = 0; chroma <= 100; chroma += 10)
+                for (int chroma = 0; chroma <= 100; chroma += 10)
                 {
-                    for (var tone = 20; tone <= 80; tone += 10)
+                    for (int tone = 20; tone <= 80; tone += 10)
                     {
-                        var hctColor = Hct.From(hue, chroma, tone);
+                        Hct hctColor = Hct.From(hue, chroma, tone);
                         if (chroma > 0)
                             Assert.That.IsCloseTo(hctColor.Hue, hue, 4.0);
                         Assert.That.IsInInclusiveRange(hctColor.Chroma, 0.0, chroma + 2.5);

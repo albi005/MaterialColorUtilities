@@ -15,7 +15,7 @@ namespace Playground.Wasm.Shared
         double Chroma { get => _chroma; set { if (_chroma == value) return; _chroma = value; HctChanged(); } }
         double Tone { get => _tone; set { if (_tone == value) return; _tone = value; HctChanged(); } }
 
-        protected override void SetFromSeed(int seed)
+        protected override void SetFromSeed(uint seed)
         {
             _hct = Hct.FromInt(seed);
             _hue = _hct.Hue;
@@ -27,7 +27,7 @@ namespace Playground.Wasm.Shared
         void HctChanged()
         {
             _hct = Hct.From(Hue, Chroma, Tone);
-            int color = _hct.ToInt();
+            uint color = _hct.ToInt();
             ThemeService.SetSeed(color, this);
             _showActualValues = true;
         }
