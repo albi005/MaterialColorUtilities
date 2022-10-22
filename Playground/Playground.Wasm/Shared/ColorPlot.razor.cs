@@ -37,6 +37,7 @@ public partial class ColorPlot : SeedColorSelector
 
     protected override void OnInitialized()
     {
+        // TODO: Cache
         bitmap = new(Resolution, Resolution / 2);
         for (int x = 0; x < bitmap.Width; x++)
         {
@@ -69,7 +70,7 @@ public partial class ColorPlot : SeedColorSelector
         seedX = args.OffsetX - 20;
         seedY = bitmap.Height - (args.OffsetY - 20);
         uint color = GetColor(seedX, seedY);
-        themeService.SetSeed(color, this);
+        themeService.Seed = color;
         view?.Invalidate();
     }
 

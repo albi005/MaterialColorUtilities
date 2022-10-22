@@ -3,6 +3,12 @@
 @using MudBlazor.Utilities
 @inherits SeedColorSelector
 
+<style>
+.mud-picker-color-picker {
+    height: 192px;
+}
+</style>
+
 <MudColorPicker
     @bind-Value="@Color"
     ColorPickerMode="@ColorPickerMode.HEX"
@@ -21,17 +27,17 @@
         {
             if (_color == value) return;
             _color = value;
-            uint color = ColorUtils.ArgbFromRgb(
-                value.R,
-                value.G,
-                value.B
-            );
-            ThemeService.SetSeed(color, this);
+            ThemeService.Seed = ColorUint;
         }
     }
 
+    uint ColorUint => _color == null 
+        ? 0
+        : ColorUtils.ArgbFromRgb(_color.R, _color.G, _color.B);
+
     protected override void SetFromSeed(uint seed)
     {
+        if (seed == ColorUint) return;
         _color = StringUtils.HexFromArgb(seed);
     }
 }

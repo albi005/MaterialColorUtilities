@@ -5,7 +5,7 @@
 
 <MudThemeProvider
     @ref="@_mudThemeProvider"
-    @bind-IsDarkMode="@_isDarkMode"
+    IsDarkMode="@ThemeService.IsDark"
     Theme="@ThemeService.MudTheme"/>
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -23,6 +23,7 @@
             </MudText>
         </a>
         <MudSpacer />
+        <ThemeSwitch />
         <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Href="https://github.com/albi005/MaterialColorUtilities" Style="color: var(--mud-palette-appbar-text)" />
     </MudAppBar>
     <MudDrawer Elevation="0" @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Always" >
@@ -35,19 +36,17 @@
 
 @code {
     bool _drawerOpen = true;
-    bool _isDarkMode;
     MudThemeProvider _mudThemeProvider;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            _isDarkMode = await _mudThemeProvider.GetSystemPreference();
-            ThemeService.IsDark = _isDarkMode;
-            ThemeService.ThemeChanged += StateHasChanged;
+            ThemeService.IsDark = await _mudThemeProvider.GetSystemPreference();
+            ThemeService.Changed += StateHasChanged;
             StateHasChanged();
         }
     }
 
-    public void Dispose() => ThemeService.ThemeChanged -= StateHasChanged;
+    public void Dispose() => ThemeService.Changed -= StateHasChanged;
 }

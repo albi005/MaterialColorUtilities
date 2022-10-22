@@ -6,9 +6,9 @@
     public static class StringUtils
     {
         /// <summary>
-        /// Hex string representing color, ex. #ff0000 for red.
+        /// Hex string representing color, ex. #0000FF for blue.
         /// </summary>
         /// <param name="argb">ARGB representation of a color.</param>
-        public static string HexFromArgb(uint argb) => "#" + argb.ToString("X").Substring(2);
+        public static string HexFromArgb(uint argb) => "#" + argb.ToString("X6").Substring(2);
     }
 }

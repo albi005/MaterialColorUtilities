@@ -1,0 +1,14 @@
+﻿@using MaterialColorUtilities.Utils
+@using System.Text
+
+<div
+    class="pa-2 flex-grow-1"
+    style="background-color: @(StringUtils.HexFromArgb(Color)); color: @(StringUtils.HexFromArgb(OnColor)); width: 150px; height: 32px; font-weight: bold">
+    @Name
+</div>
+
+@code {
+    [Parameter] public string Name { get; set; }
+    [Parameter] [EditorRequired] public uint Color { get; set; }
+    [Parameter] public uint OnColor { get; set; }
+}
