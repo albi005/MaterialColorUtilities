@@ -21,38 +21,38 @@ namespace MaterialColorUtilities.Schemes;
 /// <typeparam name="TColor">The type of the named colors.</typeparam>
 public class Scheme<TColor>
 {
-    public TColor Primary { get; set; }
-    public TColor OnPrimary { get; set; }
-    public TColor PrimaryContainer { get; set; }
-    public TColor OnPrimaryContainer { get; set; }
-    public TColor Secondary { get; set; }
-    public TColor OnSecondary { get; set; }
-    public TColor SecondaryContainer { get; set; }
-    public TColor OnSecondaryContainer { get; set; }
-    public TColor Tertiary { get; set; }
-    public TColor OnTertiary { get; set; }
-    public TColor TertiaryContainer { get; set; }
-    public TColor OnTertiaryContainer { get; set; }
-    public TColor Error { get; set; }
-    public TColor OnError { get; set; }
-    public TColor ErrorContainer { get; set; }
-    public TColor OnErrorContainer { get; set; }
-    public TColor Background { get; set; }
-    public TColor OnBackground { get; set; }
-    public TColor Surface { get; set; }
-    public TColor OnSurface { get; set; }
-    public TColor SurfaceVariant { get; set; }
-    public TColor OnSurfaceVariant { get; set; }
-    public TColor Outline { get; set; }
-    public TColor Shadow { get; set; }
-    public TColor InverseSurface { get; set; }
-    public TColor InverseOnSurface { get; set; }
-    public TColor InversePrimary { get; set; }
-    public TColor Surface1 { get; set; }
-    public TColor Surface2 { get; set; }
-    public TColor Surface3 { get; set; }
-    public TColor Surface4 { get; set; }
-    public TColor Surface5 { get; set; }
+    public TColor Primary { get; set; } = default!;
+    public TColor OnPrimary { get; set; } = default!;
+    public TColor PrimaryContainer { get; set; } = default!;
+    public TColor OnPrimaryContainer { get; set; } = default!;
+    public TColor Secondary { get; set; } = default!;
+    public TColor OnSecondary { get; set; } = default!;
+    public TColor SecondaryContainer { get; set; } = default!;
+    public TColor OnSecondaryContainer { get; set; } = default!;
+    public TColor Tertiary { get; set; } = default!;
+    public TColor OnTertiary { get; set; } = default!;
+    public TColor TertiaryContainer { get; set; } = default!;
+    public TColor OnTertiaryContainer { get; set; } = default!;
+    public TColor Error { get; set; } = default!;
+    public TColor OnError { get; set; } = default!;
+    public TColor ErrorContainer { get; set; } = default!;
+    public TColor OnErrorContainer { get; set; } = default!;
+    public TColor Background { get; set; } = default!;
+    public TColor OnBackground { get; set; } = default!;
+    public TColor Surface { get; set; } = default!;
+    public TColor OnSurface { get; set; } = default!;
+    public TColor SurfaceVariant { get; set; } = default!;
+    public TColor OnSurfaceVariant { get; set; } = default!;
+    public TColor Outline { get; set; } = default!;
+    public TColor Shadow { get; set; } = default!;
+    public TColor InverseSurface { get; set; } = default!;
+    public TColor InverseOnSurface { get; set; } = default!;
+    public TColor InversePrimary { get; set; } = default!;
+    public TColor Surface1 { get; set; } = default!;
+    public TColor Surface2 { get; set; } = default!;
+    public TColor Surface3 { get; set; } = default!;
+    public TColor Surface4 { get; set; } = default!;
+    public TColor Surface5 { get; set; } = default!;
 
     /// <summary>
     /// Converts the Scheme into a new one with a different color type.
@@ -66,6 +66,7 @@ public class Scheme<TColor>
     /// isn't nested inside another class
     /// and has a generic type parameter for at least the color type.
     /// </remarks>
+    // TODO: Rename to Convert
     public Scheme<TResult> ConvertTo<TResult>(Func<TColor, TResult> convert)
     {
         return ConvertTo(convert, new());

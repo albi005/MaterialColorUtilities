@@ -18,6 +18,7 @@ public class DynamicColorService : DynamicColorService<CorePalette, Scheme<uint>
     }
 }
 
+// TODO: Rename to MaterialColorService
 public class DynamicColorService<
     [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
     TCorePalette,
@@ -124,9 +125,9 @@ public class DynamicColorService<
         }
     }
 
-    public TCorePalette CorePalette { get; protected set; }
-    public TSchemeInt SchemeInt { get; protected set; }
-    public TSchemeMaui SchemeMaui { get; protected set; }
+    public TCorePalette CorePalette { get; protected set; } = null!;
+    public TSchemeInt SchemeInt { get; protected set; } = null!;
+    public TSchemeMaui SchemeMaui { get; protected set; } = null!;
     
     /// <summary>
     /// When the seed is set, it is stored using Preferences and will be reapplied the next time the app is launched.
@@ -139,7 +140,7 @@ public class DynamicColorService<
     }
 
     // Called by MauiAppBuilder.Build()
-    public virtual void Initialize(IServiceProvider services)
+    public virtual void Initialize(IServiceProvider? services)
     {
         if (_preferences.ContainsKey(IsDarkKey))
             _application.UserAppTheme = _preferences.Get(IsDarkKey, false)
@@ -206,7 +207,7 @@ public class DynamicColorService<
                 .Where(m => m.Name == nameof(Scheme<int>.ConvertTo))
                 .ToList()[0]
                 .MakeGenericMethod(typeof(Color))
-                .Invoke(SchemeInt, new object[] { (Func<uint, Color>)Color.FromUint });
+                .Invoke(SchemeInt, new object[] { (Func<uint, Color>)Color.FromUint })!;
         }
 
 #if PLATFORM
@@ -221,7 +222,7 @@ public class DynamicColorService<
         foreach (PropertyInfo property in typeof(TSchemeMaui).GetProperties())
         {
             string key = property.Name;
-            Color value = (Color)property.GetValue(SchemeMaui);
+            Color value = (Color)property.GetValue(SchemeMaui)!;
             _appResources[key] = value;
             _appResources[key + "Brush"] = new SolidColorBrush(value);
         }
@@ -236,6 +237,6 @@ public class DynamicColorService<
     // TODO: Replace with using empty constructor and method call
     private static TCorePalette CreateCorePalette(uint seed)
     {
-        return (TCorePalette)Activator.CreateInstance(typeof(TCorePalette), seed, false);
+        return (TCorePalette)Activator.CreateInstance(typeof(TCorePalette), seed, false)!;
     }
 }

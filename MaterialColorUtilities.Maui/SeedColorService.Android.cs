@@ -18,11 +18,11 @@ public class SeedColorService : ISeedColorService
 
     private readonly LifecycleEventService _lifecycleEventService;
     private readonly IPreferences _preferences;
-    private readonly WallpaperManager _wallpaperManager = WallpaperManager.GetInstance(Platform.AppContext);
+    private readonly WallpaperManager _wallpaperManager = WallpaperManager.GetInstance(Platform.AppContext)!;
 
     private bool _hasInitialized;
     private int? _wallpaperId;
-    private uint? _SeedColorCache;
+    private uint? _seedColorCache;
 
     public SeedColorService(ILifecycleEventService lifecycleEventService, IPreferences preferences)
     {
@@ -44,7 +44,7 @@ public class SeedColorService : ISeedColorService
             if (_preferences.ContainsKey(SeedColorCacheKey))
             {
                 _wallpaperId = _preferences.Get(WallpaperIdKey, 0);
-                _SeedColorCache = _preferences.Get(SeedColorCacheKey, 0U);
+                _seedColorCache = _preferences.Get(SeedColorCacheKey, 0U);
             }
 
             _lifecycleEventService.AddAndroid(a =>
@@ -71,11 +71,11 @@ public class SeedColorService : ISeedColorService
         >= 31 => GuessAndroid12Seed(),
         >= 27 => GetAndroid8PrimaryWallpaperColor(),
 #pragma warning restore CA1416
-        >= 24 => _SeedColorCache,
+        >= 24 => _seedColorCache,
         _ => null
     };
 
-    private event Action OnSeedColorChanged;
+    private event Action? OnSeedColorChanged;
 
     event Action ISeedColorService.OnSeedColorChanged
     {
@@ -121,7 +121,7 @@ public class SeedColorService : ISeedColorService
             if (id == Android.Resource.Color.SystemAccent1500)
             {
                 // If Primary50 didn't change, return
-                if (color == _wallpaperId) return _SeedColorCache;
+                if (color == _wallpaperId) return _seedColorCache;
                 _wallpaperId = color;
             }
 
@@ -133,14 +133,14 @@ public class SeedColorService : ISeedColorService
             }
         }
 
-        _SeedColorCache = closestColor;
+        _seedColorCache = closestColor;
         return closestColor;
     }
 
     [SupportedOSPlatform("android27.0")]
     private uint? GetAndroid8PrimaryWallpaperColor()
     {
-        WallpaperColors colors = _wallpaperManager.GetWallpaperColors((int)WallpaperManagerFlags.System);
+        WallpaperColors? colors = _wallpaperManager.GetWallpaperColors((int)WallpaperManagerFlags.System);
         return (uint?)colors?.PrimaryColor.ToArgb();
     }
 
@@ -160,14 +160,14 @@ public class SeedColorService : ISeedColorService
 
         _wallpaperId = wallpaperId;
 
-        _SeedColorCache = await Task.Run(QuantizeWallpaper);
+        _seedColorCache = await Task.Run(QuantizeWallpaper);
 
         _preferences.Set(WallpaperIdKey, wallpaperId);
 
-        if (_SeedColorCache == null)
+        if (_seedColorCache == null)
             _preferences.Remove(SeedColorCacheKey);
         else
-            _preferences.Set(SeedColorCacheKey, (int)_SeedColorCache);
+            _preferences.Set(SeedColorCacheKey, (int)_seedColorCache);
         OnSeedColorChanged?.Invoke();
     }
 
@@ -177,20 +177,20 @@ public class SeedColorService : ISeedColorService
     /// <remarks>Requires permission <see cref="Permissions.StorageRead"/></remarks>
     private uint? QuantizeWallpaper()
     {
-        uint[] pixels = GetWallpaperPixels();
+        uint[]? pixels = GetWallpaperPixels();
         if (pixels == null) return null;
         return ImageUtils.ColorsFromImage(pixels)[0];
     }
 
-    private uint[] GetWallpaperPixels()
+    private uint[]? GetWallpaperPixels()
     {
-        Drawable drawable = _wallpaperManager.Drawable;
+        Drawable? drawable = _wallpaperManager.Drawable;
         if (drawable is not BitmapDrawable bitmapDrawable || bitmapDrawable.Bitmap == null) return null;
         Bitmap bitmap = bitmapDrawable.Bitmap;
         if (bitmap.Height * bitmap.Width > 112 * 112)
         {
             Size optimalSize = CalculateOptimalSize(bitmap.Width, bitmap.Height);
-            bitmap = Bitmap.CreateScaledBitmap(bitmap, optimalSize.Width, optimalSize.Height, false);
+            bitmap = Bitmap.CreateScaledBitmap(bitmap, optimalSize.Width, optimalSize.Height, false)!;
         }
 
         int[] pixels = new int[bitmap!.ByteCount / 4];
