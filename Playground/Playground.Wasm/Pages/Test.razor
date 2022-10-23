@@ -1,0 +1,48 @@
+@page "/test"
+@using MaterialColorUtilities.Utils
+@using MaterialColorUtilities.ColorAppearance
+
+<div class="pa-8">
+    <MudSlider T="double" Min="0" Max="360" ValueLabel="true" ValueChanged="OnHueChanged"></MudSlider>
+</div>
+
+<style>
+    .color {
+        width: 100px;
+        height: 25px;
+    } 
+</style>
+
+<div class="color" style="@Style(_hue)">0</div>
+<div class="color" style="@Style(_hue+20)">20</div>
+<div class="color" style="@Style(_hue+45)">45</div>
+<div class="color" style="@Style(_hue+90)">90</div>
+<div class="color" style="@Style(_hue+95)">95</div>
+
+<div class="color mt-8" style="@Style(_hue)">Primary</div>
+<div class="color" style="@Style(_hue + GetSecondaryOffset(_hue))">Secondary</div>
+
+<div class="color mt-8" style="@Style(_hue)">Primary</div>
+<div class="color" style="@Style(_hue + 45)">Secondary</div>
+
+@code {
+
+    private double _hue = 100;
+
+    private static string Style(double hue) => $"background-color: {StringUtils.HexFromArgb(Hct.From(hue, 150, 60).ToInt())}";
+
+    private void OnHueChanged(double value)
+    {
+        _hue = value;
+        StateHasChanged();
+    }
+
+    private static double GetSecondaryOffset(double primary) => primary switch
+    {
+        >20 and <50 => 95,
+        >130 and <150 => 20,
+        >200 and <270 => 90,
+        _ => 45
+    };
+
+}

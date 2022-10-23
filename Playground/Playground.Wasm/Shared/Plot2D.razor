@@ -18,7 +18,7 @@
     [Parameter] public double MaxY { get; set; } = 100;
     [Parameter] public string LabelX { get; set; } = "X";
     [Parameter] public string LabelY { get; set; } = "Y";
-    private SKPaint stroke = new()
+    private SKPaint _stroke = new()
     {
         Color = SKColors.Black,
         IsStroke = true
@@ -26,14 +26,14 @@
 
     void OnPaintSurface(SKPaintSurfaceEventArgs args)
     {
-        stroke.Color = new((uint)ThemeService.Scheme.OnSurface);
+        _stroke.Color = ThemeService.Scheme.OnSurface;
 
-        var canvas = args.Surface.Canvas;
+        SKCanvas canvas = args.Surface.Canvas;
         args.DrawLabels(MinX, MinY, MaxX, MaxY, LabelX, LabelY, ThemeService.Scheme);
         for (int x = 0; x < 400; x++)
         {
             double y = Func(x * MaxX / 400) / MaxY * 400;
-            canvas.DrawPoint((float)x + 20, 400 - (float)y + 20, stroke);
+            canvas.DrawPoint((float)x + 20, 400 - (float)y + 20, _stroke);
         }
     }
 }

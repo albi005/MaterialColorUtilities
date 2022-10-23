@@ -1,14 +1,12 @@
 ﻿@using Playground.Wasm.Services
 @using SkiaSharp.Views.Blazor
 
-@inject ThemeService themeService
-
 @inherits SeedColorSelector
 
 <SKCanvasView
-    @ref=@view
-    OnPaintSurface=OnPaintSurface
-    @onclick=OnClick
+    @ref="@_view"
+    OnPaintSurface="OnPaintSurface"
+    @onclick="OnClick"
     style="display: block; height: 240px; width: 440px;"
     IgnorePixelScaling="true"
     />

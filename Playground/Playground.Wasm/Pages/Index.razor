@@ -1,23 +1,32 @@
 ﻿@page "/"
-@using MaterialColorUtilities.ColorAppearance
-@using MaterialColorUtilities.Palettes
+@using Playground.Wasm.Extensions
 @using Playground.Wasm.Services
-@using MaterialColorUtilities.Schemes
+@using MaterialColorUtilities.ColorAppearance
 @using MaterialColorUtilities.Utils
 @using MudBlazor.Utilities
-@using SkiaSharp
-@using SkiaSharp.Views.Blazor
-@inject ThemeService themeService
+@inject ThemeService ThemeService
+@implements IDisposable
 
 <PageTitle>Material Color Utilities for .NET</PageTitle>
 
 <MudContainer MaxWidth="@MaxWidth.ExtraLarge" Class="pt-10">
     <MudGrid>
-        <MudItem xs="12" sm="3" md="2" xl="1">
-            <Colors />
-        </MudItem>
         <MudItem>
             <ColorInput />
+        </MudItem>
+        <MudItem>
+            <MudPaper Square="true">
+                <div class="d-flex" style="width: 300px">
+                    <ColorItem Name="Seed" Color="@ThemeService.Seed" OnColor="@(Hct.FromInt(ThemeService.Seed).Tone > 49.7 ? 0xFF000000 : 0xFFFFFFFF)"/>
+                </div>
+                <ColorScheme Scheme="@ThemeService.Scheme"/>
+            </MudPaper>
+        </MudItem>
+        <MudItem md="6" lg="3">
+            <MudPaper Class="pa-4">
+                <h3>HCT</h3>
+                <HctSliders />
+            </MudPaper>
         </MudItem>
         <MudItem>
             <MudPaper Class="pa-4">
@@ -32,7 +41,8 @@
                     MaxX="360"
                     MaxY="100"
                     MinX="0"
-                    MinY="0"/>
+                    MinY="0"
+                    CacheId="hct" />
             </MudPaper>
         </MudItem>
         <MudItem>
@@ -48,7 +58,8 @@
                     MaxX="360"
                     MaxY="100"
                     MinX="0"
-                    MinY="0"/>
+                    MinY="0"
+                    CacheId="cam16" />
             </MudPaper>
         </MudItem>
         <MudItem>
@@ -64,7 +75,8 @@
                     MaxX="360"
                     MaxY="1"
                     MinX="0"
-                    MinY="0"/>
+                    MinY="0"
+                    CacheId="hsl" />
             </MudPaper>
         </MudItem>
         <MudItem>
@@ -87,20 +99,20 @@
                     MaxX="1"
                     MaxY="1"
                     MinX="0"
-                    MinY="0"/>
-            </MudPaper>
-        </MudItem>
-        <MudItem md="6" lg="4">
-            <MudPaper Class="pa-4">
-                <h3>HCT</h3>
-                <HctSliders />
+                    MinY="0"
+                    CacheId="okhsl" />
             </MudPaper>
         </MudItem>
     </MudGrid>
-    <Graphs />
 </MudContainer>
 
 @code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        ThemeService.Changed += StateHasChanged;
+    }
+
     private uint Hsl(double x, double y)
     {
         MudColor mudColor = new(x, 1, y, 1);
@@ -109,7 +121,7 @@
 
     private (double, double) HslInverse(uint color)
     {
-        MudColor mudColor = new(ColorUtils.RedFromArgb(color), ColorUtils.GreenFromArgb(color), ColorUtils.BlueFromArgb(color), 255);
+        MudColor mudColor = color.ToMudColor();
         return (mudColor.H, mudColor.L);
     }
 
@@ -130,4 +142,6 @@
             ColorUtils.BlueFromArgb(color) / 255.0));
         return (okhsl.h, okhsl.l);
     }
+
+    public void Dispose() => ThemeService.Changed -= StateHasChanged;
 }

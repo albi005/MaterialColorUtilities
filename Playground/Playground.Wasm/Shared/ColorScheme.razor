@@ -1,0 +1,42 @@
+@using MaterialColorUtilities.Schemes
+@using MaterialColorUtilities.Utils
+
+<div class="d-flex" style="width: 300px">
+    <ColorItem Name="Primary" Color="@Scheme.Primary" OnColor="@Scheme.OnPrimary" />
+    <ColorItem Name="PrimaryContainer" Color="@Scheme.PrimaryContainer" OnColor="@Scheme.OnPrimaryContainer" />
+</div>
+<div class="d-flex" style="width: 300px">
+    <ColorItem Name="Secondary" Color="@Scheme.Secondary" OnColor="@Scheme.OnSecondary" />
+    <ColorItem Name="SecondaryContainer" Color="@Scheme.SecondaryContainer" OnColor="@Scheme.OnSecondaryContainer" />
+</div>
+<div class="d-flex" style="width: 300px">
+    <ColorItem Name="Tertiary" Color="@Scheme.Tertiary" OnColor="@Scheme.OnTertiary" />
+    <ColorItem Name="TertiaryContainer" Color="@Scheme.TertiaryContainer" OnColor="@Scheme.OnTertiaryContainer" />
+</div>
+<div class="d-flex" style="width: 300px">
+    <ColorItem Name="Error" Color="@Scheme.Error" OnColor="@Scheme.OnError" />
+    <ColorItem Name="ErrorContainer" Color="@Scheme.ErrorContainer" OnColor="@Scheme.OnErrorContainer" />
+</div>
+<div class="d-flex" style="width: 300px">
+    <ColorItem Name="SurfaceVariant" Color="@Scheme.SurfaceVariant" OnColor="@Scheme.OnSurfaceVariant" />
+    <ColorItem Name="InverseSurface" Color="@Scheme.InverseSurface" OnColor="@Scheme.InversePrimary" />
+</div>
+<div class="d-flex" style="width: 300px">
+    <ColorItem Name="Background" Color="@Scheme.Background" OnColor="@Scheme.OnBackground" />
+    <ColorItem Name="Outline" Color="@Scheme.Outline" OnColor="@Scheme.Background" />
+</div>
+<div class="d-flex relative" style="width: 300px">
+    <ColorItem Color="@Scheme.Surface" />
+    <ColorItem Color="@Scheme.Surface1" />
+    <ColorItem Color="@Scheme.Surface2" />
+    <ColorItem Color="@Scheme.Surface3" />
+    <ColorItem Color="@Scheme.Surface4" />
+    <ColorItem Color="@Scheme.Surface5" />
+    <div class="absolute pa-2" style="color: @(StringUtils.HexFromArgb(Scheme.OnSurface)); font-weight: bold">
+        Surface 0-5
+    </div>
+</div>
+
+@code {
+    [Parameter] [EditorRequired] public Scheme<uint> Scheme { get; set; }
+}

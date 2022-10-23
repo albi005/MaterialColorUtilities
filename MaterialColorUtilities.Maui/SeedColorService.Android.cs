@@ -93,7 +93,7 @@ public class SeedColorService : ISeedColorService
     private uint? GuessAndroid12Seed()
     {
         // We have access to the basic tones like 0, 10, 20 etc. of every tonal palette,
-        // but if a different tone is required, we need access to the seed color.
+        // but if a more specific tone is required, we need access to the seed color.
         // Android doesn't seem to expose the seed color, so we have to get creative to get it.
 
         // We will use the tone of the primary color with the highest chroma as the seed,

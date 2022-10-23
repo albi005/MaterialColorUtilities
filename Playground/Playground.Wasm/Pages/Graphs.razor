@@ -1,10 +1,10 @@
 ﻿@page "/graphs"
 @using MaterialColorUtilities.Utils
 
-<h1>Function graphs</h1>
+<div class="pa-4">
+    <h3>ColorUtils.Linearized</h3>
+    <Plot2D Func="@(x => ColorUtils.Linearized((uint)x))" MaxX="255" />
 
-<h3>Linearized</h3>
-<Plot2D Func="@(x => ColorUtils.Linearized((uint)x))" MaxX="255" />
-
-<h3>Delinearized</h3>
-<Plot2D Func="@(x => ColorUtils.Delinearized((int)x))" MaxY="255" />
+    <h3 class="mt-16">ColorUtils.Delinearized</h3>
+    <Plot2D Func="@(x => ColorUtils.Delinearized((int)x))" MaxY="255" />
+</div>

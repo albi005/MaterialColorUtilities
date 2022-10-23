@@ -17,6 +17,7 @@ namespace Playground.Wasm.Shared
 
         protected override void SetFromSeed(uint seed)
         {
+            if (_hct.ToInt() == seed) return;
             _hct = Hct.FromInt(seed);
             _hue = _hct.Hue;
             _chroma = _hct.Chroma;
@@ -28,7 +29,7 @@ namespace Playground.Wasm.Shared
         {
             _hct = Hct.From(Hue, Chroma, Tone);
             uint color = _hct.ToInt();
-            ThemeService.SetSeed(color, this);
+            ThemeService.Seed = color;
             _showActualValues = true;
         }
     }

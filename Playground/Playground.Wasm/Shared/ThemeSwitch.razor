@@ -1,0 +1,21 @@
+﻿@using Playground.Wasm.Services
+@inject IJSRuntime Js
+@inject ThemeService ThemeService
+@implements IDisposable
+
+<MudIconButton Icon="@(ThemeService.IsDark ? Icons.Filled.LightMode : Icons.Filled.DarkMode)" OnClick="SwitchTheme"></MudIconButton>
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        ThemeService.Changed += ThemeServiceOnChanged;
+    }
+
+    private void ThemeServiceOnChanged() => InvokeAsync(StateHasChanged);
+
+    private void SwitchTheme() => ThemeService.IsDark = !ThemeService.IsDark;
+
+    public void Dispose() => ThemeService.Changed -= ThemeServiceOnChanged;
+
+}
