@@ -22,7 +22,7 @@ public class SeedColorService : ISeedColorService
     {
         get
         {
-            UIColor accentColor = _dummyButton.TintColor;
+            UIColor? accentColor = _dummyButton.TintColor;
             if (accentColor == null) return null;
             accentColor.GetRGBA(
                 out NFloat r,
@@ -36,5 +36,5 @@ public class SeedColorService : ISeedColorService
         }
     }
 
-    public event Action OnSeedColorChanged;
+    public event Action? OnSeedColorChanged;
 }

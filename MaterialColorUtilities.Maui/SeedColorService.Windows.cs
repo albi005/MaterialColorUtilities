@@ -21,5 +21,5 @@ public class SeedColorService : ISeedColorService
         }
     }
 
-    public event Action OnSeedColorChanged;
+    public event Action? OnSeedColorChanged;
 }
