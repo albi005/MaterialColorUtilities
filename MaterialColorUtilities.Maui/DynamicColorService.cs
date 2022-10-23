@@ -18,6 +18,7 @@ public class DynamicColorService : DynamicColorService<CorePalette, Scheme<uint>
     }
 }
 
+// TODO: Rename to MaterialColorService
 public class DynamicColorService<
     [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
     TCorePalette,

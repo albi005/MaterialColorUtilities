@@ -4,7 +4,7 @@
 		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
 		<LangVersion>10</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>disable</Nullable>
+		<Nullable>enable</Nullable>
 
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Version>0.1.0</Version>
