@@ -43,7 +43,7 @@ public class ThemeService
         set { _seed = value; Apply(); }
     }
 
-    private CorePalette CorePalette { get; set; }
+    private CorePalette CorePalette { get; } = new();
 
     public AppScheme<uint> Scheme { get; private set; }
     public MudTheme MudTheme { get; } = new()
@@ -63,8 +63,8 @@ public class ThemeService
         
         if (_seed != _prevSeed)
         {
-            CorePalette = new(_seed);
             _prevSeed = _seed;
+            CorePalette.Fill(_seed);
         }
 
         ISchemeMapper<CorePalette, AppScheme<uint>> mapper = IsDark

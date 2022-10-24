@@ -29,7 +29,7 @@ public class DynamicColorService<
     TLightSchemeMapper,
     TDarkSchemeMapper>
     : IMauiInitializeService
-    where TCorePalette : CorePalette
+    where TCorePalette : CorePalette, new()
     where TSchemeInt : Scheme<uint>, new()
     where TSchemeMaui : Scheme<Color>, new()
     where TLightSchemeMapper : ISchemeMapper<TCorePalette, TSchemeInt>, new()
@@ -125,7 +125,7 @@ public class DynamicColorService<
         }
     }
 
-    public TCorePalette CorePalette { get; protected set; } = null!;
+    public TCorePalette CorePalette { get; } = new();
     public TSchemeInt SchemeInt { get; protected set; } = null!;
     public TSchemeMaui SchemeMaui { get; protected set; } = null!;
     
@@ -183,7 +183,7 @@ public class DynamicColorService<
             _seed = (uint)_seedColorService.SeedColor;
         
         if (Seed != _prevSeed)
-            CorePalette = CreateCorePalette(Seed);
+            CorePalette.Fill(Seed);
 
         if (Seed == _prevSeed && IsDark == _prevIsDark) return;
         _prevSeed = Seed;
@@ -226,17 +226,5 @@ public class DynamicColorService<
             _appResources[key] = value;
             _appResources[key + "Brush"] = new SolidColorBrush(value);
         }
-    }
-
-    /// <summary>Constructs a <typeparamref name="TCorePalette"/>.</summary>
-    /// <remarks>
-    /// C# doesn't support constructor with parameters as a generic constraint,
-    /// so reflection is required to access the constructor. <see href="https://github.com/dotnet/csharplang/discussions/769">Discussion here.</see>
-    /// If you replace CorePalette, make sure it has a constructor with the following parameters: <c>int seed, bool isContent</c>
-    /// </remarks>
-    // TODO: Replace with using empty constructor and method call
-    private static TCorePalette CreateCorePalette(uint seed)
-    {
-        return (TCorePalette)Activator.CreateInstance(typeof(TCorePalette), seed, false)!;
     }
 }

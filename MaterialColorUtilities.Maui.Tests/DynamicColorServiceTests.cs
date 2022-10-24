@@ -22,7 +22,6 @@ public class DynamicColorServiceTests
         dynamicColorService.Initialize(null);
         
         Assert.IsFalse(dynamicColorService.EnableTheming);
-        Assert.IsNull(dynamicColorService.CorePalette);
         Assert.IsNull(dynamicColorService.SchemeMaui);
         Assert.IsTrue(_application.Resources.Count == 0);
     }
