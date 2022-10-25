@@ -1,112 +1,103 @@
 ﻿@page "/"
+@inject ThemeService ThemeService
 @using Playground.Wasm.Extensions
 @using Playground.Wasm.Services
 @using MaterialColorUtilities.ColorAppearance
 @using MaterialColorUtilities.Utils
 @using MudBlazor.Utilities
-@inject ThemeService ThemeService
 @implements IDisposable
 
-<PageTitle>Material Color Utilities for .NET</PageTitle>
+<PageTitle>Material Color Utilities .NET</PageTitle>
 
-<MudContainer MaxWidth="@MaxWidth.ExtraLarge" Class="pt-10">
-    <MudGrid>
-        <MudItem>
-            <ColorInput />
-        </MudItem>
-        <MudItem>
-            <MudPaper Square="true">
-                <div class="d-flex" style="width: 300px">
-                    <ColorItem Name="Seed" Color="@ThemeService.Seed" OnColor="@(Hct.FromInt(ThemeService.Seed).Tone > 49.7 ? 0xFF000000 : 0xFFFFFFFF)"/>
-                </div>
-                <ColorScheme Scheme="@ThemeService.Scheme"/>
-            </MudPaper>
-        </MudItem>
-        <MudItem md="6" lg="3">
-            <MudPaper Class="pa-4">
-                <h3>HCT</h3>
-                <HctSliders />
-            </MudPaper>
-        </MudItem>
-        <MudItem>
-            <MudPaper Class="pa-4">
-                <h3>HCT</h3>
-                chroma is maximized
-                <ColorPlot
-                    Resolution="200"
-                    Func="@((x,y) => Hct.From(x, 100, y).ToInt())"
-                    FuncInverse="@(color => { Hct hct = Hct.FromInt(color); return (hct.Hue, hct.Tone); })"
-                    LabelX="Hue"
-                    LabelY="Tone"
-                    MaxX="360"
-                    MaxY="100"
-                    MinX="0"
-                    MinY="0"
-                    CacheId="hct" />
-            </MudPaper>
-        </MudItem>
-        <MudItem>
-            <MudPaper Class="pa-4">
-                <h3>CAM16</h3>
-                from JCh, chroma is maximized
-                <ColorPlot
-                    Resolution="200"
-                    Func="@((x,y) => Cam16.FromJch(y, 100, x).ToInt())"
-                    FuncInverse="@(color => { Cam16 cam16 = Cam16.FromInt(color); return (cam16.Hue, cam16.J); })"
-                    LabelX="h"
-                    LabelY="J"
-                    MaxX="360"
-                    MaxY="100"
-                    MinX="0"
-                    MinY="0"
-                    CacheId="cam16" />
-            </MudPaper>
-        </MudItem>
-        <MudItem>
-            <MudPaper Class="pa-4">
-                <h3>HSL</h3>
-                saturation is maximized
-                <ColorPlot
-                    Resolution="200"
-                    Func="@Hsl"
-                    FuncInverse="@HslInverse"
-                    LabelX="H"
-                    LabelY="L"
-                    MaxX="360"
-                    MaxY="1"
-                    MinX="0"
-                    MinY="0"
-                    CacheId="hsl" />
-            </MudPaper>
-        </MudItem>
-        <MudItem>
-            <MudPaper Class="pa-4">
-                <h3>
-                    OKHSL
-                    <MudIconButton
-                        Href="https://bottosson.github.io/misc/colorpicker/"
-                        Icon="@Icons.Material.Outlined.OpenInNew"
-                        Size="@Size.Small"
-                        Target="_blank" />
-                </h3>
-                saturation is maximized
-                <ColorPlot
-                    Resolution="200"
-                    Func="@Okhsl"
-                    FuncInverse="@OkhslInverse"
-                    LabelX="H"
-                    LabelY="L"
-                    MaxX="1"
-                    MaxY="1"
-                    MinX="0"
-                    MinY="0"
-                    CacheId="okhsl" />
-            </MudPaper>
-        </MudItem>
-    </MudGrid>
-</MudContainer>
+<div class="d-flex flex-wrap justify-center gap-4 py-4">
+    <MudPaper Class="pa-4" Style="width: 460px">
+        <div class="d-flex pb-4">
+            <ColorItem Name="Seed"
+                       Color="@ThemeService.Seed"
+                       OnColor="@(Hct.FromInt(ThemeService.Seed).Tone > 49.7 ? 0xFF000000 : 0xFFFFFFFF)"/>
+        </div>
+        <ColorScheme Scheme="@ThemeService.Scheme"/>
+        <div class="pb-4"></div>
+        <ColorInput/>
+        <div class="pb-4"></div>
+        <StrategySelector/>
+    </MudPaper>
+    <MudPaper Class="pa-4" Style="width: 460px">
+        <div>
+            <h3>HCT</h3>
+            <ColorPlot
+                Resolution="200"
+                Func="@((x, y) => Hct.From(x, 100, y).ToInt())"
+                FuncInverse="@(color => { Hct hct = Hct.FromInt(color); return (hct.Hue, hct.Tone); })"
+                LabelX="Hue"
+                LabelY="Tone"
+                MaxX="360"
+                MaxY="100"
+                MinX="0"
+                MinY="0"
+                CacheId="hct"/>
+            <p style="opacity: 50%; font-style: italic; text-align: end">*chroma is maximized</p>
+        </div>
+        <HctSliders/>
+    </MudPaper>
+</div>
+<div class="d-flex flex-wrap justify-center gap-4 pb-4">
+    <MudPaper Class="pa-4">
+        <h3>CAM16</h3>
+        <p>from JCh, chroma is maximized</p>
+        <ColorPlot
+            Resolution="200"
+            Func="@((x, y) => Cam16.FromJch(y, 100, x).ToInt())"
+            FuncInverse="@(color => { Cam16 cam16 = Cam16.FromInt(color); return (cam16.Hue, cam16.J); })"
+            LabelX="h"
+            LabelY="J"
+            MaxX="360"
+            MaxY="100"
+            MinX="0"
+            MinY="0"
+            CacheId="cam16"/>
+    </MudPaper>
+    <MudPaper Class="pa-4">
+        <h3>HSL</h3>
+        <p>saturation is maximized</p>
+        <ColorPlot
+            Resolution="200"
+            Func="@Hsl"
+            FuncInverse="@HslInverse"
+            LabelX="H"
+            LabelY="L"
+            MaxX="360"
+            MaxY="1"
+            MinX="0"
+            MinY="0"
+            CacheId="hsl"/>
+    </MudPaper>
+    <MudPaper Class="pa-4">
+        <h3>
+            OKHSL
+            <MudIconButton
+                Href="https://bottosson.github.io/misc/colorpicker/"
+                Icon="@Icons.Material.Outlined.OpenInNew"
+                Size="@Size.Small"
+                Target="_blank"/>
+        </h3>
+        <p>saturation is maximized</p>
+        <ColorPlot
+            Resolution="200"
+            Func="@Okhsl"
+            FuncInverse="@OkhslInverse"
+            LabelX="H"
+            LabelY="L"
+            MaxX="1"
+            MaxY="1"
+            MinX="0"
+            MinY="0"
+            CacheId="okhsl"/>
+    </MudPaper>
+</div>
 
 @code {
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -127,7 +118,7 @@
 
     private uint Okhsl(double x, double y)
     {
-        var (r,g,b) = OkColor.OkHslToSrgb((x, 1, y));
+        (double r, double g, double b) = OkColor.OkHslToSrgb((x, 1, y));
         return ColorUtils.ArgbFromRgb(
             (uint)(r * 255),
             (uint)(g * 255),
@@ -136,12 +127,16 @@
 
     private (double, double) OkhslInverse(uint color)
     {
-        var okhsl = OkColor.SrgbToOkHsl((
+        (double h, double s, double l) okhsl = OkColor.SrgbToOkHsl((
             ColorUtils.RedFromArgb(color) / 255.0,
-            ColorUtils.GreenFromArgb(color) / 255.0,
-            ColorUtils.BlueFromArgb(color) / 255.0));
+                ColorUtils.GreenFromArgb(color) / 255.0,
+                ColorUtils.BlueFromArgb(color) / 255.0));
         return (okhsl.h, okhsl.l);
     }
 
-    public void Dispose() => ThemeService.Changed -= StateHasChanged;
+    public void Dispose()
+    {
+        ThemeService.Changed -= StateHasChanged;
+    }
+
 }
