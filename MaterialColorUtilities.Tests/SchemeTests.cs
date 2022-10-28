@@ -25,21 +25,21 @@ namespace MaterialColorUtilities.Tests
         [TestMethod]
         public void BlueLight()
         {
-            Scheme<uint> scheme = new LightSchemeMapper().Map(new(0xff0000ff));
+            Scheme<uint> scheme = new LightSchemeMapper().Map(CorePalette.Of(0xff0000ff));
             Assert.AreEqual(0xff343DFF, scheme.Primary);
         }
 
         [TestMethod]
         public void BlueDark()
         {
-            Scheme<uint> scheme = new DarkSchemeMapper().Map(new(0xff0000ff));
+            Scheme<uint> scheme = new DarkSchemeMapper().Map(CorePalette.Of(0xff0000ff));
             Assert.AreEqual(0xffBEC2FF, scheme.Primary);
         }
 
         [TestMethod]
         public void PurpleishLight()
         {
-            Scheme<uint> scheme = new LightSchemeMapper().Map(new(0xff6750A4));
+            Scheme<uint> scheme = new LightSchemeMapper().Map(CorePalette.Of(0xff6750A4));
             Assert.AreEqual(0xff6750A4, scheme.Primary);
             Assert.AreEqual(0xff625B71, scheme.Secondary);
             Assert.AreEqual(0xff7E5260, scheme.Tertiary);
@@ -50,7 +50,7 @@ namespace MaterialColorUtilities.Tests
         [TestMethod]
         public void PurpleishDark()
         {
-            Scheme<uint> scheme = new DarkSchemeMapper().Map(new(0xff6750A4));
+            Scheme<uint> scheme = new DarkSchemeMapper().Map(CorePalette.Of(0xff6750A4));
             Assert.AreEqual(0xffCFBCFF, scheme.Primary);
             Assert.AreEqual(0xffCBC2DB, scheme.Secondary);
             Assert.AreEqual(0xffEFB8C8, scheme.Tertiary);
@@ -61,7 +61,7 @@ namespace MaterialColorUtilities.Tests
         [TestMethod]
         public void LightSchemeFromHighChromaColor()
         {
-            Scheme<uint> scheme = new LightSchemeMapper().Map(new(0xfffa2bec));
+            Scheme<uint> scheme = new LightSchemeMapper().Map(CorePalette.Of(0xfffa2bec));
             Assert.AreEqual(0xffab00a2, scheme.Primary);
             Assert.AreEqual(0xffffffff, scheme.OnPrimary);
             Assert.AreEqual(0xffffd7f3, scheme.PrimaryContainer);
@@ -94,7 +94,7 @@ namespace MaterialColorUtilities.Tests
         [TestMethod]
         public void DarkSchemeFromHighChromaColor()
         {
-            Scheme<uint> scheme = new DarkSchemeMapper().Map(new(0xfffa2bec));
+            Scheme<uint> scheme = new DarkSchemeMapper().Map(CorePalette.Of(0xfffa2bec));
             Assert.AreEqual(0xffffabee, scheme.Primary);
             Assert.AreEqual(0xff5c0057, scheme.OnPrimary);
             Assert.AreEqual(0xff83007b, scheme.PrimaryContainer);

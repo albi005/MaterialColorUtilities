@@ -13,10 +13,13 @@
     @bind-Value="@Color"
     ColorPickerMode="@ColorPickerMode.HEX"
     Label="Seed color"
-    PickerVariant="@PickerVariant.Static"
+    PickerVariant="@PickerVariant.Inline"
+    AnchorOrigin="Origin.BottomCenter"
+    Variant="Variant.Filled"
     Elevation="1"
     DisableAlpha="true"
-    DisablePreview="true" />
+    DisablePreview="true"
+    />
 
 @code {
     MudColor _color;

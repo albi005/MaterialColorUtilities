@@ -8,3 +8,15 @@
         padding: 16px;
     }
 }
+
+.info {
+    opacity: 60%;
+    font-style: italic;
+    font-weight: normal;
+}
+
+.material-symbols-outlined {
+    translate: 0 17%;
+    font-size: 1.17em;
+    opacity: 60%;
+}

@@ -23,9 +23,9 @@ namespace MaterialColorUtilities.Palettes;
 /// </summary>
 public class TonalPalette
 {
-    private readonly Dictionary<uint, uint> cache = new();
-    private readonly double hue;
-    private readonly double chroma;
+    private readonly Dictionary<uint, uint> _cache = new();
+    private readonly double _hue;
+    private readonly double _chroma;
 
     /// <summary>Creates tones using the HCT hue and chroma from a color.</summary>
     /// <param name="argb">ARGB representation of a color.</param>
@@ -44,17 +44,17 @@ public class TonalPalette
 
     private TonalPalette(double hue, double chroma)
     {
-        this.hue = hue;
-        this.chroma = chroma;
+        _hue = hue;
+        _chroma = chroma;
     }
 
     /// <summary>Creates an ARGB color with HCT hue and chroma of this TonalPalette instance, and the provided HCT tone.</summary>
     /// <param name="tone">HCT tone, measured from 0 to 100.</param>
     /// <returns>ARGB representation of a color with that tone.</returns>
     public uint Tone(uint tone)
-        => cache.TryGetValue(tone, out uint value)
+        => _cache.TryGetValue(tone, out uint value)
             ? value
-            : cache[tone] = Hct.From(hue, chroma, tone).ToInt();
+            : _cache[tone] = Hct.From(_hue, _chroma, tone).ToInt();
 
     /// <summary>Creates an ARGB color with HCT hue and chroma of this TonalPalette instance, and the provided HCT tone.</summary>
     /// <param name="tone">HCT tone, measured from 0 to 100.</param>

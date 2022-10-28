@@ -21,7 +21,7 @@ uint seedColor = ImageUtils.ColorsFromImage(pixels).First();
 Console.WriteLine($"Seed: {StringUtils.HexFromArgb(seedColor)}");
 
 // CorePalette gives you access to every tone of the key colors
-CorePalette corePalette = new(seedColor);
+CorePalette corePalette = CorePalette.Of(seedColor);
 
 // Map the core palette to color schemes
 // A Scheme contains the named colors, like Primary or OnTertiaryContainer
@@ -41,8 +41,9 @@ ConsoleHelper.PrintProperties("Dark scheme", darkSchemeString);
 // - EXTENSION -
 // Adding your own colors:
 
-// 4. Use your new colors (this is should be at the end, but you can't add top-level statements after type declarations)
-MyCorePalette myCorePalette = new(seedColor);
+// 4. Use your new colors (this part should be at the end, but you can't add top-level statements after type declarations)
+MyCorePalette myCorePalette = new();
+corePalette.Fill(seedColor);
 MyScheme<string> myDarkScheme = new MyDarkSchemeMapper()
     .Map(myCorePalette)
     .ConvertTo(StringUtils.HexFromArgb);
@@ -52,9 +53,11 @@ ConsoleHelper.PrintProperties("My dark scheme", myDarkScheme);
 public class MyCorePalette : CorePalette
 {
     public TonalPalette Orange { get; set; }
-    
-    public MyCorePalette(uint seed) : base(seed)
+
+    public override void Fill(uint seed, Strategy strategy = Strategy.Default)
     {
+        base.Fill(seed, strategy);
+
         // You can harmonize a color to make it closer to the seed color
         uint harmonizedOrange = Blender.Harmonize(0xFFA500, seed);
         Orange = TonalPalette.FromInt(harmonizedOrange);

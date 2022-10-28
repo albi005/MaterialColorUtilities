@@ -15,9 +15,11 @@ public class ThemeService
     private readonly LightAppSchemeMapper _lightMapper = new();
     private readonly DarkAppSchemeMapper _darkMapper = new();
     private uint _seed = Scorer.Default;
+    private CorePalette.Strategy _strategy;
 
     private uint? _prevSeed;
     private bool? _prevIsDark;
+    private CorePalette.Strategy? _prevStrategy;
 
     public ThemeService()
     {
@@ -43,7 +45,17 @@ public class ThemeService
         set { _seed = value; Apply(); }
     }
 
-    private CorePalette CorePalette { get; set; }
+    public CorePalette.Strategy Strategy
+    {
+        get => _strategy;
+        set
+        {
+            _strategy = value; 
+            Apply();
+        }
+    }
+
+    private CorePalette CorePalette { get; } = new();
 
     public AppScheme<uint> Scheme { get; private set; }
     public MudTheme MudTheme { get; } = new()
@@ -58,13 +70,14 @@ public class ThemeService
 
     private void Apply()
     {
-        if (_isDark == _prevIsDark && _seed == _prevSeed) return;
+        if (_isDark == _prevIsDark && _seed == _prevSeed && _strategy == _prevStrategy) return;
         _prevIsDark = _isDark;
-        
-        if (_seed != _prevSeed)
+
+        if (_seed != _prevSeed || _strategy != _prevStrategy)
         {
-            CorePalette = new(_seed);
             _prevSeed = _seed;
+            _prevStrategy = _strategy;
+            CorePalette.Fill(_seed, _strategy);
         }
 
         ISchemeMapper<CorePalette, AppScheme<uint>> mapper = IsDark
