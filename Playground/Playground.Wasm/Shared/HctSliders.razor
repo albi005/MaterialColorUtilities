@@ -1,15 +1,21 @@
 ﻿@inherits SeedColorSelector
 
+@{
+    string tooltip = _showActualValues ? "After converting to sRGB and back to HCT / selected" : "";
+}
+
 <MudSlider @bind-Value="Hue" Variant="@Variant.Filled" ValueLabel="@true" Max="360">
-    @(_showActualValues ? $"Hue: {_hct.Hue:0}/{Hue:0}" : $"Hue: {Hue:0}")
+    <MudTooltip Text="@(tooltip)">
+        @(_showActualValues ? $"Hue: {_hct.Hue:0} / {Hue:0}" : $"Hue: {Hue:0}")
+    </MudTooltip>
 </MudSlider>
 <MudSlider @bind-Value="Chroma" Variant="@Variant.Filled" ValueLabel="@true" Max="115">
-    @(_showActualValues ? $"Chroma: {_hct.Chroma:0}/{Chroma:0}" : $"Chroma: {Chroma:0}")
+    <MudTooltip Text="@(tooltip)">
+        @(_showActualValues ? $"Chroma: {_hct.Chroma:0} / {Chroma:0}" : $"Chroma: {Chroma:0}")
+    </MudTooltip>
 </MudSlider>
 <MudSlider @bind-Value="Tone" Variant="@Variant.Filled" ValueLabel="@true" Max="100">
-    @(_showActualValues ? $"Tone: {_hct.Tone:0}/{Tone:0}" : $"Tone: {Tone:0}")
+    <MudTooltip Text="@(tooltip)">
+        @(_showActualValues ? $"Tone: {_hct.Tone:0} / {Tone:0}" : $"Tone: {Tone:0}")
+    </MudTooltip>
 </MudSlider>
-@if (_showActualValues)
-{
-    <MudText Typo="@Typo.caption">*after converting to RGB/selected</MudText>
-}

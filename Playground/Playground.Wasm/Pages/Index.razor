@@ -23,43 +23,58 @@
         <StrategySelector/>
     </MudPaper>
     <MudPaper Class="pa-4" Style="width: 460px">
-        <div>
-            <h3>HCT</h3>
-            <ColorPlot
-                Resolution="200"
-                Func="@((x, y) => Hct.From(x, 100, y).ToInt())"
-                FuncInverse="@(color => { Hct hct = Hct.FromInt(color); return (hct.Hue, hct.Tone); })"
-                LabelX="Hue"
-                LabelY="Tone"
-                MaxX="360"
-                MaxY="100"
-                MinX="0"
-                MinY="0"
-                CacheId="hct"/>
-            <p style="opacity: 50%; font-style: italic; text-align: end">*chroma is maximized</p>
-        </div>
+        <h3>
+            <a href="https://material.io/blog/science-of-color-design" target="_blank">
+                HCT
+                <span class="material-symbols-outlined">open_in_new</span>
+            </a>
+        </h3>
+        <p class="info">Chroma is maximized</p>
+        <ColorPlot
+            Resolution="200"
+            Func="@((x, y) => Hct.From(x, 100, y).ToInt())"
+            FuncInverse="@(color => { Hct hct = Hct.FromInt(color); return (hct.Hue, hct.Tone); })"
+            LabelX="Hue"
+            LabelY="Tone"
+            MaxX="360"
+            MaxY="100"
+            MinX="0"
+            MinY="0"
+            CacheId="hct"/>
         <HctSliders/>
     </MudPaper>
 </div>
 <div class="d-flex flex-wrap justify-center gap-4 pb-4">
     <MudPaper Class="pa-4">
-        <h3>CAM16</h3>
-        <p>from JCh, chroma is maximized</p>
-        <ColorPlot
-            Resolution="200"
-            Func="@((x, y) => Cam16.FromJch(y, 100, x).ToInt())"
-            FuncInverse="@(color => { Cam16 cam16 = Cam16.FromInt(color); return (cam16.Hue, cam16.J); })"
-            LabelX="h"
-            LabelY="J"
-            MaxX="360"
-            MaxY="100"
-            MinX="0"
-            MinY="0"
-            CacheId="cam16"/>
+        <h3>
+            <a href="https://en.wikipedia.org/wiki/Color_appearance_model#CAM16" target="_blank">
+                CAM16 from JCh
+                <span class="material-symbols-outlined">open_in_new</span>
+            </a>
+        </h3>
+        <p class="info">Chroma is maximized</p>
+        <MudTooltip Text="from JCh, " Placement="Placement.Top">
+            <ColorPlot
+                Resolution="200"
+                Func="@((x, y) => Cam16.FromJch(y, 100, x).ToInt())"
+                FuncInverse="@(color => { Cam16 cam16 = Cam16.FromInt(color); return (cam16.Hue, cam16.J); })"
+                LabelX="h"
+                LabelY="J"
+                MaxX="360"
+                MaxY="100"
+                MinX="0"
+                MinY="0"
+                CacheId="cam16"/>
+        </MudTooltip>
     </MudPaper>
     <MudPaper Class="pa-4">
-        <h3>HSL</h3>
-        <p>saturation is maximized</p>
+        <h3>
+            <a href="https://en.wikipedia.org/wiki/HSL_and_HSV" target="_blank">
+                HSL
+                <span class="material-symbols-outlined">open_in_new</span>
+            </a>
+        </h3>
+        <p class="info">Saturation is maximized</p>
         <ColorPlot
             Resolution="200"
             Func="@Hsl"
@@ -74,14 +89,12 @@
     </MudPaper>
     <MudPaper Class="pa-4">
         <h3>
-            OKHSL
-            <MudIconButton
-                Href="https://bottosson.github.io/misc/colorpicker/"
-                Icon="@Icons.Material.Outlined.OpenInNew"
-                Size="@Size.Small"
-                Target="_blank"/>
+            <a href="https://bottosson.github.io/misc/colorpicker/" target="_blank">
+                OKHSL
+                <span class="material-symbols-outlined">open_in_new</span>
+            </a>
         </h3>
-        <p>saturation is maximized</p>
+        <p class="info">Saturation is maximized</p>
         <ColorPlot
             Resolution="200"
             Func="@Okhsl"
