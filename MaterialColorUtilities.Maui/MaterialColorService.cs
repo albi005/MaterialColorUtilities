@@ -11,16 +11,14 @@ namespace MaterialColorUtilities.Maui;
 // Fallback seed
 // Custom seed
 // Dynamic seed
-public class DynamicColorService : DynamicColorService<CorePalette, Scheme<uint>, Scheme<Color>, LightSchemeMapper, DarkSchemeMapper>
+public class MaterialColorService : MaterialColorService<CorePalette, Scheme<uint>, Scheme<Color>, LightSchemeMapper, DarkSchemeMapper>
 {
-    public DynamicColorService(IOptions<DynamicColorOptions> options, ISeedColorService seedColorService, IApplication application, IPreferences preferences) : base(options, seedColorService, application, preferences)
+    public MaterialColorService(IOptions<MaterialColorOptions> options, IDynamicColorService dynamicColorService, IApplication application, IPreferences preferences) : base(options, dynamicColorService, application, preferences)
     {
     }
 }
 
-// TODO: Rename to MaterialColorService
-public class DynamicColorService<
-    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
+public class MaterialColorService<
     TCorePalette,
     [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)]
     TSchemeInt,
@@ -38,7 +36,7 @@ public class DynamicColorService<
     private const string SeedKey = "MaterialColorUtilities.Maui.Seed";
     private const string IsDarkKey = "MaterialColorUtilities.Maui.IsDark";
 
-    private readonly ISeedColorService _seedColorService;
+    private readonly IDynamicColorService _dynamicColorService;
     private readonly Application _application;
     private readonly ResourceDictionary _appResources;
     private readonly IPreferences _preferences;
@@ -54,9 +52,9 @@ public class DynamicColorService<
     private uint? _prevSeed;
     private bool? _prevIsDark;
 
-    public DynamicColorService(
-        IOptions<DynamicColorOptions> options,
-        ISeedColorService seedColorService,
+    public MaterialColorService(
+        IOptions<MaterialColorOptions> options,
+        IDynamicColorService dynamicColorService,
         IApplication application,
         IPreferences preferences)
     {
@@ -65,7 +63,7 @@ public class DynamicColorService<
         _enableDynamicColor = options.Value.EnableDynamicColor;
         _fallbackSeed = options.Value.FallbackSeed;
         
-        _seedColorService = seedColorService;
+        _dynamicColorService = dynamicColorService;
         _preferences = preferences;
         _application = (Application)application;
         _appResources = _application.Resources;
@@ -169,9 +167,9 @@ public class DynamicColorService<
 
     private void OnOptionsChanged()
     {
-        _seedColorService.OnSeedColorChanged -= Update;
+        _dynamicColorService.Changed -= Update;
         if (_enableTheming && _enableDynamicColor)
-            _seedColorService.OnSeedColorChanged += Update;
+            _dynamicColorService.Changed += Update;
         Update();
     }
     
@@ -179,11 +177,20 @@ public class DynamicColorService<
     {
         if (!EnableTheming) return;
 
-        if (_enableDynamicColor && _seedColorService.SeedColor != null)
-            _seed = (uint)_seedColorService.SeedColor;
-        
+        if (_enableDynamicColor && _dynamicColorService.SeedColor != null)
+            _seed = (uint)_dynamicColorService.SeedColor;
+
         if (Seed != _prevSeed)
             CorePalette.Fill(Seed);
+
+        if (_enableDynamicColor && _dynamicColorService.CorePalette != null)
+        {
+            CorePalette.Primary = _dynamicColorService.CorePalette.Primary;
+            CorePalette.Secondary = _dynamicColorService.CorePalette.Secondary;
+            CorePalette.Tertiary = _dynamicColorService.CorePalette.Tertiary;
+            CorePalette.Neutral = _dynamicColorService.CorePalette.Neutral;
+            CorePalette.NeutralVariant = _dynamicColorService.CorePalette.NeutralVariant;
+        }
 
         if (Seed == _prevSeed && IsDark == _prevIsDark) return;
         _prevSeed = Seed;

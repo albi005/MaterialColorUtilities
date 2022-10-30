@@ -3,13 +3,13 @@ using MaterialColorUtilities.Utils;
 
 namespace MaterialColorUtilities.Maui;
 
-public class SeedColorService : ISeedColorService
+public class DynamicColorService : IDynamicColorService
 {
     private readonly UISettings _uiSettings = new();
 
-    public SeedColorService()
+    public DynamicColorService()
     {
-        _uiSettings.ColorValuesChanged += (_, _) => OnSeedColorChanged?.Invoke();
+        _uiSettings.ColorValuesChanged += (_, _) => Changed?.Invoke();
     }
     
     public uint? SeedColor
@@ -21,5 +21,5 @@ public class SeedColorService : ISeedColorService
         }
     }
 
-    public event Action? OnSeedColorChanged;
+    public event Action? Changed;
 }

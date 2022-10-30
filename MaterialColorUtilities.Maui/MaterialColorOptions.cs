@@ -1,6 +1,6 @@
 ﻿namespace MaterialColorUtilities.Maui;
 
-public sealed class DynamicColorOptions
+public sealed class MaterialColorOptions
 {
     /// <summary>
     /// When true, updates to Application.UserAppTheme will be stored using Preferences

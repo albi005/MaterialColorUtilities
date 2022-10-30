@@ -8,7 +8,7 @@ namespace Playground.Maui.ViewModels;
 
 public partial class ThemeViewModel : ObservableObject
 {
-    private readonly CustomDynamicColorService _colorService;
+    private readonly CustomMaterialColorService _colorService;
     
     [ObservableProperty] private double _h;
     [ObservableProperty] private double _c;
@@ -33,7 +33,7 @@ public partial class ThemeViewModel : ObservableObject
 
     public Color OnSeed => _t < 49.6 ? Colors.White : Colors.Black;
 
-    public ThemeViewModel(CustomDynamicColorService colorService, IOptions<DynamicColorOptions> options)
+    public ThemeViewModel(CustomMaterialColorService colorService, IOptions<MaterialColorOptions> options)
     {
         _colorService = colorService;
 

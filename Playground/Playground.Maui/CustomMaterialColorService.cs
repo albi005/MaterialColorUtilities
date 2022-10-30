@@ -12,11 +12,11 @@ using Microsoft.Maui.Platform;
 
 namespace Playground.Maui;
 
-public class CustomDynamicColorService : DynamicColorService<CorePalette, AppScheme<uint>, AppScheme<Color>, LightAppSchemeMapper, DarkAppSchemeMapper>
+public class CustomMaterialColorService : MaterialColorService<CorePalette, AppScheme<uint>, AppScheme<Color>, LightAppSchemeMapper, DarkAppSchemeMapper>
 {
     private readonly WeakEventManager _weakEventManager = new();
     
-    public CustomDynamicColorService(IOptions<DynamicColorOptions> options, ISeedColorService seedColorService, IApplication application, IPreferences preferences) : base(options, seedColorService, application, preferences)
+    public CustomMaterialColorService(IOptions<MaterialColorOptions> options, IDynamicColorService dynamicColorService, IApplication application, IPreferences preferences) : base(options, dynamicColorService, application, preferences)
     {
     }
     

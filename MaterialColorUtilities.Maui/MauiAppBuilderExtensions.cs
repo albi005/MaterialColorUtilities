@@ -13,8 +13,8 @@ public static class MauiAppBuilderExtensions
 
     public static MauiAppBuilder UseMaterialDynamicColors(
         this MauiAppBuilder builder,
-        Action<DynamicColorOptions> configureOptions)
-        => builder.UseMaterialDynamicColors<DynamicColorService>(configureOptions);
+        Action<MaterialColorOptions> configureOptions)
+        => builder.UseMaterialDynamicColors<MaterialColorService>(configureOptions);
 
     public static MauiAppBuilder UseMaterialDynamicColors<
             [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
@@ -37,13 +37,13 @@ public static class MauiAppBuilderExtensions
         TDynamicColorService>
     (
         this MauiAppBuilder builder,
-        Action<DynamicColorOptions> configureOptions
+        Action<MaterialColorOptions> configureOptions
     )
         where TDynamicColorService : class, IMauiInitializeService
     {
         builder.Services.Configure(configureOptions);
         builder.Services.TryAddSingleton(_ => Preferences.Default);
-        builder.Services.AddSingleton<ISeedColorService, SeedColorService>();
+        builder.Services.AddSingleton<IDynamicColorService, DynamicColorService>();
         builder.Services.AddSingleton<TDynamicColorService>();
         builder.Services.AddSingleton<IMauiInitializeService>(s => s.GetRequiredService<TDynamicColorService>());
         return builder;

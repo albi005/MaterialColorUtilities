@@ -5,19 +5,19 @@ using UIKit;
 
 namespace MaterialColorUtilities.Maui;
 
-public class SeedColorService : ISeedColorService
+public class DynamicColorService : IDynamicColorService
 {
     private readonly UIButton _dummyButton = new();
 
-    public SeedColorService()
+    public DynamicColorService()
     {
         // based on https://gist.github.com/JunyuKuang/3ecc7c9374c0ba67438c9a6d06612e36
         NSNotificationCenter.DefaultCenter.AddObserver(
             (NSString)"NSSystemColorsDidChangeNotification",
-            _ => OnSeedColorChanged?.Invoke(),
+            _ => Changed?.Invoke(),
             null);
     }
-    
+
     public uint? SeedColor
     {
         get
@@ -36,5 +36,5 @@ public class SeedColorService : ISeedColorService
         }
     }
 
-    public event Action? OnSeedColorChanged;
+    public event Action? Changed;
 }
