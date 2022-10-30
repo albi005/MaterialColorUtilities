@@ -5,47 +5,47 @@ namespace MaterialColorUtilities.Maui;
 
 public static class MauiAppBuilderExtensions
 {
-    public static MauiAppBuilder UseMaterialDynamicColors(this MauiAppBuilder builder)
-        => builder.UseMaterialDynamicColors(_ => { });
+    public static MauiAppBuilder UseMaterialColors(this MauiAppBuilder builder)
+        => builder.UseMaterialColors(_ => { });
 
-    public static MauiAppBuilder UseMaterialDynamicColors(this MauiAppBuilder builder, uint fallbackSeed)
-        => builder.UseMaterialDynamicColors(opt => opt.FallbackSeed = fallbackSeed);
+    public static MauiAppBuilder UseMaterialColors(this MauiAppBuilder builder, uint fallbackSeed)
+        => builder.UseMaterialColors(opt => opt.FallbackSeed = fallbackSeed);
 
-    public static MauiAppBuilder UseMaterialDynamicColors(
+    public static MauiAppBuilder UseMaterialColors(
         this MauiAppBuilder builder,
         Action<MaterialColorOptions> configureOptions)
-        => builder.UseMaterialDynamicColors<MaterialColorService>(configureOptions);
+        => builder.UseMaterialColors<MaterialColorService>(configureOptions);
 
-    public static MauiAppBuilder UseMaterialDynamicColors<
+    public static MauiAppBuilder UseMaterialColors<
             [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
-            TDynamicColorService>
+            TMaterialColorService>
         (this MauiAppBuilder builder)
-        where TDynamicColorService : class, IMauiInitializeService
-        => builder.UseMaterialDynamicColors<TDynamicColorService>(_ => { });
+        where TMaterialColorService : class, IMauiInitializeService
+        => builder.UseMaterialColors<TMaterialColorService>(_ => { });
 
-    public static MauiAppBuilder UseMaterialDynamicColors<
+    public static MauiAppBuilder UseMaterialColors<
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
-        TDynamicColorService>
+        TMaterialColorService>
     (
         this MauiAppBuilder builder, uint fallbackSeed
     )
-        where TDynamicColorService : class, IMauiInitializeService
-        => builder.UseMaterialDynamicColors<TDynamicColorService>(opt => opt.FallbackSeed = fallbackSeed);
+        where TMaterialColorService : class, IMauiInitializeService
+        => builder.UseMaterialColors<TMaterialColorService>(opt => opt.FallbackSeed = fallbackSeed);
 
-    public static MauiAppBuilder UseMaterialDynamicColors<
+    public static MauiAppBuilder UseMaterialColors<
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
-        TDynamicColorService>
+        TMaterialColorService>
     (
         this MauiAppBuilder builder,
         Action<MaterialColorOptions> configureOptions
     )
-        where TDynamicColorService : class, IMauiInitializeService
+        where TMaterialColorService : class, IMauiInitializeService
     {
         builder.Services.Configure(configureOptions);
         builder.Services.TryAddSingleton(_ => Preferences.Default);
         builder.Services.AddSingleton<IDynamicColorService, DynamicColorService>();
-        builder.Services.AddSingleton<TDynamicColorService>();
-        builder.Services.AddSingleton<IMauiInitializeService>(s => s.GetRequiredService<TDynamicColorService>());
+        builder.Services.AddSingleton<TMaterialColorService>();
+        builder.Services.AddSingleton<IMauiInitializeService>(s => s.GetRequiredService<TMaterialColorService>());
         return builder;
     }
 }

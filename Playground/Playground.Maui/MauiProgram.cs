@@ -10,7 +10,7 @@ public static class MauiProgram
     {
         MauiAppBuilder builder = MauiApp
             .CreateBuilder()
-            .UseMaterialDynamicColors<CustomMaterialColorService>(opt =>
+            .UseMaterialColors<CustomMaterialColorService>(opt =>
             {
                 opt.DefaultStyle = Style.Expressive;
             })
