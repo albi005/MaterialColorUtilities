@@ -42,7 +42,7 @@ public class TonalPalette
     /// <returns>Tones matching hue and chroma.</returns>
     public static TonalPalette FromHueAndChroma(double hue, double chroma) => new(hue, chroma);
 
-    private TonalPalette(double hue, double chroma)
+    public TonalPalette(double hue, double chroma)
     {
         _hue = hue;
         _chroma = chroma;
