@@ -41,7 +41,7 @@ public class DynamicColorServiceTests
         Assert.IsTrue(materialColorService.EnableTheming);
         Assert.IsFalse(materialColorService.EnableDynamicColor);
         Assert.AreEqual(0xff4285F4, materialColorService.Seed);
-        Assert.AreEqual(0xff005AC1, materialColorService.SchemeInt.Primary);
+        Assert.AreEqual(0xff445e91, materialColorService.SchemeInt.Primary);
         Assert.AreEqual(materialColorService.SchemeInt.Primary, materialColorService.SchemeMaui.Primary.ToUint());
         Assert.IsNotNull(_application.Resources[Schemes.Keys.Primary]);
     }
@@ -58,7 +58,7 @@ public class DynamicColorServiceTests
         Assert.IsTrue(materialColorService.EnableTheming);
         Assert.IsTrue(materialColorService.EnableDynamicColor);
         Assert.AreEqual(0xff4285F4, materialColorService.Seed);
-        Assert.AreEqual(0xff005AC1, materialColorService.SchemeInt.Primary);
+        Assert.AreEqual(0xff445e91, materialColorService.SchemeInt.Primary);
         Assert.AreEqual(materialColorService.SchemeInt.Primary, materialColorService.SchemeMaui.Primary.ToUint());
         Assert.IsNotNull(_application.Resources[Schemes.Keys.Primary]);
     }
@@ -73,8 +73,8 @@ public class DynamicColorServiceTests
         
         materialColorService.Initialize(null);
         
-        Assert.AreEqual(0xFFc07d52, materialColorService.Seed);
-        Assert.AreEqual(0xFF96490A, materialColorService.SchemeInt.Primary);
+        Assert.AreEqual(0xffc07d52, materialColorService.Seed);
+        Assert.AreEqual(0xff8b4f26, materialColorService.SchemeInt.Primary);
         Assert.AreEqual(materialColorService.SchemeInt.Primary, materialColorService.SchemeMaui.Primary.ToUint());
         Assert.IsNotNull(_application.Resources[Schemes.Keys.Primary]);
     }
