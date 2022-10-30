@@ -1,4 +1,6 @@
-﻿namespace MaterialColorUtilities.Maui;
+﻿using Style = MaterialColorUtilities.Palettes.Style;
+
+namespace MaterialColorUtilities.Maui;
 
 public sealed class MaterialColorOptions
 {
@@ -9,16 +11,16 @@ public sealed class MaterialColorOptions
     public bool RememberIsDark { get; set; } = true;
 
     /// <summary>
-    /// Determines whether to generate colors as application resources.
-    /// Set to false when using a custom color scheme source.
+    /// Determines whether to generate colors and add them to the global app resources.
+    /// Set to false to disable theming.
     /// </summary>
     /// <remarks>
-    /// Can be updated at runtime using DynamicColorService.IsEnabled.
+    /// Can be updated at runtime using MaterialColorService.IsEnabled.
     /// </remarks>
     public bool EnableTheming { get; set; } = true;
     
     /// <summary>
-    /// Will be used if a dynamic seed color is not available or dynamic theming is disabled.
+    /// The seed color to use when a dynamic seed color is not available or dynamic theming is disabled.
     /// </summary>
     public uint FallbackSeed { get; set; } = 0xff4285F4; // Google Blue
 
@@ -27,7 +29,15 @@ public sealed class MaterialColorOptions
     /// </summary>
     /// <remarks>
     /// When set to <see langword="false"/>, <see cref="FallbackSeed"/> will be used as seed,
-    /// even on platforms that expose an accent color.
+    /// even on platforms that expose a dynamic color source.
     /// </remarks>
     public bool EnableDynamicColor { get; set; } = true;
+
+    /// <summary>
+    /// The style used by default to create the core palette.
+    /// </summary>
+    /// <remarks>
+    /// Can be updated at runtime using MaterialColorService.Style.
+    /// </remarks>
+    public Style DefaultStyle { get; set; } = Style.TonalSpot;
 }

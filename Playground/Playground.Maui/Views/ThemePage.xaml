@@ -7,6 +7,14 @@
              x:DataType="viewModels:ThemeViewModel">
     <ScrollView>
         <StackLayout Padding="16" Spacing="8" x:Name="stackLayout">
+            <Grid ColumnDefinitions="*,auto">
+                <Label Text="Enable theming" VerticalOptions="Center" />
+                <Switch IsToggled="{Binding EnableTheming}" HorizontalOptions="End" />
+            </Grid>
+            <Grid ColumnDefinitions="*,auto">
+                <Label Text="Enable dynamic color" VerticalOptions="Center" />
+                <Switch IsToggled="{Binding EnableDynamicColor}" HorizontalOptions="End" />
+            </Grid>
             <Label Text="Hue" />
             <Slider Value="{Binding H}" Maximum="360" />
             <Label Text="Chroma" />
@@ -48,10 +56,8 @@
             
             <Label Text="Theme" />
             <Picker ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding UserAppTheme}" />
-            <Label Text="Enable theming" />
-            <Switch IsToggled="{Binding EnableTheming}"/>
-            <Label Text="Enable dynamic color" />
-            <Switch IsToggled="{Binding EnableDynamicColor}"/>
+            <Label Text="Style" />
+            <Picker ItemsSource="{Binding StyleOptions}" SelectedItem="{Binding Style}" />
             <Button Text="Forget seed" Command="{Binding ForgetSeedCommand}"></Button>
         </StackLayout>
     </ScrollView>

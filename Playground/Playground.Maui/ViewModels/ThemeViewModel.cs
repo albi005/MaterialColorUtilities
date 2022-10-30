@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using MaterialColorUtilities.ColorAppearance;
 using MaterialColorUtilities.Maui;
 using Microsoft.Extensions.Options;
+using Style = MaterialColorUtilities.Palettes.Style;
 
 namespace Playground.Maui.ViewModels;
 
@@ -24,11 +25,28 @@ public partial class ThemeViewModel : ObservableObject
         set => Application.Current!.UserAppTheme = value;
     }
 
+    public Style Style
+    {
+        get => _colorService.Style;
+        set => _colorService.Style = value;
+    }
+
     public List<AppTheme> ThemeOptions { get; } = new()
     {
         AppTheme.Unspecified,
         AppTheme.Light,
         AppTheme.Dark
+    };
+
+    public List<Style> StyleOptions { get; } = new()
+    {
+        Style.Spritz,
+        Style.TonalSpot,
+        Style.Vibrant,
+        Style.Expressive,
+        Style.Rainbow,
+        Style.FruitSalad,
+        Style.Content
     };
 
     public Color OnSeed => _t < 49.6 ? Colors.White : Colors.Black;

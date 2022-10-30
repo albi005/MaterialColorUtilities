@@ -3,6 +3,7 @@ using MaterialColorUtilities.Schemes;
 using Microsoft.Extensions.Options;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using Style = MaterialColorUtilities.Palettes.Style;
 
 namespace MaterialColorUtilities.Maui;
 
@@ -35,6 +36,7 @@ public class MaterialColorService<
 {
     private const string SeedKey = "MaterialColorUtilities.Maui.Seed";
     private const string IsDarkKey = "MaterialColorUtilities.Maui.IsDark";
+    private const string StyleKey = "MaterialColorUtilities.Maui.Style";
 
     private readonly IDynamicColorService _dynamicColorService;
     private readonly Application _application;
@@ -49,8 +51,10 @@ public class MaterialColorService<
     private bool _enableTheming;
     private bool _enableDynamicColor;
     private uint _seed;
+    private Style _style;
     private uint? _prevSeed;
     private bool? _prevIsDark;
+    private Style _prevStyle;
 
     public MaterialColorService(
         IOptions<MaterialColorOptions> options,
@@ -62,6 +66,7 @@ public class MaterialColorService<
         _enableTheming = options.Value.EnableTheming;
         _enableDynamicColor = options.Value.EnableDynamicColor;
         _fallbackSeed = options.Value.FallbackSeed;
+        _style = options.Value.DefaultStyle;
         
         _dynamicColorService = dynamicColorService;
         _preferences = preferences;
@@ -111,6 +116,9 @@ public class MaterialColorService<
     /// <summary>
     /// A color in ARGB format, that is used as seed when creating the color scheme.
     /// </summary>
+    /// <remarks>
+    /// Changes will be saved using Preferences and reapplied the next time the app is launched.
+    /// </remarks>
     public uint Seed
     {
         get => _seed;
@@ -119,6 +127,24 @@ public class MaterialColorService<
             if (value == _seed) return;
             _seed = value;
             _preferences.Set(SeedKey, (int)value);
+            Update();
+        }
+    }
+    
+    /// <summary>
+    /// The style used to create the core palette.
+    /// </summary>
+    /// <remarks>
+    /// Changes will be saved using Preferences and reapplied the next time the app is launched.
+    /// </remarks>
+    public Style Style
+    {
+        get => _style;
+        set
+        {
+            if (value == _style) return;
+            _style = value;
+            _preferences.Set(StyleKey, (int)value);
             Update();
         }
     }
@@ -137,7 +163,7 @@ public class MaterialColorService<
         _preferences.Clear(SeedKey);
     }
 
-    // Called by MauiAppBuilder.Build()
+    // Called automatically by MauiAppBuilder.Build()
     public virtual void Initialize(IServiceProvider? services)
     {
         if (_preferences.ContainsKey(IsDarkKey))
@@ -149,6 +175,9 @@ public class MaterialColorService<
         
         if (_preferences.ContainsKey(SeedKey))
             _seed = (uint)_preferences.Get(SeedKey, 0);
+
+        if (_preferences.ContainsKey(StyleKey))
+            _style = (Style)_preferences.Get(StyleKey, (int)Style.TonalSpot);
         
         _application.RequestedThemeChanged += (_, _) =>
         {
@@ -180,8 +209,8 @@ public class MaterialColorService<
         if (_enableDynamicColor && _dynamicColorService.SeedColor != null)
             _seed = (uint)_dynamicColorService.SeedColor;
 
-        if (Seed != _prevSeed)
-            CorePalette.Fill(Seed);
+        if (Seed != _prevSeed || Style != _prevStyle)
+            CorePalette.Fill(Seed, Style);
 
         if (_enableDynamicColor && _dynamicColorService.CorePalette != null)
         {
@@ -192,9 +221,10 @@ public class MaterialColorService<
             CorePalette.NeutralVariant = _dynamicColorService.CorePalette.NeutralVariant;
         }
 
-        if (Seed == _prevSeed && IsDark == _prevIsDark) return;
+        if (Seed == _prevSeed && IsDark == _prevIsDark && Style == _prevStyle) return;
         _prevSeed = Seed;
         _prevIsDark = IsDark;
+        _prevStyle = Style;
         
         ISchemeMapper<TCorePalette, TSchemeInt> mapper = IsDark
             ? _darkSchemeMapper
