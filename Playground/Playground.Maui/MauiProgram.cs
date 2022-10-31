@@ -1,5 +1,6 @@
 ﻿using MaterialColorUtilities.Maui;
 using Playground.Maui.ViewModels;
+using Style = MaterialColorUtilities.Palettes.Style;
 
 namespace Playground.Maui;
 
@@ -9,7 +10,10 @@ public static class MauiProgram
     {
         MauiAppBuilder builder = MauiApp
             .CreateBuilder()
-            .UseMaterialDynamicColors<CustomDynamicColorService>()
+            .UseMaterialColors<CustomMaterialColorService>(opt =>
+            {
+                opt.DefaultStyle = Style.Expressive;
+            })
             .UseMauiApp<App>();
 
         builder.Services.AddTransient<ThemeViewModel>();

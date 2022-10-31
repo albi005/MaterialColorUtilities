@@ -7,9 +7,9 @@ namespace Playground.Maui;
 
 public partial class ThemePage : ContentPage
 {
-    private readonly CustomDynamicColorService _colorService;
+    private readonly CustomMaterialColorService _colorService;
     
-    public ThemePage(ThemeViewModel themeViewModel, CustomDynamicColorService colorService)
+    public ThemePage(ThemeViewModel themeViewModel, CustomMaterialColorService colorService)
     {
         _colorService = colorService;
         BindingContext = themeViewModel;

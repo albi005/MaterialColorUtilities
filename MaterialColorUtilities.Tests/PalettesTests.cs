@@ -51,13 +51,13 @@ namespace MaterialColorUtilities.Tests
             Assert.AreEqual(0xfff1efff, core.Primary[95]);
             Assert.AreEqual(0xffe0e0ff, core.Primary[90]);
             Assert.AreEqual(0xffbec2ff, core.Primary[80]);
-            Assert.AreEqual(0xff9da3ff, core.Primary[70]);
-            Assert.AreEqual(0xff7c84ff, core.Primary[60]);
-            Assert.AreEqual(0xff5a64ff, core.Primary[50]);
-            Assert.AreEqual(0xff343dff, core.Primary[40]);
-            Assert.AreEqual(0xff0000ef, core.Primary[30]);
-            Assert.AreEqual(0xff0001ac, core.Primary[20]);
-            Assert.AreEqual(0xff00006e, core.Primary[10]);
+            Assert.AreEqual(0xffa3a6e4, core.Primary[70]);
+            Assert.AreEqual(0xff888cc8, core.Primary[60]);
+            Assert.AreEqual(0xff6e72ad, core.Primary[50]);
+            Assert.AreEqual(0xff555992, core.Primary[40]);
+            Assert.AreEqual(0xff3e4278, core.Primary[30]);
+            Assert.AreEqual(0xff272b60, core.Primary[20]);
+            Assert.AreEqual(0xff11144b, core.Primary[10]);
             Assert.AreEqual(0xff000000, core.Primary[0]);
             Assert.AreEqual(0xffffffff, core.Secondary[100]);
             Assert.AreEqual(0xfff1efff, core.Secondary[95]);
@@ -95,11 +95,11 @@ namespace MaterialColorUtilities.Tests
             Assert.AreEqual(0xffc1c3f4, core.Secondary[80]);
             Assert.AreEqual(0xffa5a7d7, core.Secondary[70]);
             Assert.AreEqual(0xff8b8dbb, core.Secondary[60]);
-            Assert.AreEqual(0xff7173a0, core.Secondary[50]);
-            Assert.AreEqual(0xff585b86, core.Secondary[40]);
-            Assert.AreEqual(0xff40436d, core.Secondary[30]);
-            Assert.AreEqual(0xff2a2d55, core.Secondary[20]);
-            Assert.AreEqual(0xff14173f, core.Secondary[10]);
+            Assert.AreEqual(0xff7174a0, core.Secondary[50]);
+            Assert.AreEqual(0xff585b85, core.Secondary[40]);
+            Assert.AreEqual(0xff40436c, core.Secondary[30]);
+            Assert.AreEqual(0xff2a2d54, core.Secondary[20]);
+            Assert.AreEqual(0xff15173e, core.Secondary[10]);
             Assert.AreEqual(0xff000000, core.Secondary[0]);
         }        
     }

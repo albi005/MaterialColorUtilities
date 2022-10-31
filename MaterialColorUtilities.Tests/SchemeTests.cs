@@ -26,7 +26,7 @@ namespace MaterialColorUtilities.Tests
         public void BlueLight()
         {
             Scheme<uint> scheme = new LightSchemeMapper().Map(CorePalette.Of(0xff0000ff));
-            Assert.AreEqual(0xff343DFF, scheme.Primary);
+            Assert.AreEqual(0xff555992, scheme.Primary);
         }
 
         [TestMethod]
@@ -40,32 +40,32 @@ namespace MaterialColorUtilities.Tests
         public void PurpleishLight()
         {
             Scheme<uint> scheme = new LightSchemeMapper().Map(CorePalette.Of(0xff6750A4));
-            Assert.AreEqual(0xff6750A4, scheme.Primary);
-            Assert.AreEqual(0xff625B71, scheme.Secondary);
-            Assert.AreEqual(0xff7E5260, scheme.Tertiary);
-            Assert.AreEqual(0xffFFFBFF, scheme.Surface);
-            Assert.AreEqual(0xff1C1B1E, scheme.OnSurface);
+            Assert.AreEqual(0xff65558f, scheme.Primary);
+            Assert.AreEqual(0xff625b71, scheme.Secondary);
+            Assert.AreEqual(0xff7e5260, scheme.Tertiary);
+            Assert.AreEqual(0xfffffbff, scheme.Surface);
+            Assert.AreEqual(0xff1c1b1e, scheme.OnSurface);
         }
 
         [TestMethod]
         public void PurpleishDark()
         {
             Scheme<uint> scheme = new DarkSchemeMapper().Map(CorePalette.Of(0xff6750A4));
-            Assert.AreEqual(0xffCFBCFF, scheme.Primary);
-            Assert.AreEqual(0xffCBC2DB, scheme.Secondary);
-            Assert.AreEqual(0xffEFB8C8, scheme.Tertiary);
+            Assert.AreEqual(0xffcfbdfe, scheme.Primary);
+            Assert.AreEqual(0xffcbc2db, scheme.Secondary);
+            Assert.AreEqual(0xffefb8c8, scheme.Tertiary);
             Assert.AreEqual(0xff1c1b1e, scheme.Surface);
-            Assert.AreEqual(0xffE6E1E6, scheme.OnSurface);
+            Assert.AreEqual(0xffe6e1e6, scheme.OnSurface);
         }
 
         [TestMethod]
         public void LightSchemeFromHighChromaColor()
         {
             Scheme<uint> scheme = new LightSchemeMapper().Map(CorePalette.Of(0xfffa2bec));
-            Assert.AreEqual(0xffab00a2, scheme.Primary);
+            Assert.AreEqual(0xff814c77, scheme.Primary);
             Assert.AreEqual(0xffffffff, scheme.OnPrimary);
             Assert.AreEqual(0xffffd7f3, scheme.PrimaryContainer);
-            Assert.AreEqual(0xff390035, scheme.OnPrimaryContainer);
+            Assert.AreEqual(0xff340830, scheme.OnPrimaryContainer);
             Assert.AreEqual(0xff6e5868, scheme.Secondary);
             Assert.AreEqual(0xffffffff, scheme.OnSecondary);
             Assert.AreEqual(0xfff8daee, scheme.SecondaryContainer);
@@ -88,16 +88,16 @@ namespace MaterialColorUtilities.Tests
             Assert.AreEqual(0xff000000, scheme.Shadow);
             Assert.AreEqual(0xff342f32, scheme.InverseSurface);
             Assert.AreEqual(0xfff8eef2, scheme.InverseOnSurface);
-            Assert.AreEqual(0xffffabee, scheme.InversePrimary);
+            Assert.AreEqual(0xfff3b2e4, scheme.InversePrimary);
         }
 
         [TestMethod]
         public void DarkSchemeFromHighChromaColor()
         {
             Scheme<uint> scheme = new DarkSchemeMapper().Map(CorePalette.Of(0xfffa2bec));
-            Assert.AreEqual(0xffffabee, scheme.Primary);
-            Assert.AreEqual(0xff5c0057, scheme.OnPrimary);
-            Assert.AreEqual(0xff83007b, scheme.PrimaryContainer);
+            Assert.AreEqual(0xfff3b2e4, scheme.Primary);
+            Assert.AreEqual(0xff4d1f47, scheme.OnPrimary);
+            Assert.AreEqual(0xff67355e, scheme.PrimaryContainer);
             Assert.AreEqual(0xffffd7f3, scheme.OnPrimaryContainer);
             Assert.AreEqual(0xffdbbed1, scheme.Secondary);
             Assert.AreEqual(0xff3e2a39, scheme.OnSecondary);
@@ -121,7 +121,7 @@ namespace MaterialColorUtilities.Tests
             Assert.AreEqual(0xff000000, scheme.Shadow);
             Assert.AreEqual(0xffeae0e4, scheme.InverseSurface);
             Assert.AreEqual(0xff342f32, scheme.InverseOnSurface);
-            Assert.AreEqual(0xffab00a2, scheme.InversePrimary);
+            Assert.AreEqual(0xff814c77, scheme.InversePrimary);
         }
 
         [TestMethod]
@@ -132,28 +132,28 @@ namespace MaterialColorUtilities.Tests
             Assert.AreEqual(0xffffffff, scheme.OnPrimary);
             Assert.AreEqual(0xffffd7f3, scheme.PrimaryContainer);
             Assert.AreEqual(0xff390035, scheme.OnPrimaryContainer);
-            Assert.AreEqual(0xff7f4e75, scheme.Secondary);
+            Assert.AreEqual(0xff7e4e75, scheme.Secondary);
             Assert.AreEqual(0xffffffff, scheme.OnSecondary);
             Assert.AreEqual(0xffffd7f3, scheme.SecondaryContainer);
-            Assert.AreEqual(0xff330b2f, scheme.OnSecondaryContainer);
-            Assert.AreEqual(0xff9c4323, scheme.Tertiary);
+            Assert.AreEqual(0xff320b2e, scheme.OnSecondaryContainer);
+            Assert.AreEqual(0xff9c3091, scheme.Tertiary);
             Assert.AreEqual(0xffffffff, scheme.OnTertiary);
-            Assert.AreEqual(0xffffdbd0, scheme.TertiaryContainer);
-            Assert.AreEqual(0xff390c00, scheme.OnTertiaryContainer);
+            Assert.AreEqual(0xffffd7f3, scheme.TertiaryContainer);
+            Assert.AreEqual(0xff390035, scheme.OnTertiaryContainer);
             Assert.AreEqual(0xffba1a1a, scheme.Error);
             Assert.AreEqual(0xffffffff, scheme.OnError);
             Assert.AreEqual(0xffffdad6, scheme.ErrorContainer);
             Assert.AreEqual(0xff410002, scheme.OnErrorContainer);
             Assert.AreEqual(0xfffffbff, scheme.Background);
-            Assert.AreEqual(0xff1f1a1d, scheme.OnBackground);
+            Assert.AreEqual(0xff22191f, scheme.OnBackground);
             Assert.AreEqual(0xfffffbff, scheme.Surface);
-            Assert.AreEqual(0xff1f1a1d, scheme.OnSurface);
-            Assert.AreEqual(0xffeedee7, scheme.SurfaceVariant);
-            Assert.AreEqual(0xff4e444b, scheme.OnSurfaceVariant);
-            Assert.AreEqual(0xff80747b, scheme.Outline);
+            Assert.AreEqual(0xff22191f, scheme.OnSurface);
+            Assert.AreEqual(0xfff9daee, scheme.SurfaceVariant);
+            Assert.AreEqual(0xff564050, scheme.OnSurfaceVariant);
+            Assert.AreEqual(0xff897081, scheme.Outline);
             Assert.AreEqual(0xff000000, scheme.Shadow);
-            Assert.AreEqual(0xff342f32, scheme.InverseSurface);
-            Assert.AreEqual(0xfff8eef2, scheme.InverseOnSurface);
+            Assert.AreEqual(0xff372e34, scheme.InverseSurface);
+            Assert.AreEqual(0xfffdecf5, scheme.InverseOnSurface);
             Assert.AreEqual(0xffffabee, scheme.InversePrimary);
         }
 
@@ -165,28 +165,28 @@ namespace MaterialColorUtilities.Tests
             Assert.AreEqual(0xff5c0057, scheme.OnPrimary);
             Assert.AreEqual(0xff83007b, scheme.PrimaryContainer);
             Assert.AreEqual(0xffffd7f3, scheme.OnPrimaryContainer);
-            Assert.AreEqual(0xfff0b4e1, scheme.Secondary);
+            Assert.AreEqual(0xffefb4e1, scheme.Secondary);
             Assert.AreEqual(0xff4b2145, scheme.OnSecondary);
             Assert.AreEqual(0xff64375c, scheme.SecondaryContainer);
             Assert.AreEqual(0xffffd7f3, scheme.OnSecondaryContainer);
-            Assert.AreEqual(0xffffb59c, scheme.Tertiary);
-            Assert.AreEqual(0xff5c1900, scheme.OnTertiary);
-            Assert.AreEqual(0xff7d2c0d, scheme.TertiaryContainer);
-            Assert.AreEqual(0xffffdbd0, scheme.OnTertiaryContainer);
+            Assert.AreEqual(0xffffabee, scheme.Tertiary);
+            Assert.AreEqual(0xff5c0057, scheme.OnTertiary);
+            Assert.AreEqual(0xff7f1077, scheme.TertiaryContainer);
+            Assert.AreEqual(0xffffd7f3, scheme.OnTertiaryContainer);
             Assert.AreEqual(0xffffb4ab, scheme.Error);
             Assert.AreEqual(0xff690005, scheme.OnError);
             Assert.AreEqual(0xff93000a, scheme.ErrorContainer);
             Assert.AreEqual(0xffffb4ab, scheme.OnErrorContainer);
-            Assert.AreEqual(0xff1f1a1d, scheme.Background);
-            Assert.AreEqual(0xffeae0e4, scheme.OnBackground);
-            Assert.AreEqual(0xff1f1a1d, scheme.Surface);
-            Assert.AreEqual(0xffeae0e4, scheme.OnSurface);
-            Assert.AreEqual(0xff4e444b, scheme.SurfaceVariant);
-            Assert.AreEqual(0xffd2c2cb, scheme.OnSurfaceVariant);
-            Assert.AreEqual(0xff9a8d95, scheme.Outline);
+            Assert.AreEqual(0xff22191f, scheme.Background);
+            Assert.AreEqual(0xffefdee7, scheme.OnBackground);
+            Assert.AreEqual(0xff22191f, scheme.Surface);
+            Assert.AreEqual(0xffefdee7, scheme.OnSurface);
+            Assert.AreEqual(0xff564050, scheme.SurfaceVariant);
+            Assert.AreEqual(0xffdcbed2, scheme.OnSurfaceVariant);
+            Assert.AreEqual(0xffa4899b, scheme.Outline);
             Assert.AreEqual(0xff000000, scheme.Shadow);
-            Assert.AreEqual(0xffeae0e4, scheme.InverseSurface);
-            Assert.AreEqual(0xff342f32, scheme.InverseOnSurface);
+            Assert.AreEqual(0xffefdee7, scheme.InverseSurface);
+            Assert.AreEqual(0xff372e34, scheme.InverseOnSurface);
             Assert.AreEqual(0xffab00a2, scheme.InversePrimary);
         }
     }

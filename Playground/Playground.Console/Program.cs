@@ -54,9 +54,9 @@ public class MyCorePalette : CorePalette
 {
     public TonalPalette Orange { get; set; }
 
-    public override void Fill(uint seed, Strategy strategy = Strategy.Default)
+    public override void Fill(uint seed, Style style = Style.TonalSpot)
     {
-        base.Fill(seed, strategy);
+        base.Fill(seed, style);
 
         // You can harmonize a color to make it closer to the seed color
         uint harmonizedOrange = Blender.Harmonize(0xFFA500, seed);

@@ -5,89 +5,89 @@ namespace MaterialColorUtilities.Maui.Tests;
 [TestClass]
 public class DynamicColorServiceTests
 {
-    private readonly ISeedColorService _seedColorService = new MockSeedColorService();
+    private readonly IDynamicColorService _dynamicColorService = new MockDynamicColorService();
     private readonly Application _application = new();
     private readonly IPreferences _preferences = new MockPreferences();
     
     [TestMethod]
     public void DisableTheming()
     {
-        IOptions<DynamicColorOptions> options = CreateOptions(opt =>
+        IOptions<MaterialColorOptions> options = CreateOptions(opt =>
         {
             opt.EnableTheming = false;
         });
 
-        DynamicColorService dynamicColorService = new(options, _seedColorService, _application, _preferences);
+        MaterialColorService materialColorService = new(options, _dynamicColorService, _application, _preferences);
         
-        dynamicColorService.Initialize(null);
+        materialColorService.Initialize(null);
         
-        Assert.IsFalse(dynamicColorService.EnableTheming);
-        Assert.IsNull(dynamicColorService.SchemeMaui);
+        Assert.IsFalse(materialColorService.EnableTheming);
+        Assert.IsNull(materialColorService.SchemeMaui);
         Assert.IsTrue(_application.Resources.Count == 0);
     }
 
     [TestMethod]
     public void DisableDynamicColor()
     {
-        IOptions<DynamicColorOptions> options = CreateOptions(opt =>
+        IOptions<MaterialColorOptions> options = CreateOptions(opt =>
         {
             opt.EnableDynamicColor = false;
         });
 
-        DynamicColorService dynamicColorService = new(options, _seedColorService, _application, _preferences);
+        MaterialColorService materialColorService = new(options, _dynamicColorService, _application, _preferences);
         
-        dynamicColorService.Initialize(null);
+        materialColorService.Initialize(null);
         
-        Assert.IsTrue(dynamicColorService.EnableTheming);
-        Assert.IsFalse(dynamicColorService.EnableDynamicColor);
-        Assert.AreEqual(0xff4285F4, dynamicColorService.Seed);
-        Assert.AreEqual(0xff005AC1, dynamicColorService.SchemeInt.Primary);
-        Assert.AreEqual(dynamicColorService.SchemeInt.Primary, dynamicColorService.SchemeMaui.Primary.ToUint());
+        Assert.IsTrue(materialColorService.EnableTheming);
+        Assert.IsFalse(materialColorService.EnableDynamicColor);
+        Assert.AreEqual(0xff4285F4, materialColorService.Seed);
+        Assert.AreEqual(0xff445e91, materialColorService.SchemeInt.Primary);
+        Assert.AreEqual(materialColorService.SchemeInt.Primary, materialColorService.SchemeMaui.Primary.ToUint());
         Assert.IsNotNull(_application.Resources[Schemes.Keys.Primary]);
     }
 
     [TestMethod]
     public void EnableDynamicColor_SeedColorNull()
     {
-        IOptions<DynamicColorOptions> options = CreateOptions();
+        IOptions<MaterialColorOptions> options = CreateOptions();
 
-        DynamicColorService dynamicColorService = new(options, _seedColorService, _application, _preferences);
+        MaterialColorService materialColorService = new(options, _dynamicColorService, _application, _preferences);
         
-        dynamicColorService.Initialize(null);
+        materialColorService.Initialize(null);
         
-        Assert.IsTrue(dynamicColorService.EnableTheming);
-        Assert.IsTrue(dynamicColorService.EnableDynamicColor);
-        Assert.AreEqual(0xff4285F4, dynamicColorService.Seed);
-        Assert.AreEqual(0xff005AC1, dynamicColorService.SchemeInt.Primary);
-        Assert.AreEqual(dynamicColorService.SchemeInt.Primary, dynamicColorService.SchemeMaui.Primary.ToUint());
+        Assert.IsTrue(materialColorService.EnableTheming);
+        Assert.IsTrue(materialColorService.EnableDynamicColor);
+        Assert.AreEqual(0xff4285F4, materialColorService.Seed);
+        Assert.AreEqual(0xff445e91, materialColorService.SchemeInt.Primary);
+        Assert.AreEqual(materialColorService.SchemeInt.Primary, materialColorService.SchemeMaui.Primary.ToUint());
         Assert.IsNotNull(_application.Resources[Schemes.Keys.Primary]);
     }
 
     [TestMethod]
     public void EnableDynamicColor_SeedColorAvailable()
     {
-        IOptions<DynamicColorOptions> options = CreateOptions();
+        IOptions<MaterialColorOptions> options = CreateOptions();
 
-        ISeedColorService seedColorService = new MockSeedColorService(0xFFc07d52);
-        DynamicColorService dynamicColorService = new(options, seedColorService, _application, _preferences);
+        IDynamicColorService dynamicColorService = new MockDynamicColorService(0xFFc07d52);
+        MaterialColorService materialColorService = new(options, dynamicColorService, _application, _preferences);
         
-        dynamicColorService.Initialize(null);
+        materialColorService.Initialize(null);
         
-        Assert.AreEqual(0xFFc07d52, dynamicColorService.Seed);
-        Assert.AreEqual(0xFF96490A, dynamicColorService.SchemeInt.Primary);
-        Assert.AreEqual(dynamicColorService.SchemeInt.Primary, dynamicColorService.SchemeMaui.Primary.ToUint());
+        Assert.AreEqual(0xffc07d52, materialColorService.Seed);
+        Assert.AreEqual(0xff8b4f26, materialColorService.SchemeInt.Primary);
+        Assert.AreEqual(materialColorService.SchemeInt.Primary, materialColorService.SchemeMaui.Primary.ToUint());
         Assert.IsNotNull(_application.Resources[Schemes.Keys.Primary]);
     }
 
-    private static IOptions<DynamicColorOptions> CreateOptions()
+    private static IOptions<MaterialColorOptions> CreateOptions()
     {
-        DynamicColorOptions options = new();
+        MaterialColorOptions options = new();
         return Options.Create(options);
     }
 
-    private static IOptions<DynamicColorOptions> CreateOptions(Action<DynamicColorOptions> configure)
+    private static IOptions<MaterialColorOptions> CreateOptions(Action<MaterialColorOptions> configure)
     {
-        DynamicColorOptions options = new();
+        MaterialColorOptions options = new();
         configure(options);
         return Options.Create(options);
     }

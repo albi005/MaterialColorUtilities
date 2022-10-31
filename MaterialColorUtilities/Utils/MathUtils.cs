@@ -115,4 +115,26 @@ public static class MathUtils
     public static double Hypot(double x, double y) => Math.Sqrt(x * x + y * y);
     public static double Log1p(double x) => Math.Log(1 + x);
     public static double Expm1(double x) => Math.Exp(x) - 1;
+    
+    /// <summary>
+    /// Given a seed hue, and a mapping of hues to hue rotations, find which hues in the mapping the seed hue falls
+    /// between, and add the hue rotation of the lower hue to the seed hue.
+    /// </summary>
+    /// <param name="seedHue">Hue of the seed color</param>
+    /// <param name="hueAndRotations">
+    /// List of pairs, where the first item in a pair is a hue, and the second item in
+    /// the pair is a hue rotation that should be applied</param>
+    /// <returns></returns>
+    public static double RotateHue(double seedHue, params (int Hue, int Rotation)[] hueAndRotations)
+    {
+        for (int i = 0; i < hueAndRotations.Length - 1; i++)
+        {
+            double thisHue = hueAndRotations[i].Hue;
+            double nextHue = hueAndRotations[i + 1].Hue;
+            if (thisHue <= seedHue && seedHue < nextHue)
+                return SanitizeDegreesDouble(seedHue + hueAndRotations[i].Rotation);
+        }
+    
+        return seedHue;
+    }
 }
