@@ -7,6 +7,10 @@
     "Tests project generators": {
       "commandName": "DebugRoslynComponent",
       "targetProject": "..\\MaterialColorUtilities.Tests\\MaterialColorUtilities.Tests.csproj"
+    },
+    "Core project generators": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\MaterialColorUtilities\\MaterialColorUtilities.csproj"
     }
   }
 }

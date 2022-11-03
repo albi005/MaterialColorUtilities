@@ -29,12 +29,12 @@ Scheme<uint> lightScheme = new LightSchemeMapper().Map(corePalette);
 Scheme<uint> darkScheme = new DarkSchemeMapper().Map(corePalette);
 
 // Easily convert between Schemes with different color types
-Scheme<Color> lightSchemeColor = lightScheme.ConvertTo(x => Color.FromArgb((int)x));
+Scheme<Color> lightSchemeColor = lightScheme.Convert(x => Color.FromArgb((int)x));
 
-Scheme<string> lightSchemeString = lightScheme.ConvertTo(x => "#" + x.ToString("X")[2..]);
+Scheme<string> lightSchemeString = lightScheme.Convert(x => "#" + x.ToString("X")[2..]);
 ConsoleHelper.PrintProperties("Light scheme", lightSchemeString);
 
-Scheme<string> darkSchemeString = darkScheme.ConvertTo(StringUtils.HexFromArgb);
+Scheme<string> darkSchemeString = darkScheme.Convert(StringUtils.HexFromArgb);
 ConsoleHelper.PrintProperties("Dark scheme", darkSchemeString);
 
 
@@ -43,10 +43,10 @@ ConsoleHelper.PrintProperties("Dark scheme", darkSchemeString);
 
 // 4. Use your new colors (this part should be at the end, but you can't add top-level statements after type declarations)
 MyCorePalette myCorePalette = new();
-corePalette.Fill(seedColor);
+myCorePalette.Fill(seedColor);
 MyScheme<string> myDarkScheme = new MyDarkSchemeMapper()
     .Map(myCorePalette)
-    .ConvertTo(StringUtils.HexFromArgb);
+    .Convert(StringUtils.HexFromArgb);
 ConsoleHelper.PrintProperties("My dark scheme", myDarkScheme);
 
 // 1. Define a new key color if you need by subclassing CorePalette

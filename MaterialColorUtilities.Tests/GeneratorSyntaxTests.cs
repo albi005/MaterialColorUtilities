@@ -9,13 +9,13 @@ public class GeneratorSyntaxExamples
     public void TypeParametersWithoutTColor()
     {
         SchemeWithTypeParametersButWithoutTColor<object> scheme = new();
-        Scheme<double> converted = scheme.ConvertTo(i => (double)i);
+        Scheme<double> converted = scheme.Convert(i => (double)i);
     }
 
     public void AdditionalTypeParameters()
     {
         MyScheme3<object, int> scheme = new();
-        MyScheme3<object, double> converted = scheme.ConvertTo(i => (double)i);
+        MyScheme3<object, double> converted = scheme.Convert(i => (double)i);
     }
 }
 
