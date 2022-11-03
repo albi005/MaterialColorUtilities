@@ -234,14 +234,14 @@ public class MaterialColorService<
 
         if (typeof(TSchemeMaui) == typeof(Scheme<Color>))
         {
-            SchemeMaui = (TSchemeMaui)SchemeInt.ConvertTo(Color.FromUint);
+            SchemeMaui = (TSchemeMaui)SchemeInt.Convert(Color.FromUint);
         }
         else
         {
             // We have to use reflection to access the generated method with the correct return type.
             SchemeMaui = (TSchemeMaui)typeof(TSchemeInt)
                 .GetMethods()
-                .Where(m => m.Name == nameof(Scheme<int>.ConvertTo))
+                .Where(m => m.Name == nameof(Scheme<int>.Convert))
                 .ToList()[0]
                 .MakeGenericMethod(typeof(Color))
                 .Invoke(SchemeInt, new object[] { (Func<uint, Color>)Color.FromUint })!;

@@ -84,7 +84,7 @@ public class ThemeService
             ? _darkMapper
             : _lightMapper;
         Scheme = mapper.Map(CorePalette);
-        AppScheme<MudColor> mudColorScheme = Scheme.ConvertTo(IntExtensions.ToMudColor);
+        AppScheme<MudColor> mudColorScheme = Scheme.Convert(IntExtensions.ToMudColor);
         if (IsDark)
             MudTheme.PaletteDark = UpdatePalette(MudTheme.PaletteDark, mudColorScheme);
         else

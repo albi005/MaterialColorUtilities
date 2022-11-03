@@ -19,9 +19,10 @@ namespace MaterialColorUtilities.SourceGenerators
         {
             public bool Equals(ClassContext x, ClassContext y) => x.Symbol.ToDisplayString() == y.Symbol.ToDisplayString();
             public int GetHashCode(ClassContext obj) => obj.Symbol.ToDisplayString().GetHashCode();
-            public static ClassContextNameOnlyComparer Default { get; } = new ClassContextNameOnlyComparer();
+            public static ClassContextNameOnlyComparer Default { get; } = new();
         }
-        public record struct SourceCreationContext(
+        
+        public readonly record struct SourceCreationContext(
             string Identifier,
             string Modifiers,
             string Namespace,
@@ -44,16 +45,14 @@ namespace MaterialColorUtilities.SourceGenerators
                 ^ TColor.GetHashCode()
                 ^ TypeParameters.GetHashCode();
         }
-        public record struct Result(string Hint, string SourceText);
+
+        private record struct Result(string Hint, string SourceText);
 
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
             IncrementalValuesProvider<ClassContext> classes = context.SyntaxProvider.CreateSyntaxProvider(
                 static (syntaxNode, _) =>
-                    syntaxNode is ClassDeclarationSyntax cds
-                    && cds.BaseList != null
-                    && cds.TypeParameterList != null
-                    && cds.Parent is not ClassDeclarationSyntax
+                    syntaxNode is ClassDeclarationSyntax { TypeParameterList: { }, Parent: not ClassDeclarationSyntax } cds 
                     && cds.Modifiers.Any(SyntaxKind.PartialKeyword),
                 static (context, _) =>
                 {
@@ -94,11 +93,13 @@ namespace MaterialColorUtilities.SourceGenerators
             IncrementalValuesProvider<Result> results = sourceCreationContexts.Select(static (context, _) =>
             {
                 bool hasNamespace = context.Namespace != null;
+                bool isOriginal = context.Namespace == "MaterialColorUtilities.Schemes";
                 string typeParameters = Regex.Replace(context.TypeParameters, @$"\b{context.TColor}\b", "TResult");
                 string resultType = $"{context.Identifier}{typeParameters}";
 
                 StringBuilder builder = new();
                 builder.AppendLine("using System;");
+                builder.AppendLine("using System.Collections.Generic;");
                 builder.AppendLine();
                 if (hasNamespace)
                 {
@@ -108,21 +109,32 @@ namespace MaterialColorUtilities.SourceGenerators
                 builder.AppendLine($"{context.Modifiers} class {context.Identifier}{context.TypeParameters}");
                 builder.AppendLine("{");
                 builder.AppendLine("/// <summary>Converts the Scheme into a new one with a different color type</summary>");
-                builder.AppendLine($"public new {resultType} ConvertTo<TResult>(Func<{context.TColor}, TResult> convert)");
+                builder.AppendLine($"public {(isOriginal ? null : "new")} {resultType} Convert<TResult>(Func<{context.TColor}, TResult> convert)");
                 builder.AppendLine("{");
-                builder.AppendLine($"return ConvertTo<TResult>(convert, new {resultType}());");
+                builder.AppendLine($"return Convert<TResult>(convert, new {resultType}());");
                 builder.AppendLine("}");
                 builder.AppendLine();
                 builder.AppendLine("/// <summary>Maps the Scheme's colors onto an existing Scheme object with a different color type</summary>");
-                builder.AppendLine($"public {resultType} ConvertTo<TResult>(Func<{context.TColor}, TResult> convert, {resultType} result)");
+                builder.AppendLine($"public {resultType} Convert<TResult>(Func<{context.TColor}, TResult> convert, {resultType} result)");
                 builder.AppendLine("{");
-                builder.AppendLine("base.ConvertTo(convert, result);");
-                foreach (var newColor in context.NewColors)
+                if (!isOriginal)
+                    builder.AppendLine("base.Convert(convert, result);");
+                foreach (string newColor in context.NewColors)
                 {
                     builder.AppendLine($"result.{newColor} = convert({newColor});");
                 }
                 builder.AppendLine();
                 builder.AppendLine("return result;");
+                builder.AppendLine("}");
+                builder.AppendLine();
+                builder.AppendLine($"public {(isOriginal ? "virtual" : "override")} IEnumerable<KeyValuePair<string, {context.TColor}>> Enumerate()");
+                builder.AppendLine("{");
+                if (!isOriginal)
+                    builder.AppendLine("foreach (var pair in base.Enumerate()) yield return pair;");
+                foreach (string newColor in context.NewColors)
+                {
+                    builder.AppendLine($"yield return new KeyValuePair<string, {context.TColor}>(\"{newColor}\", {newColor});");
+                }
                 builder.AppendLine("}");
                 builder.AppendLine("}");
                 if (hasNamespace)
@@ -137,7 +149,7 @@ namespace MaterialColorUtilities.SourceGenerators
                 if (hasNamespace) hint += $"{context.Namespace}.";
                 hint += context.Identifier;
                 hint += $"{{{context.TypeParameters.Substring(1, context.TypeParameters.Length - 2)}}}";
-                hint += ".ConvertTo.sg.cs";
+                hint += ".sg.cs";
 
                 return new Result(hint, sourceText);
             });
@@ -151,31 +163,23 @@ namespace MaterialColorUtilities.SourceGenerators
             });
         }
 
-        static bool IsScheme(INamedTypeSymbol symbol)
-        {
-            if (symbol.OriginalDefinition.ToDisplayString() == SchemeDisplayString)
-                return true;
-            if (symbol.BaseType == null)
-                return false;
-            return IsScheme(symbol.BaseType);
-        }
+        static bool IsScheme(INamedTypeSymbol symbol) =>
+            symbol.OriginalDefinition.ToDisplayString() == SchemeDisplayString
+            || symbol.BaseType != null
+            && IsScheme(symbol.BaseType);
 
-        static string GetTColor(INamedTypeSymbol symbol)
-        {
-            if (symbol.OriginalDefinition.ToDisplayString() == SchemeDisplayString)
-                return symbol.TypeArguments[0].ToDisplayString();
-            return GetTColor(symbol.BaseType);
-        }
+        static string GetTColor(INamedTypeSymbol symbol) =>
+            symbol.OriginalDefinition.ToDisplayString() == SchemeDisplayString
+                ? symbol.TypeArguments[0].ToDisplayString()
+                : GetTColor(symbol.BaseType);
     }
 }
 
 namespace System.Runtime.CompilerServices
 {
-    /// <summary>
-    /// Workaround for
-    /// "Predefined type 'System.Runtime.CompilerServices.IsExternalInit' is not defined or imported"
-    /// when declaring records
-    /// </summary>
+    // Workaround for
+    // "Predefined type 'System.Runtime.CompilerServices.IsExternalInit' is not defined or imported"
+    // when declaring records
     [EditorBrowsable(EditorBrowsableState.Never)]
     internal static class IsExternalInit
     {
