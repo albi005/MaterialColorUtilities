@@ -6,8 +6,12 @@ namespace MaterialColorUtilities.Maui.Tests;
 public class DynamicColorServiceTests
 {
     private readonly IDynamicColorService _dynamicColorService = new MockDynamicColorService();
-    private readonly Application _application = new();
     private readonly IPreferences _preferences = new MockPreferences();
+
+    public DynamicColorServiceTests()
+    {
+        _ = new Application();
+    }
     
     [TestMethod]
     public void DisableTheming()
@@ -16,14 +20,14 @@ public class DynamicColorServiceTests
         {
             opt.EnableTheming = false;
         });
-
-        MaterialColorService materialColorService = new(options, _dynamicColorService, _application, _preferences);
+        MaterialColorService materialColorService = new(options, _dynamicColorService, _preferences);
+        ResourceDictionary resourceDictionary = new();
         
-        materialColorService.Initialize(null);
+        materialColorService.Initialize(resourceDictionary);
         
         Assert.IsFalse(materialColorService.EnableTheming);
         Assert.IsNull(materialColorService.SchemeMaui);
-        Assert.IsTrue(_application.Resources.Count == 0);
+        Assert.IsTrue(resourceDictionary.Count == 0);
     }
 
     [TestMethod]
@@ -33,50 +37,50 @@ public class DynamicColorServiceTests
         {
             opt.EnableDynamicColor = false;
         });
-
-        MaterialColorService materialColorService = new(options, _dynamicColorService, _application, _preferences);
+        MaterialColorService materialColorService = new(options, _dynamicColorService, _preferences);
+        ResourceDictionary resourceDictionary = new();
         
-        materialColorService.Initialize(null);
+        materialColorService.Initialize(resourceDictionary);
         
         Assert.IsTrue(materialColorService.EnableTheming);
         Assert.IsFalse(materialColorService.EnableDynamicColor);
         Assert.AreEqual(0xff4285F4, materialColorService.Seed);
         Assert.AreEqual(0xff445e91, materialColorService.SchemeInt.Primary);
         Assert.AreEqual(materialColorService.SchemeInt.Primary, materialColorService.SchemeMaui.Primary.ToUint());
-        Assert.IsNotNull(_application.Resources[Schemes.Keys.Primary]);
+        Assert.IsNotNull(resourceDictionary[Schemes.Keys.Primary]);
     }
 
     [TestMethod]
     public void EnableDynamicColor_SeedColorNull()
     {
         IOptions<MaterialColorOptions> options = CreateOptions();
-
-        MaterialColorService materialColorService = new(options, _dynamicColorService, _application, _preferences);
+        MaterialColorService materialColorService = new(options, _dynamicColorService, _preferences);
+        ResourceDictionary resourceDictionary = new();
         
-        materialColorService.Initialize(null);
+        materialColorService.Initialize(resourceDictionary);
         
         Assert.IsTrue(materialColorService.EnableTheming);
         Assert.IsTrue(materialColorService.EnableDynamicColor);
         Assert.AreEqual(0xff4285F4, materialColorService.Seed);
         Assert.AreEqual(0xff445e91, materialColorService.SchemeInt.Primary);
         Assert.AreEqual(materialColorService.SchemeInt.Primary, materialColorService.SchemeMaui.Primary.ToUint());
-        Assert.IsNotNull(_application.Resources[Schemes.Keys.Primary]);
+        Assert.IsNotNull(resourceDictionary[Schemes.Keys.Primary]);
     }
 
     [TestMethod]
     public void EnableDynamicColor_SeedColorAvailable()
     {
         IOptions<MaterialColorOptions> options = CreateOptions();
-
         IDynamicColorService dynamicColorService = new MockDynamicColorService(0xFFc07d52);
-        MaterialColorService materialColorService = new(options, dynamicColorService, _application, _preferences);
+        MaterialColorService materialColorService = new(options, dynamicColorService, _preferences);
+        ResourceDictionary resourceDictionary = new();
         
-        materialColorService.Initialize(null);
+        materialColorService.Initialize(resourceDictionary);
         
         Assert.AreEqual(0xffc07d52, materialColorService.Seed);
         Assert.AreEqual(0xff8b4f26, materialColorService.SchemeInt.Primary);
         Assert.AreEqual(materialColorService.SchemeInt.Primary, materialColorService.SchemeMaui.Primary.ToUint());
-        Assert.IsNotNull(_application.Resources[Schemes.Keys.Primary]);
+        Assert.IsNotNull(resourceDictionary[Schemes.Keys.Primary]);
     }
 
     private static IOptions<MaterialColorOptions> CreateOptions()

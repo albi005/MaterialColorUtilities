@@ -16,7 +16,7 @@ public class CustomMaterialColorService : MaterialColorService<CorePalette, AppS
 {
     private readonly WeakEventManager _weakEventManager = new();
     
-    public CustomMaterialColorService(IOptions<MaterialColorOptions> options, IDynamicColorService dynamicColorService, IApplication application, IPreferences preferences) : base(options, dynamicColorService, application, preferences)
+    public CustomMaterialColorService(IOptions<MaterialColorOptions> options, IDynamicColorService dynamicColorService, IPreferences preferences) : base(options, dynamicColorService, preferences)
     {
     }
     
