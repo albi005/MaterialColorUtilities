@@ -2,7 +2,6 @@
 using MaterialColorUtilities.Schemes;
 using Microsoft.Extensions.Options;
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 using Style = MaterialColorUtilities.Palettes.Style;
 
 namespace MaterialColorUtilities.Maui;
@@ -14,7 +13,7 @@ namespace MaterialColorUtilities.Maui;
 // Dynamic seed
 public class MaterialColorService : MaterialColorService<CorePalette, Scheme<uint>, Scheme<Color>, LightSchemeMapper, DarkSchemeMapper>
 {
-    public MaterialColorService(IOptions<MaterialColorOptions> options, IDynamicColorService dynamicColorService, IApplication application, IPreferences preferences) : base(options, dynamicColorService, application, preferences)
+    public MaterialColorService(IOptions<MaterialColorOptions> options, IDynamicColorService dynamicColorService, IPreferences preferences) : base(options, dynamicColorService, preferences)
     {
     }
 }
@@ -23,11 +22,10 @@ public class MaterialColorService<
     TCorePalette,
     [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods)]
     TSchemeInt,
-    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)]
     TSchemeMaui,
     TLightSchemeMapper,
     TDarkSchemeMapper>
-    : IMauiInitializeService
+    : IMaterialColorService
     where TCorePalette : CorePalette, new()
     where TSchemeInt : Scheme<uint>, new()
     where TSchemeMaui : Scheme<Color>, new()
@@ -39,14 +37,15 @@ public class MaterialColorService<
     private const string StyleKey = "MaterialColorUtilities.Maui.Style";
 
     private readonly IDynamicColorService _dynamicColorService;
-    private readonly Application _application;
-    private readonly ResourceDictionary _appResources;
     private readonly IPreferences _preferences;
     private readonly bool _rememberIsDark;
     private readonly uint _fallbackSeed;
     
     private readonly TLightSchemeMapper _lightSchemeMapper = new();
     private readonly TDarkSchemeMapper _darkSchemeMapper = new();
+
+    private Application _application = null!;
+    private ResourceDictionary _appResources = null!;
 
     private bool _enableTheming;
     private bool _enableDynamicColor;
@@ -59,7 +58,6 @@ public class MaterialColorService<
     public MaterialColorService(
         IOptions<MaterialColorOptions> options,
         IDynamicColorService dynamicColorService,
-        IApplication application,
         IPreferences preferences)
     {
         _rememberIsDark = options.Value.RememberIsDark;
@@ -70,10 +68,10 @@ public class MaterialColorService<
         
         _dynamicColorService = dynamicColorService;
         _preferences = preferences;
-        _application = (Application)application;
-        _appResources = _application.Resources;
-    }
 
+        IMaterialColorService.Current = this;
+    }
+    
     public bool EnableTheming
     {
         get => _enableTheming;
@@ -164,8 +162,13 @@ public class MaterialColorService<
     }
 
     // Called automatically by MauiAppBuilder.Build()
-    public virtual void Initialize(IServiceProvider? services)
+    void IMauiInitializeService.Initialize(IServiceProvider? serviceProvider) { }
+
+    public virtual void Initialize(ResourceDictionary resourceDictionary)
     {
+        _application = Application.Current!;
+        _appResources = resourceDictionary;
+        
         if (_preferences.ContainsKey(IsDarkKey))
             _application.UserAppTheme = _preferences.Get(IsDarkKey, false)
                 ? AppTheme.Dark
@@ -256,12 +259,17 @@ public class MaterialColorService<
     
     protected virtual void Apply()
     {
-        foreach (PropertyInfo property in typeof(TSchemeMaui).GetProperties())
+        foreach (KeyValuePair<string, Color> color in SchemeMaui.Enumerate())
         {
-            string key = property.Name;
-            Color value = (Color)property.GetValue(SchemeMaui)!;
-            _appResources[key] = value;
-            _appResources[key + "Brush"] = new SolidColorBrush(value);
+            _appResources[color.Key] = color.Value;
+            _appResources[color.Key + "Brush"] = new SolidColorBrush(color.Value);
         }
     }
+}
+
+public interface IMaterialColorService : IMauiInitializeService
+{
+    public static IMaterialColorService Current { get; set; } = null!;
+
+    void Initialize(ResourceDictionary resourceDictionary);
 }
