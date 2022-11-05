@@ -39,7 +39,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
 
-		<None Include="..\README.md">
+		<None Include="README.md">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>

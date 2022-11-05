@@ -4,7 +4,6 @@ using MaterialColorUtilities.Score;
 using Microsoft.JSInterop;
 using MudBlazor;
 using MudBlazor.Utilities;
-using Playground.Shared;
 using Playground.Wasm.Extensions;
 
 namespace Playground.Wasm.Services;
@@ -12,10 +11,10 @@ namespace Playground.Wasm.Services;
 public class ThemeService
 {
     private bool _isDark;
-    private readonly LightAppSchemeMapper _lightMapper = new();
-    private readonly DarkAppSchemeMapper _darkMapper = new();
+    private readonly LightMudSchemeMapper _lightMapper = new();
+    private readonly DarkMudSchemeMapper _darkMapper = new();
     private uint _seed = Scorer.Default;
-    private Style _style;
+    private Style _style = Style.Vibrant;
 
     private uint? _prevSeed;
     private bool? _prevIsDark;
@@ -57,7 +56,7 @@ public class ThemeService
 
     private CorePalette CorePalette { get; } = new();
 
-    public AppScheme<uint> Scheme { get; private set; }
+    public MudScheme<uint> Scheme { get; private set; }
     public MudTheme MudTheme { get; } = new()
     {
         ZIndex = new()
@@ -80,11 +79,11 @@ public class ThemeService
             CorePalette.Fill(_seed, _style);
         }
 
-        ISchemeMapper<CorePalette, AppScheme<uint>> mapper = IsDark
+        ISchemeMapper<CorePalette, MudScheme<uint>> mapper = IsDark
             ? _darkMapper
             : _lightMapper;
         Scheme = mapper.Map(CorePalette);
-        AppScheme<MudColor> mudColorScheme = Scheme.Convert(IntExtensions.ToMudColor);
+        MudScheme<MudColor> mudColorScheme = Scheme.Convert(IntExtensions.ToMudColor);
         if (IsDark)
             MudTheme.PaletteDark = UpdatePalette(MudTheme.PaletteDark, mudColorScheme);
         else
@@ -92,11 +91,15 @@ public class ThemeService
         Changed?.Invoke();
     }
 
-    private static Palette UpdatePalette(Palette palette, AppScheme<MudColor> scheme)
+    private static Palette UpdatePalette(Palette palette, MudScheme<MudColor> scheme)
     {
         palette.Primary = scheme.Primary;
+        palette.PrimaryDarken = scheme.Primary2.Value;
+        palette.PrimaryContrastText = scheme.OnPrimary;
         palette.Secondary = scheme.Secondary;
+        palette.SecondaryContrastText = scheme.OnSecondary;
         palette.Tertiary = scheme.Tertiary;
+        palette.TertiaryContrastText = scheme.OnTertiary;
         palette.Background = scheme.Background;
         palette.AppbarBackground = scheme.Surface2;
         palette.AppbarText = scheme.OnBackground;

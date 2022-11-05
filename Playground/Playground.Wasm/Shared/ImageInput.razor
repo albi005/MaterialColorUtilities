@@ -1,0 +1,36 @@
+﻿@using Playground.Wasm.Services
+@using SkiaSharp
+@using MaterialColorUtilities.Utils
+@using System.Runtime.InteropServices
+@using MaterialColorUtilities.Palettes
+@using System.Diagnostics
+
+@inject ThemeService ThemeService
+
+<InputFile id="imageInput" accept="image/png, image/jpeg" hidden OnChange="OnImageSelected" />
+
+<MudButton
+    Variant="Variant.Filled"
+    HtmlTag="label"
+    Color="Color.Primary"
+    for="imageInput">
+    Upload image
+</MudButton>
+
+@code {
+
+    private async void OnImageSelected(InputFileChangeEventArgs e)
+    {
+        IBrowserFile resized = await e.File.RequestImageFileAsync("image/png", 122, 122);
+        using MemoryStream memoryStream = new();
+        await using Stream openReadStream = resized.OpenReadStream();
+        await openReadStream.CopyToAsync(memoryStream);
+        memoryStream.Position = 0;
+        SKBitmap skBitmap = SKBitmap.Decode(memoryStream);
+        uint[] array = MemoryMarshal.Cast<SKColor, uint>(skBitmap.Pixels).ToArray();
+
+        uint seed = ImageUtils.ColorsFromImage(array)[0];
+        ThemeService.Seed = seed;
+    }
+
+}

@@ -21,6 +21,8 @@
         <ColorInput/>
         <div class="pb-4"></div>
         <StyleSelector/>
+        <div class="pb-4"></div>
+        <ImageInput />
     </MudPaper>
     <MudPaper Class="pa-4" Style="width: 460px">
         <h3>
@@ -53,19 +55,17 @@
             </a>
         </h3>
         <p class="info">Chroma is maximized</p>
-        <MudTooltip Text="from JCh, " Placement="Placement.Top">
-            <ColorPlot
-                Resolution="200"
-                Func="@((x, y) => Cam16.FromJch(y, 100, x).ToInt())"
-                FuncInverse="@(color => { Cam16 cam16 = Cam16.FromInt(color); return (cam16.Hue, cam16.J); })"
-                LabelX="h"
-                LabelY="J"
-                MaxX="360"
-                MaxY="100"
-                MinX="0"
-                MinY="0"
-                CacheId="cam16"/>
-        </MudTooltip>
+        <ColorPlot
+            Resolution="200"
+            Func="@((x, y) => Cam16.FromJch(y, 100, x).ToInt())"
+            FuncInverse="@(color => { Cam16 cam16 = Cam16.FromInt(color); return (cam16.Hue, cam16.J); })"
+            LabelX="h"
+            LabelY="J"
+            MaxX="360"
+            MaxY="100"
+            MinX="0"
+            MinY="0"
+            CacheId="cam16"/>
     </MudPaper>
     <MudPaper Class="pa-4">
         <h3>
