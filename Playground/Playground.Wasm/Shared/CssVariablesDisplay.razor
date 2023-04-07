@@ -1,0 +1,49 @@
+@using System.Text.RegularExpressions
+@using Playground.Wasm.Services
+@using System.Text
+@using MaterialColorUtilities.Utils
+@using System.ComponentModel.DataAnnotations
+@inherits SeedColorSelector
+
+<div class="code">
+    <pre>
+        <code>
+            @_text
+        </code>
+    </pre>
+</div>
+
+@code {
+
+    private string _text;
+
+    protected override void SetFromSeed(uint seed)
+    {
+        _text = CreateCssVariables();
+    }
+
+    private string CreateCssVariables()
+    {
+        StringBuilder builder = new();
+
+        builder.Append(".material-theme {\n");
+        foreach (KeyValuePair<string, uint> color in ThemeService.Scheme.Enumerate())
+        {
+            builder.Append("    --md-sys-color-");
+            builder.Append(PascalToKebab(color.Key));
+            builder.Append(": ");
+            string hex = StringUtils.HexFromArgb(color.Value);
+            builder.Append(hex);
+            builder.Append(";\n");
+        }
+        builder.Append('}');
+
+        return builder.ToString();
+    }
+
+    private static string PascalToKebab(string value) => GeneratedRegex.PascalToKebabRegex().Replace(
+        value,
+        "-$1")
+        .Trim()
+        .ToLower();
+}
