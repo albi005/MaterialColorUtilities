@@ -74,7 +74,7 @@ public partial class ThemeViewModel : ObservableObject
     partial void OnEnableThemingChanged(bool value) => _colorService.EnableTheming = value;
     partial void OnEnableDynamicColorChanged(bool value) => _colorService.EnableDynamicColor = value;
 
-    [ICommand]
+    [RelayCommand]
     void ForgetSeed() => _colorService.ForgetSeed();
     
     void SetSeed()
