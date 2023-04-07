@@ -53,4 +53,12 @@ public partial class Scheme<TColor>
     public TColor Surface3 { get; set; } = default!;
     public TColor Surface4 { get; set; } = default!;
     public TColor Surface5 { get; set; } = default!;
+    public TColor SurfaceDim { get; set; } = default!;
+    public TColor SurfaceBright { get; set; } = default!;
+    public TColor SurfaceContainerLowest { get; set; } = default!;
+    public TColor SurfaceContainerLow { get; set; } = default!;
+    public TColor SurfaceContainer { get; set; } = default!;
+    public TColor SurfaceContainerHigh { get; set; } = default!;
+    public TColor SurfaceContainerHighest { get; set; } = default!;
+    public TColor OutlineVariant { get; set; } = default!;
 }

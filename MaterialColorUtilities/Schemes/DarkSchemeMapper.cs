@@ -50,6 +50,20 @@ namespace MaterialColorUtilities.Schemes
             scheme.Surface3 = scheme.Surface.Add(scheme.Primary, .11);
             scheme.Surface4 = scheme.Surface.Add(scheme.Primary, .12);
             scheme.Surface5 = scheme.Surface.Add(scheme.Primary, .14);
+            
+            scheme.SurfaceDim = corePalette.Neutral[6];
+            scheme.Surface = corePalette.Neutral[6];
+            scheme.SurfaceBright = corePalette.Neutral[24];
+            scheme.SurfaceContainerLowest = corePalette.Neutral[4];
+            scheme.SurfaceContainerLow = corePalette.Neutral[10];
+            scheme.SurfaceContainer = corePalette.Neutral[12];
+            scheme.SurfaceContainerHigh = corePalette.Neutral[17];
+            scheme.SurfaceContainerHighest = corePalette.Neutral[22];
+            scheme.OnSurface = corePalette.Neutral[90];
+            scheme.OnSurfaceVariant = corePalette.Neutral[80];
+            scheme.Outline = corePalette.Neutral[60];
+            scheme.OutlineVariant = corePalette.Neutral[30];
+            
         }
     }
 }
