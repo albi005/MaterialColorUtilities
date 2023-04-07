@@ -242,11 +242,13 @@ public class MaterialColorService<
         else
         {
             // We have to use reflection to access the generated method with the correct return type.
+#pragma warning disable IL2060 // Can not statically analyze for trimming
             SchemeMaui = (TSchemeMaui)typeof(TSchemeInt)
                 .GetMethods()
                 .Where(m => m.Name == nameof(Scheme<int>.Convert))
                 .ToList()[0]
                 .MakeGenericMethod(typeof(Color))
+#pragma warning restore IL2060
                 .Invoke(SchemeInt, new object[] { (Func<uint, Color>)Color.FromUint })!;
         }
 

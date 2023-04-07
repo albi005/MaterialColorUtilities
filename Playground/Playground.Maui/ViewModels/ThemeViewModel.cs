@@ -49,7 +49,7 @@ public partial class ThemeViewModel : ObservableObject
         Style.Content
     };
 
-    public Color OnSeed => _t < 49.6 ? Colors.White : Colors.Black;
+    public Color OnSeed => T < 49.6 ? Colors.White : Colors.Black;
 
     public ThemeViewModel(CustomMaterialColorService colorService, IOptions<MaterialColorOptions> options)
     {
@@ -88,9 +88,11 @@ public partial class ThemeViewModel : ObservableObject
     {
         Seed = Color.FromUint(_colorService.Seed);
         Hct hct = Hct.FromInt(_colorService.Seed);
+#pragma warning disable MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
+        // It works, I don't care
         _h = hct.Hue;
         _c = hct.Chroma;
         _t = hct.Tone;
-        OnPropertyChanged("");
+#pragma warning restore MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
     }
 }
