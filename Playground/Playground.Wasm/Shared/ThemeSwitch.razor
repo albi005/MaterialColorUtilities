@@ -3,7 +3,7 @@
 @inject ThemeService ThemeService
 @implements IDisposable
 
-<MudIconButton Icon="@(ThemeService.IsDark ? Icons.Filled.LightMode : Icons.Filled.DarkMode)" OnClick="SwitchTheme"></MudIconButton>
+<MudIconButton Icon="@(ThemeService.IsDark ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)" OnClick="SwitchTheme"></MudIconButton>
 
 @code {
     protected override void OnInitialized()
