@@ -11,8 +11,10 @@ export class SKHtmlCanvas {
                 return null;
             }
             // make current
+            const GL = SKHtmlCanvas.getGL();
             GL.makeContextCurrent(ctx);
             // read values
+            const GLctx = SKHtmlCanvas.getGLctx();
             const fbo = GLctx.getParameter(GLctx.FRAMEBUFFER_BINDING);
             this.glInfo = {
                 context: ctx,
@@ -96,6 +98,7 @@ export class SKHtmlCanvas {
         this.renderLoopRequest = window.requestAnimationFrame(() => {
             if (this.glInfo) {
                 // make current
+                const GL = SKHtmlCanvas.getGL();
                 GL.makeContextCurrent(this.glInfo.context);
             }
             this.renderFrameCallback.invokeMethod('Invoke');
@@ -150,6 +153,7 @@ export class SKHtmlCanvas {
             explicitSwapControl: 0,
             renderViaOffscreenBackBuffer: 0,
         };
+        const GL = SKHtmlCanvas.getGL();
         let ctx = GL.createContext(htmlCanvas, contextAttributes);
         if (!ctx && contextAttributes.majorVersion > 1) {
             console.warn('Falling back to WebGL 1.0');
@@ -158,5 +162,12 @@ export class SKHtmlCanvas {
             ctx = GL.createContext(htmlCanvas, contextAttributes);
         }
         return ctx;
+    }
+    static getGL() {
+        return globalThis.SkiaSharpGL || Module.GL || GL;
+    }
+    static getGLctx() {
+        const GL = SKHtmlCanvas.getGL();
+        return GL.currentContext && GL.currentContext.GLctx || GLctx;
     }
 }

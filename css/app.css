@@ -20,3 +20,12 @@
     font-size: 1.17em;
     opacity: 60%;
 }
+
+.code {
+    background-color: black;
+    color: white;
+    border-radius: 16px;
+    padding: 16px;
+    margin: 16px;
+    overflow: scroll;
+}
