@@ -6,19 +6,19 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>0.1.0</Version>
-		<Description>C# implementation of the Material Design Color Utilities. Can be used to extract a color from an image and then generate a Material Design 3 color scheme from it.</Description>
+		<Version Condition="$(Version) == ''">0.1.0</Version>
+		<Description>C# implementation of Google's Material color utilities</Description>
 		<PackageProjectUrl>https://github.com/albi005/MaterialColorUtilities</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/albi005/MaterialColorUtilities</RepositoryUrl>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<Authors>albi05</Authors>
 
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<Copyright>Copyright 2021-2022 Google LLC and project contributors</Copyright>
+		<Copyright>Copyright 2021-2023 Google LLC and project contributors</Copyright>
 	</PropertyGroup>
 
 	<ItemGroup>
