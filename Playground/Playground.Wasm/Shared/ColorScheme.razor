@@ -2,8 +2,8 @@
 @using MaterialColorUtilities.Utils
 
 <div class="d-flex">
-    <ColorItem Name="Primary" Color="@Scheme.Primary" OnColor="@Scheme.OnPrimary" />
-    <ColorItem Name="PrimaryContainer" Color="@Scheme.PrimaryContainer" OnColor="@Scheme.OnPrimaryContainer" />
+    <ColorItem Name="Primary" Color="@Scheme.Primary" OnColor="@Scheme.OnPrimary" BorderRadius="4px 0 0 0" />
+    <ColorItem Name="PrimaryContainer" Color="@Scheme.PrimaryContainer" OnColor="@Scheme.OnPrimaryContainer" BorderRadius="0 4px 0 0" />
 </div>
 <div class="d-flex">
     <ColorItem Name="Secondary" Color="@Scheme.Secondary" OnColor="@Scheme.OnSecondary" />
@@ -26,12 +26,12 @@
     <ColorItem Name="Outline" Color="@Scheme.Outline" OnColor="@Scheme.Background" />
 </div>
 <div class="d-flex relative">
-    <ColorItem Color="@Scheme.Surface" />
+    <ColorItem Color="@Scheme.Surface" BorderRadius="0 0 0 4px" />
     <ColorItem Color="@Scheme.Surface1" />
     <ColorItem Color="@Scheme.Surface2" />
     <ColorItem Color="@Scheme.Surface3" />
     <ColorItem Color="@Scheme.Surface4" />
-    <ColorItem Color="@Scheme.Surface5" />
+    <ColorItem Color="@Scheme.Surface5" BorderRadius="0 0 4px 0" />
     <div class="absolute pa-2" style="color: @(StringUtils.HexFromArgb(Scheme.OnSurface))">
         Surface 0-5
     </div>

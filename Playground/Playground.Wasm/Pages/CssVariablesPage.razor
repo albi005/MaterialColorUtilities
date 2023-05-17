@@ -1,14 +1,8 @@
 @page "/css"
 @inherits SeedColorSelector
 
-<MudPaper Class="pa-4 ma-4" Style="width: 460px">
-    <ColorScheme Scheme="@ThemeService.Scheme"/>
-    <div class="pb-4"></div>
-    <ColorInput/>
-    <div class="pb-4"></div>
-    <StyleSelector/>
-    <div class="pb-4"></div>
-    <ImageInput />
+<MudPaper Class="pa-4 ma-4" Style="margin: auto; max-width: 512px">
+    <ThemeBuilder />
 </MudPaper>
 <CssVariablesDisplay />
 

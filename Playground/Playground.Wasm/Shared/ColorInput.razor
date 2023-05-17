@@ -14,12 +14,13 @@
     ColorPickerMode="@ColorPickerMode.HEX"
     Label="Seed color"
     PickerVariant="@PickerVariant.Inline"
-    AnchorOrigin="Origin.BottomCenter"
-    Variant="Variant.Filled"
+    AnchorOrigin="Origin.CenterLeft"
+    Variant="Variant.Outlined"
     Elevation="1"
     DisableAlpha="true"
     DisablePreview="true"
-    />
+    DisableColorField="@Small"
+/>
 
 @code {
     MudColor _color;
@@ -43,4 +44,7 @@
         if (seed == ColorUint) return;
         _color = StringUtils.HexFromArgb(seed);
     }
+    
+    [Parameter]
+    public bool Small { get; set; }
 }

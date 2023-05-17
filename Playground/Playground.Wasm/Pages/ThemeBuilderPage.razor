@@ -1,0 +1,48 @@
+@page "/theme-builder"
+@using System.Web
+@using System.Globalization
+@using MaterialColorUtilities.Palettes
+@layout EmptyLayout
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JsRuntime
+@inherits SchemeDisplay
+
+<style>
+    html {
+        background-color: var(--mud-palette-surface);
+    }
+    
+    body {
+        background-color: transparent;
+    }
+</style>
+
+<ThemeBuilder Small="true" />
+
+@{
+    JsRuntime.InvokeVoidAsync("postScheme", ThemeService.CreateCssVariables());
+}
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        
+        Uri uri = new(NavigationManager.Uri);
+        var queries = HttpUtility.ParseQueryString(uri.Query);
+        
+        string colorQuery = queries["color"];
+        if (colorQuery != null && uint.TryParse(colorQuery, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint color))
+        {
+            ThemeService.Seed = color;
+        }
+
+        string styleQuery = queries["style"];
+        if (styleQuery != null && Enum.TryParse(styleQuery, true, out Style style))
+        {
+            ThemeService.Style = style;
+        }
+    }
+
+}

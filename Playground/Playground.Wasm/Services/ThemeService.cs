@@ -57,6 +57,9 @@ public class ThemeService
     private CorePalette CorePalette { get; } = new();
 
     public MudScheme<uint> Scheme { get; private set; }
+    public MudScheme<uint> LightScheme { get; private set; }
+    public MudScheme<uint> DarkScheme { get; private set; }
+
     public MudTheme MudTheme { get; } = new()
     {
         ZIndex = new()
@@ -66,6 +69,8 @@ public class ThemeService
     };
 
     public event Action Changed;
+    
+    public string CreateCssVariables() => CssVariables.Create(LightScheme, DarkScheme);
 
     private void Apply()
     {
@@ -78,11 +83,13 @@ public class ThemeService
             _prevStyle = _style;
             CorePalette.Fill(_seed, _style);
         }
+        
+        LightScheme = _lightMapper.Map(CorePalette);
+        DarkScheme = _darkMapper.Map(CorePalette);
+        Scheme = IsDark
+            ? DarkScheme
+            : LightScheme;
 
-        ISchemeMapper<CorePalette, MudScheme<uint>> mapper = IsDark
-            ? _darkMapper
-            : _lightMapper;
-        Scheme = mapper.Map(CorePalette);
         MudScheme<MudColor> mudColorScheme = Scheme.Convert(IntExtensions.ToMudColor);
         if (IsDark)
             MudTheme.PaletteDark = UpdatePalette(MudTheme.PaletteDark, mudColorScheme);

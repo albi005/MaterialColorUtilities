@@ -1,28 +1,14 @@
 ﻿@page "/"
-@inject ThemeService ThemeService
 @using Playground.Wasm.Extensions
-@using Playground.Wasm.Services
 @using MaterialColorUtilities.ColorAppearance
 @using MaterialColorUtilities.Utils
 @using MudBlazor.Utilities
-@implements IDisposable
 
 <PageTitle>Material Color Utilities .NET</PageTitle>
 
 <div class="d-flex flex-wrap justify-center gap-4 py-4">
     <MudPaper Class="pa-4" Style="width: 460px">
-        <div class="d-flex pb-4">
-            <ColorItem Name="Seed"
-                       Color="@ThemeService.Seed"
-                       OnColor="@(Hct.FromInt(ThemeService.Seed).Tone > 49.7 ? 0xFF000000 : 0xFFFFFFFF)"/>
-        </div>
-        <ColorScheme Scheme="@ThemeService.Scheme"/>
-        <div class="pb-4"></div>
-        <ColorInput/>
-        <div class="pb-4"></div>
-        <StyleSelector/>
-        <div class="pb-4"></div>
-        <ImageInput />
+        <ThemeBuilder />
     </MudPaper>
     <MudPaper Class="pa-4" Style="width: 460px">
         <h3>
@@ -111,12 +97,6 @@
 
 @code {
 
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        ThemeService.Changed += StateHasChanged;
-    }
-
     private uint Hsl(double x, double y)
     {
         MudColor mudColor = new(x, 1, y, 1);
@@ -145,11 +125,6 @@
                 ColorUtils.GreenFromArgb(color) / 255.0,
                 ColorUtils.BlueFromArgb(color) / 255.0));
         return (okhsl.h, okhsl.l);
-    }
-
-    public void Dispose()
-    {
-        ThemeService.Changed -= StateHasChanged;
     }
 
 }

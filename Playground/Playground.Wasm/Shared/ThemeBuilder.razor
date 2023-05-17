@@ -1,0 +1,23 @@
+@using MaterialColorUtilities.Utils
+@inherits SchemeDisplay
+
+<div style="display: flex; flex-direction: column; gap: @(Small ? 0 : 12)px">
+    <div>
+        <ColorScheme Scheme="@ThemeService.Scheme"/>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px; margin: 0 32px">
+        <div style="background-color: @(StringUtils.HexFromArgb(ThemeService.Seed)); border-radius: 20px; padding: 20px"></div>
+        <ColorInput Small="@Small"/>
+        <ImageInput/>
+    </div>
+    <div style="margin: 0 88px 0 80px">
+        <StyleSelector/>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public bool Small { get; set; }
+
+}

@@ -7,15 +7,16 @@
 
 @inject ThemeService ThemeService
 
-<InputFile id="imageInput" accept="image/png, image/jpeg" hidden OnChange="OnImageSelected" />
+<InputFile id="imageInput" accept="image/png, image/jpeg" hidden OnChange="OnImageSelected"/>
 
-<MudButton
-    Variant="Variant.Filled"
-    HtmlTag="label"
-    Color="Color.Primary"
-    for="imageInput">
-    Upload image
-</MudButton>
+<MudTooltip Text="Automatically select the seed color from your wallpaper" Arrow="true" Placement="Placement.Top">
+    <MudFab
+        Icon="@Icons.Material.Rounded.Wallpaper"
+        Color="Color.Primary"
+        HtmlTag="label"
+        Size="Size.Medium"
+        for="imageInput"/>
+</MudTooltip>
 
 @code {
 
@@ -34,3 +35,4 @@
     }
 
 }
+

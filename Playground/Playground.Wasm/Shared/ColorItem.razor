@@ -3,7 +3,12 @@
 
 <div
     class="pa-2 flex-grow-1"
-    style="background-color: @(StringUtils.HexFromArgb(Color)); color: @(StringUtils.HexFromArgb(OnColor)); width: 150px; height: 32px; font-weight: bold">
+    style="
+        background-color: @(StringUtils.HexFromArgb(Color));
+        color: @(StringUtils.HexFromArgb(OnColor));
+        width: 150px; height: 32px;
+        font-weight: bold;
+        border-radius: @BorderRadius">
     @Name
 </div>
 
@@ -11,4 +16,5 @@
     [Parameter] public string Name { get; set; }
     [Parameter] [EditorRequired] public uint Color { get; set; }
     [Parameter] public uint OnColor { get; set; }
+    [Parameter] public string BorderRadius { get; set; } = "0";
 }

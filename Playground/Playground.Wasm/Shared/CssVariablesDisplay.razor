@@ -3,6 +3,7 @@
 @using System.Text
 @using MaterialColorUtilities.Utils
 @using System.ComponentModel.DataAnnotations
+@using Playground.Wasm.Extensions
 @inherits SeedColorSelector
 
 <div class="code">
@@ -19,52 +20,7 @@
 
     protected override void SetFromSeed(uint seed)
     {
-        _text = CreateCssVariables();
+        _text = ThemeService.CreateCssVariables();
     }
 
-    private string CreateCssVariables()
-    {
-        StringBuilder builder = new();
-
-        builder.Append(".material-theme {\n");
-        foreach (KeyValuePair<string, uint> color in ThemeService.Scheme.Enumerate())
-        {
-            builder.Append("    --md-sys-color-");
-            builder.Append(PascalToKebab(color.Key));
-            builder.Append(": ");
-            string hex = StringUtils.HexFromArgb(color.Value);
-            builder.Append(hex);
-            builder.Append(";\n");
-        }
-        builder.Append('}');
-
-        return builder.ToString();
-    }
-
-    // Credits to ChatGPT
-    private static string PascalToKebab(ReadOnlySpan<char> pascalCase)
-    {
-        if (pascalCase.Length == 0) return string.Empty;
-
-        Span<char> kebabCase = stackalloc char[pascalCase.Length + pascalCase.Length / 2];
-        int kebabCaseIndex = 0;
-        kebabCase[kebabCaseIndex++] = char.ToLower(pascalCase[0]);
-
-        for (int i = 1; i < pascalCase.Length; i++)
-        {
-            char currentChar = pascalCase[i];
-
-            if (char.IsUpper(currentChar))
-            {
-                kebabCase[kebabCaseIndex++] = '-';
-                kebabCase[kebabCaseIndex++] = char.ToLower(currentChar);
-            }
-            else
-            {
-                kebabCase[kebabCaseIndex++] = currentChar;
-            }
-        }
-
-        return new(kebabCase[..kebabCaseIndex]);
-    }
 }

@@ -1,0 +1,29 @@
+@using Playground.Wasm.Services
+@inherits LayoutComponentBase
+@inject ThemeService ThemeService
+@implements IDisposable
+
+<MudThemeProvider
+    @ref="@_mudThemeProvider"
+    IsDarkMode="@ThemeService.IsDark"
+    Theme="@ThemeService.MudTheme"/>
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+@Body
+
+@code {
+    MudThemeProvider _mudThemeProvider;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            ThemeService.IsDark = await _mudThemeProvider.GetSystemPreference();
+            ThemeService.Changed += StateHasChanged;
+            StateHasChanged();
+        }
+    }
+
+    public void Dispose() => ThemeService.Changed -= StateHasChanged;
+}
