@@ -6,10 +6,8 @@
 - **HCT**: a color space similar to HSL but with perceptually accurate colors
 - **Quantize and score**: extract the best colors from an image for theming
 - **Scheme**: turn a single color into a palette for theming
-
-Features not in Google's version:
 - **Style**: different ways to generate palettes, available from Android 13
-- A generic scheme that supports different color types and adding type-safe custom colors
+- **Generic scheme**: color schemes can be easily converted to use the color type you need
 
 [GET STARTED](MaterialColorUtilities/README.md#walkthrough)
 
@@ -35,5 +33,4 @@ There are sample projects for the console, Blazor and .NET MAUI in the Playgroun
 You can ask questions under the [Discussions](https://github.com/albi005/MaterialColorUtilities/discussions) tab. Don't forget to check the source code when trying to solve a problem.
 
 ## Contributing
-If you have found a bug or want a new feature, [open a new issue](https://github.com/albi005/MaterialColorUtilities/issues). Pull requests are welcome but please open an issue
-before, so we can talk about it.
+If you have found a bug or want a new feature, [open a new issue](https://github.com/albi005/MaterialColorUtilities/issues). Before creating a pull request open an issue so that we can discuss your ideas. 
