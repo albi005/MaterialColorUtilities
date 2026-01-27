@@ -20,7 +20,7 @@
         <p class="info">Chroma is maximized</p>
         <ColorPlot
             Resolution="200"
-            Func="@((x, y) => Hct.From(x, 100, y).ToInt())"
+            Func="@((x, y) => Hct.From(x, 115, y).ToInt())"
             FuncInverse="@(color => { Hct hct = Hct.FromInt(color); return (hct.Hue, hct.Tone); })"
             LabelX="Hue"
             LabelY="Tone"
@@ -43,7 +43,7 @@
         <p class="info">Chroma is maximized</p>
         <ColorPlot
             Resolution="200"
-            Func="@((x, y) => Cam16.FromJch(y, 100, x).ToInt())"
+            Func="@((x, y) => Cam16.FromJch(y, 115, x).ToInt())"
             FuncInverse="@(color => { Cam16 cam16 = Cam16.FromInt(color); return (cam16.Hue, cam16.J); })"
             LabelX="h"
             LabelY="J"
