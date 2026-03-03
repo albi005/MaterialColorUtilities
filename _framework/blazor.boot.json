@@ -7,7 +7,7 @@
   "linkerEnabled": true,
   "resources": {
     "assembly": {
-      "MaterialColorUtilities.dll": "sha256-UTFL0+07gfJYHhuzv5SeNTVMS7oxUg\/lxtEFl0rGuqM=",
+      "MaterialColorUtilities.dll": "sha256-RHXATy+VtGp4KCsfuQS3zqKcI6pD1ZwkI9CsKkCvTDY=",
       "Microsoft.AspNetCore.Components.dll": "sha256-o22kVGIMrhrKGNPleWGUMjZvxzVEDWLJLzerEZz7rHo=",
       "Microsoft.AspNetCore.Components.Forms.dll": "sha256-SJ4bhzKS+xsplXfsK5muYlmj5VGpJ5CRHzQiCzYrTSg=",
       "Microsoft.AspNetCore.Components.Web.dll": "sha256-6Qz1aOOGi+fXOrdDkr3lEpp1i2VwC47Dxd82JykBg58=",
@@ -24,8 +24,8 @@
       "Microsoft.JSInterop.dll": "sha256-WW0uhJWoJ9gu2HMXA\/v7vlXOlq7YaUTMh9z9Fo+hieE=",
       "Microsoft.JSInterop.WebAssembly.dll": "sha256-dtKm86rx8+scNgFoMXC71MicQVGTw0I9Jbe4yWypUBI=",
       "MudBlazor.dll": "sha256-6o+C7MOLSE0A1AvdLOoXShkaGbgJMgCxYxm8xUvxoTA=",
-      "Playground.Shared.dll": "sha256-OE0aaJpwoceW9AkHt2mNJaDZBjR+dwP7KNLQ1VMMPtM=",
-      "Playground.Wasm.dll": "sha256-Sk0ijey1NPWfkUAL07ZNMp0YxcO44yjDU6ytm0CWhmA=",
+      "Playground.Shared.dll": "sha256-Zso8OC4Sffl5TTdLpZN0M\/MsWkiRlgJNsrhO09Dm+1g=",
+      "Playground.Wasm.dll": "sha256-HhwgJvYRmY8kUMCR6YenJojiTvtf51VQQ4bES7oEPBM=",
       "SkiaSharp.dll": "sha256-SfsCFYdQ0ksiCMcDZc3+u7AvG4ZsDxSby0mxe3PGi\/w=",
       "SkiaSharp.Views.Blazor.dll": "sha256-m0\/YvrmLnHMtqOKUSqAyvxiKSd63EIAMPk32D8qpLd8=",
       "System.Collections.Concurrent.dll": "sha256-0FK+edCqUixM77fSHqBGLnJINFu49ub30O+qTyN81MI=",
