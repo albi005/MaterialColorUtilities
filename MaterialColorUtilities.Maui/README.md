@@ -213,7 +213,7 @@ public static class MauiProgram
 ```
 
 ### Custom colors
-If you want to use custom colors, follow the instructions [here](../MaterialColorUtilities/README.md#custom-colors) on how to create you own palettes/schemes. Then specify them as generic type arguments:
+If you want to use custom colors, follow the instructions for [creating you own palettes/schemes](../MaterialColorUtilities/README.md#custom-colors). Then specify them as generic type arguments:
 ```csharp
 public class MyMaterialColorService : MaterialColorService<MyCorePalette, MyScheme<uint>, MyScheme<Color>, MyLightSchemeMapper, MyDarkSchemeMapper>
 {
