@@ -120,7 +120,7 @@ public partial class MyScheme<TColor> : Scheme<TColor>
 ```
 A source generator will generate new Convert methods automatically as another part of this class.  
 Make sure to **mark the class `partial`** and don't nest it inside another class.  
-If you get warning `CS8032: An instance of analyzer MaterialColorUtilities.Schemes.SchemeConverterGenerator cannot be created...` your IDE/compiler doesn't have Roslyn 4.0, so the source generator won't work. Make sure you are using Visual Studio 2022, MSBuild 17 or .NET 6.
+If you get warning `CS8032: An instance of analyzer MaterialColorUtilities.Schemes.SchemeConverterGenerator cannot be created...` your IDE/compiler doesn't have Roslyn 4.0, so the source generator won't work. Make sure you are using Visual Studio 2022+, MSBuild 17+ or .NET 6+.
 
 Finally, subclass the mappers, override the MapCore method and define how to map the core palette to the scheme:
 ```csharp
